@@ -1,0 +1,472 @@
+
+> jbr
+> cross-env NODE_OPTIONS=--max-old-space-size=8192 jbr run
+
+Warming up by executing 61 query sets, containing 61 queries, for 1 rounds
+Execute:  1 / 61 <input/queries/001_ns#0>
+Endpoint not available yet, waited for 1 seconds...
+Endpoint not available yet, waited for 2 seconds...
+Endpoint not available yet, waited for 3 seconds...
+Endpoint not available yet, waited for 4 seconds...
+Endpoint not available yet, waited for 5 seconds...
+Endpoint not available yet, waited for 6 seconds...
+Endpoint not available yet, waited for 7 seconds...
+Endpoint not available yet, waited for 8 seconds...
+Endpoint not available yet, waited for 9 seconds...
+Endpoint not available yet, waited for 10 seconds...
+Endpoint not available yet, waited for 11 seconds...
+Endpoint not available yet, waited for 12 seconds...
+Endpoint not available yet, waited for 13 seconds...
+Endpoint not available yet, waited for 14 seconds...
+Endpoint not available yet, waited for 15 seconds...
+Endpoint not available yet, waited for 16 seconds...
+Endpoint available after 16 seconds
+Execute:  2 / 61 <input/queries/002_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 23:
+...Of ?wd_id .        SELECT * WHERE {   
+----------------------^
+Expecting 'IRIREF', 'PNAME_NS', '{', '}', '(', 'INTEGER', 'VALUES', 'VAR', 'NIL', 'GRAPH', 'OPTIONAL', 'MINUS', 'SERVICE', 'FILTER', 'BIND', '[', 'DECIMAL', 'DOUBLE', 'BOOLEAN', 'INTEGER_POSITIVE', 'DECIMAL_POSITIVE', 'DOUBLE_POSITIVE', 'INTEGER_NEGATIVE', 'DECIMAL_NEGATIVE', 'DOUBLE_NEGATIVE', 'STRING_LITERAL1', 'STRING_LITERAL2', 'STRING_LITERAL_LONG1', 'STRING_LITERAL_LONG2', 'PNAME_LN', 'BLANK_NODE_LABEL', 'ANON', '<<', got 'SELECT'
+Execute:  3 / 61 <input/queries/006_ns#0>
+Execute:  4 / 61 <input/queries/007_ns#0>
+Execute:  5 / 61 <input/queries/009_ns#0>
+Execute:  6 / 61 <input/queries/016_ns#0>
+Execute:  7 / 61 <input/queries/017_ns#0>
+Execute:  8 / 61 <input/queries/018_ns#0>
+Execute:  9 / 61 <input/queries/019_ns#0>
+Execute: 10 / 61 <input/queries/020_ns#0>
+Execute: 11 / 61 <input/queries/109_uniprot_transporter_in_liver_ns#0>
+Execute: 12 / 61 <input/queries/11_ns#0>
+Error: Unexpected "A" at position 0 in state STOP
+Execute: 13 / 61 <input/queries/12_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 18:
+... ?rhea rh:accession ?accession .  ?rhea
+-----------------------^
+Expecting '(', 'NIL', got 'VAR'
+Execute: 14 / 61 <input/queries/13_ns#0>
+Error: Unexpected "A" at position 0 in state STOP
+Execute: 15 / 61 <input/queries/14_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 21:
+...node2_mbgd)    }  FILTER NOT EXISTS { 
+---------------------^
+Expecting 'EOF', '}', 'GROUP', 'HAVING', 'ORDER', 'LIMIT', 'OFFSET', 'VALUES', got 'FILTER'
+Execute: 16 / 61 <input/queries/16_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 17 / 61 <input/queries/17_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 18 / 61 <input/queries/18_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 12:
+...sease        }    ?gene rdfs:seeAlso ?
+---------------------^
+Expecting 'EOF', '}', 'GROUP', 'HAVING', 'ORDER', 'LIMIT', 'OFFSET', 'VALUES', got 'VAR'
+Execute: 19 / 61 <input/queries/19_draft_human_metabolome_ns#0>
+Error: Unexpected "A" at position 0 in state STOP
+Execute: 20 / 61 <input/queries/19_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 21 / 61 <input/queries/20_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 22 / 61 <input/queries/20_search_chemical_names_in_japanese_ns#0>
+Execute: 23 / 61 <input/queries/26_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 24 / 61 <input/queries/27_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 25 / 61 <input/queries/29_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 26 / 61 <input/queries/34_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 27 / 61 <input/queries/36_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 28 / 61 <input/queries/38_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 29 / 61 <input/queries/3_ns#0>
+Error: Unexpected "A" at position 0 in state STOP
+Execute: 30 / 61 <input/queries/40_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 31 / 61 <input/queries/42_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://data.epo.org/linked-data/query (HTTP status 404):
+Error 404: Service Description: /ds/query
+
+Execute: 32 / 61 <input/queries/43_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://data.epo.org/linked-data/query (HTTP status 404):
+Error 404: Service Description: /ds/query
+
+Execute: 33 / 61 <input/queries/45_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 34 / 61 <input/queries/46_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 26:
+...tion> ?image .    }
+----------------------^
+Expecting 'IRIREF', 'PNAME_NS', '{', '}', '(', 'INTEGER', 'VALUES', 'VAR', 'NIL', 'GRAPH', 'OPTIONAL', 'MINUS', 'SERVICE', 'FILTER', 'BIND', '[', 'DECIMAL', 'DOUBLE', 'BOOLEAN', 'INTEGER_POSITIVE', 'DECIMAL_POSITIVE', 'DOUBLE_POSITIVE', 'INTEGER_NEGATIVE', 'DECIMAL_NEGATIVE', 'DOUBLE_NEGATIVE', 'STRING_LITERAL1', 'STRING_LITERAL2', 'STRING_LITERAL_LONG1', 'STRING_LITERAL_LONG2', 'PNAME_LN', 'BLANK_NODE_LABEL', 'ANON', '<<', '.', 'UNION', got 'EOF'
+Execute: 35 / 61 <input/queries/48_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 36 / 61 <input/queries/49_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 37 / 61 <input/queries/50_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 23:
+...ssOf* CHEBI:52639  ?protein up:organism
+----------------------^
+Expecting '{', '}', 'VALUES', 'GRAPH', 'OPTIONAL', 'MINUS', 'SERVICE', 'FILTER', 'BIND', ';', ']', ',', '{|', '|}', '.', got 'VAR'
+Execute: 38 / 61 <input/queries/51_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 39 / 61 <input/queries/52_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 40 / 61 <input/queries/53_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 20:
+...ssOf* CHEBI:15889  ?humanProtein up:org
+----------------------^
+Expecting '{', '}', 'VALUES', 'GRAPH', 'OPTIONAL', 'MINUS', 'SERVICE', 'FILTER', 'BIND', ';', ']', ',', '{|', '|}', '.', got 'VAR'
+Execute: 41 / 61 <input/queries/54_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://idsm.elixir-czech.cz/sparql/endpoint/chebi (HTTP status 400):
+error: 1:35-38 'mismatched input 'null' expecting {IRIREF, PNAME_NS, PNAME_LN, VAR1, VAR2}'
+
+Execute: 42 / 61 <input/queries/5_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 43 / 61 <input/queries/60_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://idsm.elixir-czech.cz/sparql/endpoint/chebi (HTTP status 400):
+error: 1:35-38 'mismatched input 'null' expecting {IRIREF, PNAME_NS, PNAME_LN, VAR1, VAR2}'
+
+Execute: 44 / 61 <input/queries/67_draft_human_metabolome_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 45 / 61 <input/queries/6_ns#0>
+Error: Unknown SPARQL results content type: 
+Execute: 46 / 61 <input/queries/70_enzymes_interacting_with_molecules_similar_to_dopamine_ns#0>
+Endpoint not available yet, waited for 1 seconds...
+Endpoint not available yet, waited for 2 seconds...
+Endpoint not available yet, waited for 3 seconds...
+Endpoint not available yet, waited for 4 seconds...
+Endpoint not available yet, waited for 5 seconds...
+Endpoint not available yet, waited for 6 seconds...
+Endpoint not available yet, waited for 7 seconds...
+Endpoint available after 7 seconds
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://idsm.elixir-czech.cz/sparql/endpoint/chebi (HTTP status 400):
+error: 1:35-38 'mismatched input 'null' expecting {IRIREF, PNAME_NS, PNAME_LN, VAR1, VAR2}'
+
+Execute: 47 / 61 <input/queries/71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://idsm.elixir-czech.cz/sparql/endpoint/chebi (HTTP status 400):
+error: 1:35-38 'mismatched input 'null' expecting {IRIREF, PNAME_NS, PNAME_LN, VAR1, VAR2}'
+
+Execute: 48 / 61 <input/queries/7_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 49 / 61 <input/queries/90_uniprot_affected_by_metabolic_diseases_using_MeSH_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 50 / 61 <input/queries/92_uniprot_bioregistry_iri_translation_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 51 / 61 <input/queries/99_uniprot_identifiers_org_translation_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 52 / 61 <input/queries/a_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://idsm.elixir-czech.cz/sparql/endpoint/chebi (HTTP status 400):
+error: 1:35-38 'mismatched input 'null' expecting {IRIREF, PNAME_NS, PNAME_LN, VAR1, VAR2}'
+
+Execute: 53 / 61 <input/queries/emi#examples011a_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://qlever.cs.uni-freiburg.de/api/wikidata (HTTP status 404):
+Unknown path
+Execute: 54 / 61 <input/queries/emi#examples011b_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://qlever.cs.uni-freiburg.de/api/wikidata (HTTP status 404):
+Unknown path
+Execute: 55 / 61 <input/queries/emi#examples012_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 39:
+...d in wikidata)			 	?wd_chem wdt:P235 ?s
+----------------------^
+Expecting '{', got 'VAR'
+Execute: 56 / 61 <input/queries/emi#examples013_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 31:
+...d in wikidata)			 	?wd_chem wdt:P235 ?s
+----------------------^
+Expecting '{', got 'VAR'
+Execute: 57 / 61 <input/queries/emi#examples015_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 40:
+...wikidata)		      		?wd_chem wdt:P235 ?i
+----------------------^
+Expecting '{', got 'VAR'
+Execute: 58 / 61 <input/queries/emi#examples018_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 28:
+...ted in wikidata)			?wd_chem wdt:P235 ?i
+----------------------^
+Expecting '{', got 'VAR'
+Execute: 59 / 61 <input/queries/emi#examples019a_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://qlever.cs.uni-freiburg.de/api/wikidata (HTTP status 404):
+Unknown path
+Execute: 60 / 61 <input/queries/emi#examples019b_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 63:
+...ted in wikidata)		 ?wd_chem wdt:P235 ?s
+----------------------^
+Expecting '{', got 'VAR'
+Execute: 61 / 61 <input/queries/emi#examples021_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 36:
+...ata from wikidata		?wd_chem wdt:P235 ?i
+----------------------^
+Expecting '{', got 'VAR'
+Warmup done in 6 minutes
+Executing 61 query sets, containing 61 queries, with replication of 1
+Execute:  1 / 61 <input/queries/001_ns#0>
+Execute:  2 / 61 <input/queries/002_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 23:
+...Of ?wd_id .        SELECT * WHERE {   
+----------------------^
+Expecting 'IRIREF', 'PNAME_NS', '{', '}', '(', 'INTEGER', 'VALUES', 'VAR', 'NIL', 'GRAPH', 'OPTIONAL', 'MINUS', 'SERVICE', 'FILTER', 'BIND', '[', 'DECIMAL', 'DOUBLE', 'BOOLEAN', 'INTEGER_POSITIVE', 'DECIMAL_POSITIVE', 'DOUBLE_POSITIVE', 'INTEGER_NEGATIVE', 'DECIMAL_NEGATIVE', 'DOUBLE_NEGATIVE', 'STRING_LITERAL1', 'STRING_LITERAL2', 'STRING_LITERAL_LONG1', 'STRING_LITERAL_LONG2', 'PNAME_LN', 'BLANK_NODE_LABEL', 'ANON', '<<', got 'SELECT'
+Execute:  3 / 61 <input/queries/006_ns#0>
+Execute:  4 / 61 <input/queries/007_ns#0>
+Execute:  5 / 61 <input/queries/009_ns#0>
+Execute:  6 / 61 <input/queries/016_ns#0>
+Error: Unexpected "A" at position 0 in state STOP
+Execute:  7 / 61 <input/queries/017_ns#0>
+Error: Unexpected "A" at position 0 in state STOP
+Execute:  8 / 61 <input/queries/018_ns#0>
+Execute:  9 / 61 <input/queries/019_ns#0>
+Execute: 10 / 61 <input/queries/020_ns#0>
+Execute: 11 / 61 <input/queries/109_uniprot_transporter_in_liver_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 12 / 61 <input/queries/11_ns#0>
+Error: Unexpected "A" at position 0 in state STOP
+Execute: 13 / 61 <input/queries/12_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 18:
+... ?rhea rh:accession ?accession .  ?rhea
+-----------------------^
+Expecting '(', 'NIL', got 'VAR'
+Execute: 14 / 61 <input/queries/13_ns#0>
+Error: Unexpected "A" at position 0 in state STOP
+Execute: 15 / 61 <input/queries/14_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 21:
+...node2_mbgd)    }  FILTER NOT EXISTS { 
+---------------------^
+Expecting 'EOF', '}', 'GROUP', 'HAVING', 'ORDER', 'LIMIT', 'OFFSET', 'VALUES', got 'FILTER'
+Execute: 16 / 61 <input/queries/16_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 17 / 61 <input/queries/17_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 18 / 61 <input/queries/18_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 12:
+...sease        }    ?gene rdfs:seeAlso ?
+---------------------^
+Expecting 'EOF', '}', 'GROUP', 'HAVING', 'ORDER', 'LIMIT', 'OFFSET', 'VALUES', got 'VAR'
+Execute: 19 / 61 <input/queries/19_draft_human_metabolome_ns#0>
+Error: Unexpected "A" at position 0 in state STOP
+Execute: 20 / 61 <input/queries/19_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 21 / 61 <input/queries/20_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 22 / 61 <input/queries/20_search_chemical_names_in_japanese_ns#0>
+Execute: 23 / 61 <input/queries/26_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 24 / 61 <input/queries/27_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 25 / 61 <input/queries/29_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 26 / 61 <input/queries/34_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 27 / 61 <input/queries/36_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 28 / 61 <input/queries/38_ns#0>
+Error: Unknown SPARQL results content type: 
+Execute: 29 / 61 <input/queries/3_ns#0>
+Endpoint not available yet, waited for 1 seconds...
+Endpoint not available yet, waited for 2 seconds...
+Endpoint not available yet, waited for 3 seconds...
+Endpoint not available yet, waited for 4 seconds...
+Endpoint not available yet, waited for 5 seconds...
+Endpoint not available yet, waited for 6 seconds...
+Endpoint not available yet, waited for 7 seconds...
+Endpoint available after 7 seconds
+Error: Unexpected "A" at position 0 in state STOP
+Execute: 30 / 61 <input/queries/40_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 31 / 61 <input/queries/42_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://data.epo.org/linked-data/query (HTTP status 404):
+Error 404: Service Description: /ds/query
+
+Execute: 32 / 61 <input/queries/43_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://data.epo.org/linked-data/query (HTTP status 404):
+Error 404: Service Description: /ds/query
+
+Execute: 33 / 61 <input/queries/45_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 34 / 61 <input/queries/46_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 26:
+...tion> ?image .    }
+----------------------^
+Expecting 'IRIREF', 'PNAME_NS', '{', '}', '(', 'INTEGER', 'VALUES', 'VAR', 'NIL', 'GRAPH', 'OPTIONAL', 'MINUS', 'SERVICE', 'FILTER', 'BIND', '[', 'DECIMAL', 'DOUBLE', 'BOOLEAN', 'INTEGER_POSITIVE', 'DECIMAL_POSITIVE', 'DOUBLE_POSITIVE', 'INTEGER_NEGATIVE', 'DECIMAL_NEGATIVE', 'DOUBLE_NEGATIVE', 'STRING_LITERAL1', 'STRING_LITERAL2', 'STRING_LITERAL_LONG1', 'STRING_LITERAL_LONG2', 'PNAME_LN', 'BLANK_NODE_LABEL', 'ANON', '<<', '.', 'UNION', got 'EOF'
+Execute: 35 / 61 <input/queries/48_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 36 / 61 <input/queries/49_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 37 / 61 <input/queries/50_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 23:
+...ssOf* CHEBI:52639  ?protein up:organism
+----------------------^
+Expecting '{', '}', 'VALUES', 'GRAPH', 'OPTIONAL', 'MINUS', 'SERVICE', 'FILTER', 'BIND', ';', ']', ',', '{|', '|}', '.', got 'VAR'
+Execute: 38 / 61 <input/queries/51_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 39 / 61 <input/queries/52_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 40 / 61 <input/queries/53_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 20:
+...ssOf* CHEBI:15889  ?humanProtein up:org
+----------------------^
+Expecting '{', '}', 'VALUES', 'GRAPH', 'OPTIONAL', 'MINUS', 'SERVICE', 'FILTER', 'BIND', ';', ']', ',', '{|', '|}', '.', got 'VAR'
+Execute: 41 / 61 <input/queries/54_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://idsm.elixir-czech.cz/sparql/endpoint/chebi (HTTP status 400):
+error: 1:35-38 'mismatched input 'null' expecting {IRIREF, PNAME_NS, PNAME_LN, VAR1, VAR2}'
+
+Execute: 42 / 61 <input/queries/5_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 43 / 61 <input/queries/60_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://idsm.elixir-czech.cz/sparql/endpoint/chebi (HTTP status 400):
+error: 1:35-38 'mismatched input 'null' expecting {IRIREF, PNAME_NS, PNAME_LN, VAR1, VAR2}'
+
+Execute: 44 / 61 <input/queries/67_draft_human_metabolome_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 45 / 61 <input/queries/6_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 46 / 61 <input/queries/70_enzymes_interacting_with_molecules_similar_to_dopamine_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://idsm.elixir-czech.cz/sparql/endpoint/chebi (HTTP status 400):
+error: 1:35-38 'mismatched input 'null' expecting {IRIREF, PNAME_NS, PNAME_LN, VAR1, VAR2}'
+
+Execute: 47 / 61 <input/queries/71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://idsm.elixir-czech.cz/sparql/endpoint/chebi (HTTP status 400):
+error: 1:35-38 'mismatched input 'null' expecting {IRIREF, PNAME_NS, PNAME_LN, VAR1, VAR2}'
+
+Execute: 48 / 61 <input/queries/7_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 49 / 61 <input/queries/90_uniprot_affected_by_metabolic_diseases_using_MeSH_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 50 / 61 <input/queries/92_uniprot_bioregistry_iri_translation_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 51 / 61 <input/queries/99_uniprot_identifiers_org_translation_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+fetch failed
+Execute: 52 / 61 <input/queries/a_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://idsm.elixir-czech.cz/sparql/endpoint/chebi (HTTP status 400):
+error: 1:35-38 'mismatched input 'null' expecting {IRIREF, PNAME_NS, PNAME_LN, VAR1, VAR2}'
+
+Execute: 53 / 61 <input/queries/emi#examples011a_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://qlever.cs.uni-freiburg.de/api/wikidata (HTTP status 404):
+Unknown path
+Execute: 54 / 61 <input/queries/emi#examples011b_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://qlever.cs.uni-freiburg.de/api/wikidata (HTTP status 404):
+Unknown path
+Execute: 55 / 61 <input/queries/emi#examples012_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 39:
+...d in wikidata)			 	?wd_chem wdt:P235 ?s
+----------------------^
+Expecting '{', got 'VAR'
+Execute: 56 / 61 <input/queries/emi#examples013_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 31:
+...d in wikidata)			 	?wd_chem wdt:P235 ?s
+----------------------^
+Expecting '{', got 'VAR'
+Execute: 57 / 61 <input/queries/emi#examples015_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 40:
+...wikidata)		      		?wd_chem wdt:P235 ?i
+----------------------^
+Expecting '{', got 'VAR'
+Execute: 58 / 61 <input/queries/emi#examples018_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 28:
+...ted in wikidata)			?wd_chem wdt:P235 ?i
+----------------------^
+Expecting '{', got 'VAR'
+Execute: 59 / 61 <input/queries/emi#examples019a_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://qlever.cs.uni-freiburg.de/api/wikidata (HTTP status 404):
+Unknown path
+Execute: 60 / 61 <input/queries/emi#examples019b_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 63:
+...ted in wikidata)		 ?wd_chem wdt:P235 ?s
+----------------------^
+Expecting '{', got 'VAR'
+Execute: 61 / 61 <input/queries/emi#examples021_ns#0>
+Error: Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Parse error on line 36:
+...ata from wikidata		?wd_chem wdt:P235 ?i
+----------------------^
+Expecting '{', got 'VAR'
+Executions done in 7 minutes
+[37mWriting results to /users/ecrumuge/realfedinit/experiments/no-service-comboi/combinations/combination_0/output[39m
+[37m[39m
+[37m✨ Done in 802.77s[39m

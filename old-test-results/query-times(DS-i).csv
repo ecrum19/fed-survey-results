@@ -1,0 +1,89 @@
+name;id;error;errorDescription;failures;hash;httpRequests;httpRequestsMax;httpRequestsMin;httpRequestsStd;replication;results;resultsMax;resultsMin;time;timeMax;timeMin;times;timestamps;timestampsMax;timestampsMin;timestampsStd;timeStd
+input/queries/001;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;3;3;3;0;1;0;0;0;14616;14616;14616;14616;;;;;0
+input/queries/002;0;true;Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://idsm.elixir-czech.cz/sparql/endpoint/wikidata (HTTP status 400):
+error: 1:35-38 'mismatched input 'null' expecting {IRIREF, PNAME_NS, PNAME_LN, VAR1, VAR2}'
+;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/006;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;1;1;1;0;1;0;0;0;48;48;48;48;;;;;0
+input/queries/007;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;3;3;3;0;1;0;0;0;3935;3935;3935;3935;;;;;0
+input/queries/009;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;3;3;3;0;1;0;0;0;4549;4549;4549;4549;;;;;0
+input/queries/016;0;true;Unknown SPARQL results content type: ;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/017;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;3;3;3;0;1;0;0;0;3489;3489;3489;3489;;;;;0
+input/queries/018;0;true;Unknown SPARQL results content type: ;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/019;0;true;Unknown SPARQL results content type: ;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/020;0;true;Unknown SPARQL results content type: ;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/109_uniprot_transporter_in_liver;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;3;3;3;0;1;0;0;0;3708;3708;3708;3708;;;;;0
+input/queries/11;0;false;;0;67841dc5feb14433aef857d42b87d63a;3;3;3;0;1;7;7;7;3005;3005;3005;3005;3005 3005 3005 3005 3005 3005 3005;3005 3005 3005 3005 3005 3005 3005;3005 3005 3005 3005 3005 3005 3005;0 0 0 0 0 0 0;0
+input/queries/12;0;false;;0;7504c7e266f39c8cc3266c62b9720a9f;4;4;4;0;1;12854;12854;
+input/queries/13;0;true;Unexpected "A" at position 0 in state STOP;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/14;0;true;Unexpected "A" at position 0 in state STOP;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/16;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;5;5;5;0;1;0;0;0;3310;3310;3310;3310;;;;;0
+input/queries/17;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;3;3;3;0;1;0;0;0;3322;3322;3322;3322;;;;;0
+input/queries/18;0;true;Unknown SPARQL results content type: ;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/19;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;5;5;5;0;1;0;0;0;3669;3669;3669;3669;;;;;0
+input/queries/19_draft_human_metabolome;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;3;3;3;0;1;0;0;0;3398;3398;3398;3398;;;;;0
+input/queries/20;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;3;3;3;0;1;0;0;0;298;298;298;298;;;;;0
+input/queries/20_search_chemical_names_in_japanese;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;1;1;1;0;1;0;0;0;140;140;140;140;;;;;0
+input/queries/26;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;5;5;5;0;1;0;0;0;3427;3427;3427;3427;;;;;0
+input/queries/27;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;5;5;5;0;1;0;0;0;3359;3359;3359;3359;;;;;0
+input/queries/29;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;4;4;4;0;1;0;0;0;2299;2299;2299;2299;;;;;0
+input/queries/3;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;3;3;3;0;1;0;0;0;3342;3342;3342;3342;;;;;0
+input/queries/34;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;5;5;5;0;1;0;0;0;3411;3411;3411;3411;;;;;0
+input/queries/36;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;3;3;3;0;1;0;0;0;349;349;349;349;;;;;0
+input/queries/38;0;false;;0;40ab5b19979dc28b107d855f5f99bab5;6;6;6;0;1;2;2;2;12401;12401;12401;12401;12229 12229;12229 12229;12229 12229;0 0;0
+input/queries/40;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;3;3;3;0;1;0;0;0;1110;1110;1110;1110;;;;;0
+input/queries/42;0;true;Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://data.epo.org/linked-data/query (HTTP status 404):
+Error 404: Service Description: /ds/query
+;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/43;0;true;Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://data.epo.org/linked-data/query (HTTP status 404):
+Error 404: Service Description: /ds/query
+;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/45;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;5;5;5;0;1;0;0;0;4036;4036;4036;4036;;;;;0
+input/queries/46;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;3;3;3;0;1;0;0;0;328;328;328;328;;;;;0
+input/queries/48;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;3;3;3;0;1;0;0;0;3844;3844;3844;3844;;;;;0
+input/queries/49;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;5;5;5;0;1;0;0;0;3405;3405;3405;3405;;;;;0
+input/queries/5;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;3;3;3;0;1;0;0;0;2513;2513;2513;2513;;;;;0
+input/queries/50;0;true;Unexpected "!" at position 0 in state STOP;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/51;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;4;4;4;0;1;0;0;0;1096;1096;1096;1096;;;;;0
+input/queries/52;0;true;Unexpected "!" at position 0 in state STOP;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/53;0;true;Unknown SPARQL results content type: ;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/54;0;true;Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://idsm.elixir-czech.cz/sparql/endpoint/chebi (HTTP status 400):
+error: 1:35-38 'mismatched input 'null' expecting {IRIREF, PNAME_NS, PNAME_LN, VAR1, VAR2}'
+;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/6;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;5;5;5;0;1;0;0;0;3500;3500;3500;3500;;;;;0
+input/queries/60;0;true;Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://idsm.elixir-czech.cz/sparql/endpoint/chebi (HTTP status 400):
+error: 1:35-38 'mismatched input 'null' expecting {IRIREF, PNAME_NS, PNAME_LN, VAR1, VAR2}'
+;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/67_draft_human_metabolome;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;5;5;5;0;1;0;0;0;78322;78322;78322;78322;;;;;0
+input/queries/7;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;5;5;5;0;1;0;0;0;3369;3369;3369;3369;;;;;0
+input/queries/70_enzymes_interacting_with_molecules_similar_to_dopamine;0;true;Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://idsm.elixir-czech.cz/sparql/endpoint/chebi (HTTP status 400):
+error: 1:35-38 'mismatched input 'null' expecting {IRIREF, PNAME_NS, PNAME_LN, VAR1, VAR2}'
+;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease;0;true;Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://idsm.elixir-czech.cz/sparql/endpoint/chebi (HTTP status 400):
+error: 1:35-38 'mismatched input 'null' expecting {IRIREF, PNAME_NS, PNAME_LN, VAR1, VAR2}'
+;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/90_uniprot_affected_by_metabolic_diseases_using_MeSH;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;3;3;3;0;1;0;0;0;1223;1223;1223;1223;;;;;0
+input/queries/92_uniprot_bioregistry_iri_translation;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;3;3;3;0;1;0;0;0;789;789;789;789;;;;;0
+input/queries/99_uniprot_identifiers_org_translation;0;true;Unknown SPARQL results content type: ;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/a;0;false;;0;eb414db4ef347439632faf4bfd22f21e;3;3;3;0;1;137;137;137;1018;1018;1018;
+input/queries/emi#examples011a;0;true;Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://qlever.cs.uni-freiburg.de/api/wikidata (HTTP status 404):
+Unknown path;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/emi#examples011b;0;true;Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://qlever.cs.uni-freiburg.de/api/wikidata (HTTP status 404):
+Unknown path;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/emi#examples012;0;true;Unknown SPARQL results content type: ;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/emi#examples013;0;true;Unknown SPARQL results content type: ;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/emi#examples015;0;true;Unknown SPARQL results content type: ;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/emi#examples018;0;true;Unknown SPARQL results content type: ;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/emi#examples019a;0;true;Invalid SPARQL endpoint response from http://localhost:3001/sparql (HTTP status 400):
+Could not retrieve https://qlever.cs.uni-freiburg.de/api/wikidata (HTTP status 404):
+Unknown path;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/emi#examples019b;0;true;Unknown SPARQL results content type: ;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
+input/queries/emi#examples021;0;true;Unknown SPARQL results content type: ;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN
