@@ -299,7 +299,6 @@ Output:
 {"chebi":{"value":"http://purl.obolibrary.org/obo/CHEBI_70846","type":"uri"},"name":{"value":"Ceramide (iso-d17:1(4E))","type":"literal"},"startName":{"value":"Ceramide","type":"literal"},"rhea":{"value":"http://rdf.rhea-db.org/34711","type":"uri"},"id":{"value":"https://swisslipids.org/rdf/SLM_000000002","type":"uri"},"startId":{"value":"https://swisslipids.org/rdf/SLM_000399814","type":"uri"},"rheaEquation":{"value":"an N-acyl-15-methylhexadecasphing-4-enine + H2O = 15-methylhexadecasphing-4-enine + a fatty acid","type":"literal"}}
 ]},
 "metadata": { "httpRequests": 59500 }}
-
 Timestamp (end): 2025-09-03T03:27:30.228425
 
 Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://biosoda.unil.ch/emi/sparql https://query.wikidata.org/sparql -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch2/001_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/testbatch2/001_ns.rq.log --httpRetryCount=10000
@@ -315,7 +314,6 @@ Output:
 
 ]},
 "metadata": { "httpRequests": 6 }}
-
 Timestamp (end): 2025-09-03T03:27:53.922303
 
 Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.omabrowser.org/sparql https://sparql.uniprot.org/sparql/ -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch2/3_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/testbatch2/3_ns.rq.log --httpRetryCount=10000

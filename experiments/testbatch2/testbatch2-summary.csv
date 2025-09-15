@@ -1,0 +1,17 @@
+query_name,sources,start,end,duration_seconds,produced_results,results_count,error
+testbatch2,None,2025-09-02T10:17:00.718430,2025-09-05T18:48:22.782877,289882.064447,2,1,13
+018_ns.rq,"['https://www.bgee.org/sparql', 'https://sparql.omabrowser.org/sparql']",2025-09-02T10:17:00.718579,2025-09-02T10:17:25.782577,25.063998,False,0,Unknown Error
+019_ns.rq,"['https://www.bgee.org/sparql', 'https://sparql.omabrowser.org/sparql']",2025-09-02T10:17:26.783431,2025-09-02T10:17:51.804119,25.020688,False,0,Unknown Error
+017_ns.rq,"['https://www.bgee.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-09-02T10:17:52.805163,2025-09-02T10:18:17.798192,24.993029,False,0,fetch failed
+020_ns.rq,"['https://www.bgee.org/sparql', 'https://sparql.omabrowser.org/sparql']",2025-09-02T10:18:18.799254,2025-09-02T10:18:43.859694,25.06044,False,0,fetch failed
+11_ns.rq,"['https://sparql.rhea-db.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-09-02T10:18:44.860776,2025-09-03T03:15:36.459994,61011.599218,False,0,Request failed: https://sparql.uniprot.org/sparql/
+5_ns.rq,"['https://beta.sparql.swisslipids.org/sparql', 'https://sparql.rhea-db.org/sparql']",2025-09-03T03:15:37.461076,2025-09-03T03:27:30.228425,712.767349,True,266,None
+001_ns.rq,"['https://biosoda.unil.ch/emi/sparql', 'https://query.wikidata.org/sparql']",2025-09-03T03:27:31.229452,2025-09-03T03:27:48.420323,17.190871,False,0,Unknown Error
+7_ns.rq,"['https://beta.sparql.swisslipids.org/sparql', 'https://sparql.rhea-db.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-09-03T03:27:49.421338,2025-09-03T03:27:53.922303,4.500965,True,0,None
+3_ns.rq,"['https://sparql.omabrowser.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-09-03T03:27:54.923306,2025-09-03T04:03:03.287080,2108.363774,False,0,Request failed: https://sparql.omabrowser.org/sparql-sd/
+006_ns.rq,"['https://biosoda.unil.ch/emi/sparql', 'https://query.wikidata.org/sparql']",2025-09-03T04:03:04.288148,2025-09-03T04:03:21.537868,17.24972,False,0,Unknown Error
+13_ns.rq,"['https://sparql.rhea-db.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-09-03T04:03:22.539015,2025-09-03T15:42:15.247239,41932.708224,False,0,fetch failed
+20_search_chemical_names_in_japanese_ns.rq,"['https://sparql.rhea-db.org/sparql', 'https://data.allie.dbcls.jp/sparql']",2025-09-03T15:42:16.248278,2025-09-03T16:41:11.381189,3535.132911,False,0,fetch failed
+6_ns.rq,"['https://beta.sparql.swisslipids.org/sparql', 'https://sparql.rhea-db.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-09-03T16:41:12.382226,2025-09-05T18:47:03.678125,180351.295899,False,0,Unknown Error
+12_ns.rq,"['https://sparql.rhea-db.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-09-05T18:47:04.679192,2025-09-05T18:48:17.415400,72.736208,False,0,Unknown Error
+016_ns.rq,"['https://www.bgee.org/sparql', 'https://sparql.uniprot.org/sparql', 'https://sparql.omabrowser.org/sparql']",2025-09-05T18:48:18.416391,2025-09-05T18:48:22.782707,4.366316,False,0,Unknown Error
