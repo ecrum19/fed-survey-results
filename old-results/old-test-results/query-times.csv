@@ -1,0 +1,37 @@
+name;id;error;errorDescription;failures;hash;httpRequests;httpRequestsMax;httpRequestsMin;httpRequestsStd;replication;results;resultsMax;resultsMin;time;timeMax;timeMin;times;timestamps;timestampsMax;timestampsMin;timestampsStd;timeStd
+"3;0;true;Unexpected ""A"" at position 111 in state STOP;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN"
+5;0;false;;0;9df8c6273d1491abd1bcc8bd7d0770c1;4;4;4;0;1;267;267;267;23018;23018;23018;23018;22954 22954 22954 22954 
+"6;0;true;Unexpected ""!"" at position 0 in state STOP;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN"
+11;0;false;;0;9aef8fb11e61aebbe22757a5c7c7b3ef;3;3;3;0;1;7;7;7;2033;2033;2033;2033;2031 2031 2031 2031 2031 2031 2031;2031 2031 2031 2031 2031 2031 2031;2031 2031 2031 2031 2031 2031 2031;0 0 0 0 0 0 0;0
+12;0;false;;0;92b841505a0f69f8db762ce22bc5608b;4;4;4;0;1;12719;12719;12719;8634;8634;8634;8634;7324 7324 7325 7325 
+"16;0;true;Unexpected ""!"" at position 0 in state STOP;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN"
+"26;0;true;Unexpected ""!"" at position 0 in state STOP;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN"
+"27;0;true;Unexpected ""!"" at position 0 in state STOP;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN"
+29;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;4;4;4;0;1;0;0;0;6481;6481;6481;6481;;;;;0
+"34;0;true;Unexpected ""!"" at position 0 in state STOP;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN"
+38;0;false;;0;40ab5b19979dc28b107d855f5f99bab5;3;3;3;0;1;2;2;2;1818;1818;1818;1818;1815 1815;1815 1815;1815 1815;0 0;0
+"40;0;true;Unexpected ""!"" at position 0 in state STOP;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN"
+42;0;false;;0;1919badf3fe7e906b0b638c1163e8d9c;3;3;3;0;1;66;66;66;4818;4818;4818;4818;4799 4799 4799 4799 4799 4799 
+43;0;false;;0;18a56b52b43b78ed22d2a8d2127488da;4;4;4;0;1;71;71;71;13703;13703;13703;13703;13682 13683 13683 13683 
+45;0;false;;0;c64e80a1cc7f6bc37bb2c84656e1f61f;4;4;4;0;1;26;26;26;146489;146489;146489;146489;146486 146486 146486 
+"49;0;true;Unexpected ""A"" at position 0 in state STOP;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN"
+51;0;false;;0;c26e606f51ff8f062bc5e6ea83178b3d;3;3;3;0;1;24733;24733;24733;5427;5427;5427;5427;3498 3498 3498 3498 
+"52;0;true;Unexpected ""!"" at position 0 in state STOP;1;;;;;;1;0;0;0;0;0;0;NaN;86752 86752 86752 86752 86752 86752 
+53;0;false;;0;78362e5a020d73713543d3ec6ea486fb;4;4;4;0;1;29743;29743;29743;181702;181702;181702;181702;6404 6408 
+001;0;false;;0;0354fb705b65d4510b7d51d1abe3e04a;4;4;4;0;1;10;10;10;11354;11354;11354;11354;11352 11352 11352 11352 11352 11352 11352 11353 11353 11353;11352 11352 11352 11352 11352 11352 11352 11353 11353 11353;11352 11352 11352 11352 11352 11352 11352 11353 11353 11353;0 0 0 0 0 0 0 0 0 0;0
+006;0;false;;0;33b57be5a4bec22971c14867fee7073f;4;4;4;0;1;5;5;5;5704;5704;5704;5704;5702 5703 5703 5703 5703;5702 5703 5703 5703 5703;5702 5703 5703 5703 5703;0 0 0 0 0;0
+007;0;false;;0;8c33d73a3aea913cde601ec2db242151;4;4;4;0;1;92;92;92;8865;8865;8865;8865;8857 8857 8857 8857 8857 8857 
+009;0;false;;0;543e68200b87ac936c511bc3bbfc6b9f;3;3;3;0;1;1;1;1;1306;1306;1306;1306;1305;1305;1305;0;0
+016;0;false;;0;b67dfe7c248282f3b9ccdf43e32a4895;4;4;4;0;1;13;13;13;7875;7875;7875;7875;7873 7873 7873 7873 7873 7873 
+"018;0;true;Unexpected ""!"" at position 0 in state STOP;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN"
+019;0;false;;0;debb9b9b625a051f4481692fca4423ea;4;4;4;0;1;454;454;454;81195;81195;81195;81195;81071 81071 81071 
+109_uniprot_transporter_in_liver;0;false;;0;51cdb711c73505fcd653236cde7e7b3c;4;4;4;0;1;4764;4764;4764;64954;64954;
+19_draft_human_metabolome;0;false;;0;77832772786bbf0483c916a17a4c3f88;4;4;4;0;1;146840;146840;146840;134555;134555;20_search_chemical_names_in_japanese;0;false;;0;d41d8cd98f00b204e9800998ecf8427e;3;3;3;0;1;0;0;0;3722;3722;3722;3722;;;;;0
+"67_draft_human_metabolome;0;true;Unexpected ""!"" at position 0 in state STOP;1;;;;;;1;0;0;0;0;0;0;NaN;5808 5808 "
+"emi#examples011a;0;true;Unexpected ""A"" at position 0 in state STOP;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN"
+"emi#examples011b;0;true;Unexpected ""A"" at position 0 in state STOP;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN"
+emi#examples013;0;false;;0;c72fcf920507497d18c1f181eeb9ac09;4;4;4;0;1;10000;10000;10000;3224;
+emi#examples015;0;false;;0;dd485fa6c7b1aeefb1a1927684b689c0;4;4;4;0;1;10000;10000;10000;2366;2366;2366;
+emi#examples018;0;false;;0;ab9856acffb35323dcb0a53ce52f8423;3;3;3;0;1;1000;1000;1000;395;395;395;395;287 
+"emi#examples019a;0;true;Unexpected ""A"" at position 0 in state STOP;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN"
+"emi#examples019b;0;true;Unexpected ""A"" at position 0 in state STOP;1;;;;;;1;0;0;0;0;0;0;NaN;;;;;NaN"

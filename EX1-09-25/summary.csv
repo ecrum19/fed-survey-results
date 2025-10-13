@@ -1,0 +1,45 @@
+query_name,sources,start,end,duration_seconds,produced_results,results_count,error
+EX1-09-25,None,2025-09-02T10:17:00.718430,2025-09-12T15:32:00.177141,392152.355323,5,4,38
+42_ns.rq,"['https://sparql.uniprot.org/sparql', 'https://data.epo.org/linked-data/query']",2025-09-11T11:10:18.818433,2025-09-11T11:10:35.233723,16.41529,True,66,None
+67_draft_human_metabolome_ns.rq,"['https://sparql.uniprot.org/sparql', 'https://sparql.rhea-db.org/sparql']",2025-09-11T11:10:36.234785,2025-09-11T11:11:55.019837,78.785052,False,0,Aborted
+43_ns.rq,"['https://sparql.uniprot.org/sparql', 'https://data.epo.org/linked-data/query']",2025-09-11T11:11:56.020856,2025-09-11T11:14:54.681688,178.660832,True,71,None
+53_ns.rq,"['https://sparql.uniprot.org/sparql', 'https://sparql.rhea-db.org/sparql', 'https://sparql.omabrowser.org/sparql']",2025-09-11T11:14:55.682845,2025-09-11T11:16:33.175143,97.492298,False,0,Aborted
+40_ns.rq,"['https://sparql.uniprot.org/sparql', 'https://sparql.rhea-db.org/sparql']",2025-09-11T11:16:34.176139,2025-09-11T11:17:54.399902,80.223763,False,0,Aborted
+92_uniprot_bioregistry_iri_translation_ns.rq,"['https://sparql.uniprot.org/sparql', 'https://bioregistry.io/sparql']",2025-09-11T11:17:55.400920,2025-09-11T11:18:00.210291,4.809371,True,194,None
+26_ns.rq,"['https://beta.sparql.swisslipids.org/sparql', 'https://sparql.rhea-db.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-09-11T11:18:01.211213,2025-09-12T04:27:23.275060,61762.063847,False,0,fetch failed
+48_ns.rq,"['https://sparql.uniprot.org/sparql', 'https://glyconnect.expasy.org/sparql']",2025-09-12T04:27:24.275854,2025-09-12T04:28:50.302727,86.026873,False,0,Aborted
+29_ns.rq,"['https://sparql.uniprot.org/sparql', 'https://data.allie.dbcls.jp/sparql']",2025-09-12T04:28:51.303762,2025-09-12T14:07:38.749171,34727.445409,False,0,fetch failed
+19_draft_human_metabolome_ns.rq,"['https://sparql.rhea-db.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-09-12T14:07:39.750260,2025-09-12T14:08:51.834244,72.083984,False,0,Aborted
+51_ns.rq,"['https://sparql.uniprot.org/sparql', 'https://sparql.rhea-db.org/sparql']",2025-09-12T14:08:52.835104,2025-09-12T14:10:10.403488,77.568384,False,0,fetch failed
+34_ns.rq,"['https://beta.sparql.swisslipids.org/sparql', 'https://sparql.rhea-db.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-09-12T14:10:11.404442,2025-09-12T14:11:25.512037,74.107595,False,0,Aborted
+36_ns.rq,"['https://sparql.uniprot.org/sparql', 'https://sparql.orthodb.org/sparql']",2025-09-12T14:11:26.513036,2025-09-12T14:12:53.033527,86.520491,False,0,Aborted
+27_ns.rq,"['https://beta.sparql.swisslipids.org/sparql', 'https://sparql.rhea-db.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-09-12T14:12:54.034511,2025-09-12T15:29:25.619369,4591.584858,False,0,Node.js v22.17.0
+45_ns.rq,"['https://sparql.uniprot.org/sparql', 'https://sparql.rhea-db.org/sparql', 'https://query.wikidata.org/sparql']",2025-09-12T15:29:26.620399,2025-09-12T15:32:00.177017,153.556618,False,0,terminated
+018_ns.rq,"['https://www.bgee.org/sparql', 'https://sparql.omabrowser.org/sparql']",2025-09-02T10:17:00.718579,2025-09-02T10:17:25.782577,25.063998,False,0,fetch failed
+019_ns.rq,"['https://www.bgee.org/sparql', 'https://sparql.omabrowser.org/sparql']",2025-09-02T10:17:26.783431,2025-09-02T10:17:51.804119,25.020688,False,0,fetch failed
+017_ns.rq,"['https://www.bgee.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-09-02T10:17:52.805163,2025-09-02T10:18:17.798192,24.993029,False,0,fetch failed
+020_ns.rq,"['https://www.bgee.org/sparql', 'https://sparql.omabrowser.org/sparql']",2025-09-02T10:18:18.799254,2025-09-02T10:18:43.859694,25.06044,False,0,fetch failed
+11_ns.rq,"['https://sparql.rhea-db.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-09-02T10:18:44.860776,2025-09-03T03:15:36.459994,61011.599218,False,0,Request failed: https://sparql.uniprot.org/sparql/
+5_ns.rq,"['https://beta.sparql.swisslipids.org/sparql', 'https://sparql.rhea-db.org/sparql']",2025-09-03T03:15:37.461076,2025-09-03T03:27:30.228425,712.767349,True,266,None
+001_ns.rq,"['https://biosoda.unil.ch/emi/sparql', 'https://query.wikidata.org/sparql']",2025-09-03T03:27:31.229452,2025-09-03T03:27:48.420323,17.190871,False,0,Request failed: https://biosoda.unil.ch/emi/sparql
+7_ns.rq,"['https://beta.sparql.swisslipids.org/sparql', 'https://sparql.rhea-db.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-09-03T03:27:49.421338,2025-09-03T03:27:53.922303,4.500965,True,0,None
+3_ns.rq,"['https://sparql.omabrowser.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-09-03T03:27:54.923306,2025-09-03T04:03:03.287080,2108.363774,False,0,Request failed: https://sparql.omabrowser.org/sparql-sd/
+006_ns.rq,"['https://biosoda.unil.ch/emi/sparql', 'https://query.wikidata.org/sparql']",2025-09-03T04:03:04.288148,2025-09-03T04:03:21.537868,17.24972,False,0,Request failed: https://biosoda.unil.ch/emi/sparql
+13_ns.rq,"['https://sparql.rhea-db.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-09-03T04:03:22.539015,2025-09-03T15:42:15.247239,41932.708224,False,0,fetch failed
+20_search_chemical_names_in_japanese_ns.rq,"['https://sparql.rhea-db.org/sparql', 'https://data.allie.dbcls.jp/sparql']",2025-09-03T15:42:16.248278,2025-09-03T16:41:11.381189,3535.132911,False,0,fetch failed
+6_ns.rq,"['https://beta.sparql.swisslipids.org/sparql', 'https://sparql.rhea-db.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-09-03T16:41:12.382226,2025-09-05T18:47:03.678125,180351.295899,False,0,fetch failed
+12_ns.rq,"['https://sparql.rhea-db.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-09-05T18:47:04.679192,2025-09-05T18:48:17.415400,72.736208,False,0,Aborted
+016_ns.rq,"['https://www.bgee.org/sparql', 'https://sparql.uniprot.org/sparql', 'https://sparql.omabrowser.org/sparql']",2025-09-05T18:48:18.416391,2025-09-05T18:48:22.782707,4.366316,False,0,Request failed: https://www.bgee.org/sparql
+15-rat-TP53-biosodafrontend_ns.rq,"['https://sparql.omabrowser.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-09-08T14:25:01.122774,2025-09-08T14:25:30.391836,29.269062,False,0,terminated
+emi#examples018_ns.rq,"['https://biosoda.unil.ch/emi/sparql', 'https://qlever.cs.uni']",2025-09-08T14:25:31.392945,2025-09-08T14:25:35.554084,4.161139,False,0,Request failed: https://biosoda.unil.ch/emi/sparql
+emi#examples019b_ns.rq,"['https://biosoda.unil.ch/emi/sparql', 'https://qlever.cs.uni']",2025-09-08T14:25:36.555130,2025-09-08T14:25:40.757300,4.20217,False,0,Request failed: https://biosoda.unil.ch/emi/sparql
+116_biosodafrontend_rabit_mouse_orthologs_ns.rq,"['https://sparql.uniprot.org/sparql', 'https://sparql.omabrowser.org/sparql']",2025-09-08T14:25:41.758277,2025-09-08T14:26:29.311303,47.553026,False,0,terminated
+emi#examples019a_ns.rq,"['https://biosoda.unil.ch/emi/sparql', 'https://qlever.cs.uni']",2025-09-08T14:26:30.312313,2025-09-08T14:26:34.442667,4.130354,False,0,Request failed: https://biosoda.unil.ch/emi/sparql
+emi#examples011a_ns.rq,"['https://biosoda.unil.ch/emi/sparql', 'https://qlever.cs.uni']",2025-09-08T14:26:35.443695,2025-09-08T14:26:39.582267,4.138572,False,0,Request failed: https://biosoda.unil.ch/emi/sparql
+emi#examples015_ns.rq,"['https://biosoda.unil.ch/emi/sparql', 'https://qlever.cs.uni']",2025-09-08T14:26:40.583252,2025-09-08T14:26:44.723676,4.140424,False,0,Request failed: https://biosoda.unil.ch/emi/sparql
+emi#examples012_ns.rq,"['https://biosoda.unil.ch/emi/sparql', 'https://qlever.cs.uni']",2025-09-08T14:26:45.724686,2025-09-08T14:26:49.875176,4.15049,False,0,Request failed: https://biosoda.unil.ch/emi/sparql
+009_ns.rq,"['https://biosoda.unil.ch/emi/sparql', 'https://query.wikidata.org/sparql']",2025-09-08T14:26:50.876169,2025-09-08T14:27:28.714810,37.838641,False,0,Node.js v22.17.0
+emi#examples013_ns.rq,"['https://biosoda.unil.ch/emi/sparql', 'https://qlever.cs.uni']",2025-09-08T14:27:29.715883,2025-09-08T14:27:33.970421,4.254538,False,0,Request failed: https://biosoda.unil.ch/emi/sparql
+007_ns.rq,"['https://biosoda.unil.ch/emi/sparql', 'https://query.wikidata.org/sparql']",2025-09-08T14:27:34.971445,2025-09-08T14:27:39.844827,4.873382,False,0,Request failed: https://biosoda.unil.ch/emi/sparql
+emi#examples021_ns.rq,"['https://biosoda.unil.ch/emi/sparql', 'https://qlever.cs.uni']",2025-09-08T14:27:40.845858,2025-09-08T14:27:44.961792,4.115934,False,0,Request failed: https://biosoda.unil.ch/emi/sparql
+emi#examples011b_ns.rq,"['https://biosoda.unil.ch/emi/sparql', 'https://qlever.cs.uni']",2025-09-08T14:27:45.962815,2025-09-08T14:27:50.054499,4.091684,False,0,Request failed: https://biosoda.unil.ch/emi/sparql
