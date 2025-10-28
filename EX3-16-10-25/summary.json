@@ -1,0 +1,734 @@
+{
+  "general_stats": {
+    "run_start": "2025-10-16T10:08:52.766271",
+    "run_end": "2025-10-23T10:47:07.661548",
+    "run_duration_seconds": 210451.509072
+  },
+  "entries": [
+    {
+      "query_name": "EX3-16-10-25",
+      "sources": "None",
+      "start": "2025-10-16T10:08:52.766271",
+      "end": "2025-10-23T10:47:07.661548",
+      "duration_seconds": 210451.509072,
+      "produced_results": 10,
+      "results_count": 6,
+      "error": 44
+    },
+    {
+      "query_name": "42_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://data.epo.org/linked-data/query"
+      ],
+      "start": "2025-10-16T10:08:52.766426",
+      "end": "2025-10-16T10:09:00.868877",
+      "duration_seconds": 8.102451,
+      "produced_results": true,
+      "results_count": 66,
+      "error": "None"
+    },
+    {
+      "query_name": "67_draft_human_metabolome_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.rhea-db.org/sparql"
+      ],
+      "start": "2025-10-16T10:09:01.869954",
+      "end": "2025-10-16T11:34:11.451601",
+      "duration_seconds": 5109.581647,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "fetch failed"
+    },
+    {
+      "query_name": "109_uniprot_transporter_in_liver_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://www.bgee.org/sparql"
+      ],
+      "start": "2025-10-16T11:34:12.452619",
+      "end": "2025-10-16T11:34:19.526993",
+      "duration_seconds": 7.074374,
+      "produced_results": true,
+      "results_count": 0,
+      "error": "None"
+    },
+    {
+      "query_name": "43_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://data.epo.org/linked-data/query"
+      ],
+      "start": "2025-10-16T11:34:20.528025",
+      "end": "2025-10-16T11:34:27.074981",
+      "duration_seconds": 6.546956,
+      "produced_results": true,
+      "results_count": 71,
+      "error": "None"
+    },
+    {
+      "query_name": "53_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.omabrowser.org/sparql"
+      ],
+      "start": "2025-10-16T11:34:28.076032",
+      "end": "2025-10-16T11:38:33.518411",
+      "duration_seconds": 245.442379,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "terminated"
+    },
+    {
+      "query_name": "40_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.rhea-db.org/sparql"
+      ],
+      "start": "2025-10-16T11:38:34.519415",
+      "end": "2025-10-16T11:39:39.701329",
+      "duration_seconds": 65.181914,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "fetch failed"
+    },
+    {
+      "query_name": "92_uniprot_bioregistry_iri_translation_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://bioregistry.io/sparql"
+      ],
+      "start": "2025-10-16T11:39:40.702330",
+      "end": "2025-10-16T11:39:45.791378",
+      "duration_seconds": 5.089048,
+      "produced_results": true,
+      "results_count": 0,
+      "error": "None"
+    },
+    {
+      "query_name": "48_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://glyconnect.expasy.org/sparql"
+      ],
+      "start": "2025-10-16T11:39:46.792387",
+      "end": "2025-10-16T11:40:00.772498",
+      "duration_seconds": 13.980111,
+      "produced_results": true,
+      "results_count": 0,
+      "error": "None"
+    },
+    {
+      "query_name": "50_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.rhea-db.org/sparql",
+        "https://www.bgee.org/sparql"
+      ],
+      "start": "2025-10-16T11:40:01.773520",
+      "end": "2025-10-16T11:40:40.221303",
+      "duration_seconds": 38.447783,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "fetch failed"
+    },
+    {
+      "query_name": "29_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://data.allie.dbcls.jp/sparql"
+      ],
+      "start": "2025-10-16T11:40:41.222298",
+      "end": "2025-10-16T11:44:35.162773",
+      "duration_seconds": 233.940475,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://data.allie.dbcls.jp/sparql"
+    },
+    {
+      "query_name": "19_draft_human_metabolome_ns.rq",
+      "sources": [
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2025-10-16T11:44:36.163860",
+      "end": "2025-10-16T11:46:25.062567",
+      "duration_seconds": 108.898707,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Aborted"
+    },
+    {
+      "query_name": "51_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.rhea-db.org/sparql"
+      ],
+      "start": "2025-10-16T11:46:26.063524",
+      "end": "2025-10-16T11:49:33.505914",
+      "duration_seconds": 187.44239,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Aborted"
+    },
+    {
+      "query_name": "36_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.orthodb.org/sparql"
+      ],
+      "start": "2025-10-16T11:49:34.506929",
+      "end": "2025-10-16T11:49:40.000852",
+      "duration_seconds": 5.493923,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Node.js v22.17.0"
+    },
+    {
+      "query_name": "45_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.rhea-db.org/sparql",
+        "https://query.wikidata.org/sparql"
+      ],
+      "start": "2025-10-16T11:49:41.001882",
+      "end": "2025-10-16T11:52:12.860774",
+      "duration_seconds": 151.858892,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "fetch failed"
+    },
+    {
+      "query_name": "019_ns.rq",
+      "sources": [
+        "https://www.bgee.org/sparql",
+        "https://sparql.omabrowser.org/sparql"
+      ],
+      "start": "2025-10-16T12:31:12.237510",
+      "end": "2025-10-16T12:55:13.339805",
+      "duration_seconds": 1441.102295,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://www.bgee.org/sparql?query=SELECT%20%3FtaxonFly%20WHERE%20%7B%20%3Chttps%3A%2F%2Fomabrowser.org%2Foma%2Fgenome%2F28377%3E%20%3Chttp%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FRO_0002162%3E%20%3FtaxonFly.%20%7D"
+    },
+    {
+      "query_name": "19_ns.rq",
+      "sources": [
+        "https://sparql.orthodb.org/sparql",
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.rhea-db.org/sparql"
+      ],
+      "start": "2025-10-16T12:55:14.340739",
+      "end": "2025-10-16T13:03:40.935600",
+      "duration_seconds": 506.594861,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Aborted"
+    },
+    {
+      "query_name": "18_ns.rq",
+      "sources": [
+        "https://sparql.orthodb.org/sparql",
+        "https://sparql.nextprot.org"
+      ],
+      "start": "2025-10-16T13:03:41.936558",
+      "end": "2025-10-16T13:03:58.979470",
+      "duration_seconds": 17.042912,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://idsm.elixir-czech.cz/sparql/endpoint/chebi?query=ASK%20WHERE%20%7B%20%3Fchebi%20%3Chttp%3A%2F%2Fbioinfo.uochb.cas.cz%2Frdf%2Fv1.0%2Fsachem%23substructureSearch%3E%20%3Fg_0.%20%7D"
+    },
+    {
+      "query_name": "017_ns.rq",
+      "sources": [
+        "https://www.bgee.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2025-10-16T13:03:59.980332",
+      "end": "2025-10-16T13:12:46.417563",
+      "duration_seconds": 526.437231,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "fetch failed"
+    },
+    {
+      "query_name": "020_ns.rq",
+      "sources": [
+        "https://www.bgee.org/sparql",
+        "https://sparql.omabrowser.org/sparql"
+      ],
+      "start": "2025-10-16T13:12:47.418557",
+      "end": "2025-10-16T15:02:15.287827",
+      "duration_seconds": 6567.86927,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "fetch failed"
+    },
+    {
+      "query_name": "17_ns.rq",
+      "sources": [
+        "https://sparql.orthodb.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2025-10-16T15:02:16.288873",
+      "end": "2025-10-16T15:02:21.205041",
+      "duration_seconds": 4.916168,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://sparql.uniprot.org/sparql/"
+    },
+    {
+      "query_name": "26_ns.rq",
+      "sources": [
+        "https://beta.sparql.swisslipids.org/sparql",
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2025-10-16T15:02:22.205925",
+      "end": "2025-10-16T15:42:50.426198",
+      "duration_seconds": 2428.220273,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Aborted"
+    },
+    {
+      "query_name": "5_ns.rq",
+      "sources": [
+        "https://beta.sparql.swisslipids.org/sparql",
+        "https://sparql.rhea-db.org/sparql"
+      ],
+      "start": "2025-10-16T15:42:51.427200",
+      "end": "2025-10-16T18:44:00.490705",
+      "duration_seconds": 10869.063505,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "fetch failed"
+    },
+    {
+      "query_name": "16_ns.rq",
+      "sources": [
+        "https://beta.sparql.swisslipids.org/sparql",
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2025-10-16T18:44:01.491640",
+      "end": "2025-10-16T18:45:04.156171",
+      "duration_seconds": 62.664531,
+      "produced_results": true,
+      "results_count": 608,
+      "error": "None"
+    },
+    {
+      "query_name": "7_ns.rq",
+      "sources": [
+        "https://beta.sparql.swisslipids.org/sparql",
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2025-10-16T18:45:05.157232",
+      "end": "2025-10-16T18:45:10.036946",
+      "duration_seconds": 4.879714,
+      "produced_results": true,
+      "results_count": 0,
+      "error": "None"
+    },
+    {
+      "query_name": "34_ns.rq",
+      "sources": [
+        "https://beta.sparql.swisslipids.org/sparql",
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2025-10-16T18:45:11.037982",
+      "end": "2025-10-16T21:52:18.702629",
+      "duration_seconds": 11227.664647,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "fetch failed"
+    },
+    {
+      "query_name": "6_ns.rq",
+      "sources": [
+        "https://beta.sparql.swisslipids.org/sparql",
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2025-10-16T21:52:19.703753",
+      "end": "2025-10-16T21:54:48.640986",
+      "duration_seconds": 148.937233,
+      "produced_results": true,
+      "results_count": 1216,
+      "error": "None"
+    },
+    {
+      "query_name": "016_ns.rq",
+      "sources": [
+        "https://www.bgee.org/sparql",
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.omabrowser.org/sparql"
+      ],
+      "start": "2025-10-16T21:54:49.642050",
+      "end": "2025-10-16T22:22:44.813641",
+      "duration_seconds": 1675.171591,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "fetch failed"
+    },
+    {
+      "query_name": "27_ns.rq",
+      "sources": [
+        "https://beta.sparql.swisslipids.org/sparql",
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2025-10-16T22:22:45.814671",
+      "end": "2025-10-17T09:53:04.279641",
+      "duration_seconds": 41418.46497,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Aborted"
+    },
+    {
+      "query_name": "018_ns.rq",
+      "sources": [
+        "https://www.bgee.org/sparql",
+        "https://sparql.omabrowser.org/sparql"
+      ],
+      "start": "2025-10-17T10:00:11.786330",
+      "end": "2025-10-17T10:03:08.794857",
+      "duration_seconds": 177.008527,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Node.js v22.17.0"
+    },
+    {
+      "query_name": "18_ns.rq",
+      "sources": [
+        "https://sparql.rhea-db.org/sparql",
+        "https://idsm.elixir-czech.cz/sparql/endpoint/chebi"
+      ],
+      "start": "2025-10-17T10:03:09.804193",
+      "end": "2025-10-17T10:03:14.158225",
+      "duration_seconds": 4.354032,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://idsm.elixir-czech.cz/sparql/endpoint/chebi?query=ASK%20WHERE%20%7B%20%3Fchebi%20%3Chttp%3A%2F%2Fbioinfo.uochb.cas.cz%2Frdf%2Fv1.0%2Fsachem%23substructureSearch%3E%20%3Fg_0.%20%7D"
+    },
+    {
+      "query_name": "emi#examples019b_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://qlever.cs.uni"
+      ],
+      "start": "2025-10-17T10:03:15.159308",
+      "end": "2025-10-17T10:03:19.394400",
+      "duration_seconds": 4.235092,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fintxn2%20%3Chttps%3A%2F%2Fpurl.org%2Femi%23hasSource%3E%20%3FparasitoidX.%20%7D"
+    },
+    {
+      "query_name": "11_ns.rq",
+      "sources": [
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2025-10-17T10:03:20.403648",
+      "end": "2025-10-18T00:00:02.311725",
+      "duration_seconds": 50201.908077,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "fetch failed"
+    },
+    {
+      "query_name": "emi#examples019a_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://qlever.cs.uni"
+      ],
+      "start": "2025-10-18T00:00:03.321123",
+      "end": "2025-10-18T00:00:07.499319",
+      "duration_seconds": 4.178196,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fintxn2%20%3Chttps%3A%2F%2Fpurl.org%2Femi%23hasTarget%3E%20%3FparasiteX.%20%7D"
+    },
+    {
+      "query_name": "emi#examples011a_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://qlever.cs.uni"
+      ],
+      "start": "2025-10-18T00:00:08.508594",
+      "end": "2025-10-18T00:00:12.599295",
+      "duration_seconds": 4.090701,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fintxn%20%3Chttps%3A%2F%2Fpurl.org%2Femi%23hasTarget%3E%20%3Ftarget.%20%7D"
+    },
+    {
+      "query_name": "009_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://query.wikidata.org/sparql"
+      ],
+      "start": "2025-10-18T00:00:13.608558",
+      "end": "2025-10-18T00:00:18.807468",
+      "duration_seconds": 5.19891,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fmaterial%20%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fsosa%2FisSampleOf%3E%20%3Forgane.%20%7D"
+    },
+    {
+      "query_name": "001_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://query.wikidata.org/sparql"
+      ],
+      "start": "2025-10-18T00:00:19.816786",
+      "end": "2025-10-18T00:00:23.859546",
+      "duration_seconds": 4.04276,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fmaterial%20%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fsosa%2FisSampleOf%3E%20%3Forgane.%20%7D"
+    },
+    {
+      "query_name": "3_ns.rq",
+      "sources": [
+        "https://sparql.omabrowser.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2025-10-18T00:00:24.868558",
+      "end": "2025-10-18T00:01:46.813272",
+      "duration_seconds": 81.944714,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Aborted"
+    },
+    {
+      "query_name": "006_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://query.wikidata.org/sparql"
+      ],
+      "start": "2025-10-18T00:01:47.822479",
+      "end": "2025-10-18T00:01:51.957390",
+      "duration_seconds": 4.134911,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fs%20%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fsosa%2FisSampleOf%3E%20%3Fo.%20%7D"
+    },
+    {
+      "query_name": "13_ns.rq",
+      "sources": [
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2025-10-18T00:01:52.966319",
+      "end": "2025-10-18T10:07:10.383309",
+      "duration_seconds": 36317.41699,
+      "produced_results": true,
+      "results_count": 8584,
+      "error": "None"
+    },
+    {
+      "query_name": "20_search_chemical_names_in_japanese_ns.rq",
+      "sources": [
+        "https://sparql.rhea-db.org/sparql",
+        "https://data.allie.dbcls.jp/sparql"
+      ],
+      "start": "2025-10-18T10:07:11.392599",
+      "end": "2025-10-18T10:08:02.145338",
+      "duration_seconds": 50.752739,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://data.allie.dbcls.jp/sparql"
+    },
+    {
+      "query_name": "12_ns.rq",
+      "sources": [
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2025-10-18T10:08:03.154619",
+      "end": "2025-10-18T20:25:12.358796",
+      "duration_seconds": 37029.204177,
+      "produced_results": true,
+      "results_count": 52700,
+      "error": "None"
+    },
+    {
+      "query_name": "emi#examples011b_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://qlever.cs.uni"
+      ],
+      "start": "2025-10-18T20:25:13.368158",
+      "end": "2025-10-18T20:25:17.614691",
+      "duration_seconds": 4.246533,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3FtrySpObs%20%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fsosa%2FisFeatureOfInterestOf%3E%20%3FtryObId.%20%7D"
+    },
+    {
+      "query_name": "15-rat-TP53-biosodafrontend_ns.rq",
+      "sources": [
+        "https://sparql.omabrowser.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2025-10-23T09:49:54.127841",
+      "end": "2025-10-23T09:53:31.127800",
+      "duration_seconds": 216.999959,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Aborted"
+    },
+    {
+      "query_name": "118_biosodafrontend_rat_brain_human_cancer_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.omabrowser.org/sparql",
+        "https://www.bgee.org/sparql"
+      ],
+      "start": "2025-10-23T09:53:32.136982",
+      "end": "2025-10-23T10:33:35.736236",
+      "duration_seconds": 2403.599254,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://sparql.omabrowser.org/sparql-sd/?query=SELECT%20%3Fvar1%20WHERE%20%7B%20%3Fvar1%20%3Chttp%3A%2F%2Fpurl.uniprot.org%2Fcore%2FscientificName%3E%20%22Rattus%20norvegicus%22.%20%7D"
+    },
+    {
+      "query_name": "emi#examples018_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://qlever.cs.uni"
+      ],
+      "start": "2025-10-23T10:33:36.745570",
+      "end": "2025-10-23T10:33:41.008648",
+      "duration_seconds": 4.263078,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fmaterial%20%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fsosa%2FisSampleOf%3E%20%3Forgane.%20%7D"
+    },
+    {
+      "query_name": "116_biosodafrontend_rabit_mouse_orthologs_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.omabrowser.org/sparql"
+      ],
+      "start": "2025-10-23T10:33:42.017969",
+      "end": "2025-10-23T10:36:33.781161",
+      "duration_seconds": 171.763192,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Node.js v22.17.0"
+    },
+    {
+      "query_name": "117_biosodafrontend_glioblastoma_orthologs_rat_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.omabrowser.org/sparql",
+        "https://www.bgee.org/sparql"
+      ],
+      "start": "2025-10-23T10:36:34.790413",
+      "end": "2025-10-23T10:44:01.555486",
+      "duration_seconds": 446.765073,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "terminated"
+    },
+    {
+      "query_name": "emi#examples015_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://qlever.cs.uni"
+      ],
+      "start": "2025-10-23T10:44:02.564700",
+      "end": "2025-10-23T10:44:06.731391",
+      "duration_seconds": 4.166691,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fintxn%20%3Chttps%3A%2F%2Fpurl.org%2Femi%23hasTarget%3E%20%3Ftarget.%20%7D"
+    },
+    {
+      "query_name": "emi#examples012_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://qlever.cs.uni"
+      ],
+      "start": "2025-10-23T10:44:07.740593",
+      "end": "2025-10-23T10:44:11.960108",
+      "duration_seconds": 4.219515,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3FtrySpObs%20%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fsosa%2FisFeatureOfInterestOf%3E%20%3FtryObId.%20%7D"
+    },
+    {
+      "query_name": "emi#examples013_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://qlever.cs.uni"
+      ],
+      "start": "2025-10-23T10:44:12.969352",
+      "end": "2025-10-23T10:44:17.145114",
+      "duration_seconds": 4.175762,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fmaterial%20%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fsosa%2FisSampleOf%3E%20%3Forgane.%20%7D"
+    },
+    {
+      "query_name": "007_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://query.wikidata.org/sparql"
+      ],
+      "start": "2025-10-23T10:44:18.154402",
+      "end": "2025-10-23T10:44:22.299703",
+      "duration_seconds": 4.145301,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fs%20%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fsosa%2FisSampleOf%3E%20%3Fo.%20%7D"
+    },
+    {
+      "query_name": "emi#examples021_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://qlever.cs.uni"
+      ],
+      "start": "2025-10-23T10:44:23.309065",
+      "end": "2025-10-23T10:44:27.465700",
+      "duration_seconds": 4.156635,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fintxn%20%3Chttps%3A%2F%2Fpurl.org%2Femi%23hasTarget%3E%20%3FyOrg.%20%7D"
+    },
+    {
+      "query_name": "028-biosodafrontend_ns.rq",
+      "sources": [
+        "https://www.bgee.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2025-10-23T10:44:28.475050",
+      "end": "2025-10-23T10:45:49.421608",
+      "duration_seconds": 80.946558,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Aborted"
+    },
+    {
+      "query_name": "027-biosodafrontend_ns.rq",
+      "sources": [
+        "https://www.bgee.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2025-10-23T10:45:50.430837",
+      "end": "2025-10-23T10:47:07.661418",
+      "duration_seconds": 77.230581,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Aborted"
+    }
+  ]
+}
