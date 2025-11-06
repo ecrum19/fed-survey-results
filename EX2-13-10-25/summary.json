@@ -11,6 +11,7 @@
       "start": "2025-10-13T09:33:15.398769",
       "end": "2025-10-15T12:08:17.751662",
       "duration_seconds": 88157.61628900001,
+      "http_requests": null,
       "produced_results": 9,
       "results_count": 5,
       "error": 45
@@ -24,6 +25,7 @@
       "start": "2025-10-13T09:33:15.398936",
       "end": "2025-10-13T09:33:22.335911",
       "duration_seconds": 6.936975,
+      "http_requests": 11,
       "produced_results": true,
       "results_count": 66,
       "error": "None"
@@ -37,6 +39,7 @@
       "start": "2025-10-13T09:33:23.336756",
       "end": "2025-10-13T09:35:10.559342",
       "duration_seconds": 107.222586,
+      "http_requests": 1478,
       "produced_results": false,
       "results_count": 0,
       "error": "Aborted"
@@ -50,6 +53,7 @@
       "start": "2025-10-13T09:35:11.560314",
       "end": "2025-10-13T09:35:16.928380",
       "duration_seconds": 5.368066,
+      "http_requests": 21,
       "produced_results": true,
       "results_count": 0,
       "error": "None"
@@ -63,6 +67,7 @@
       "start": "2025-10-13T09:35:17.929278",
       "end": "2025-10-13T09:35:25.097887",
       "duration_seconds": 7.168609,
+      "http_requests": 22,
       "produced_results": true,
       "results_count": 71,
       "error": "None"
@@ -77,6 +82,7 @@
       "start": "2025-10-13T09:35:26.098925",
       "end": "2025-10-13T09:40:08.904524",
       "duration_seconds": 282.805599,
+      "http_requests": 1161,
       "produced_results": false,
       "results_count": 0,
       "error": "terminated"
@@ -90,6 +96,7 @@
       "start": "2025-10-13T09:40:09.905536",
       "end": "2025-10-13T09:41:30.244892",
       "duration_seconds": 80.339356,
+      "http_requests": 928,
       "produced_results": false,
       "results_count": 0,
       "error": "terminated"
@@ -103,6 +110,7 @@
       "start": "2025-10-13T09:41:31.245882",
       "end": "2025-10-13T09:52:34.597281",
       "duration_seconds": 663.351399,
+      "http_requests": 7,
       "produced_results": true,
       "results_count": 0,
       "error": "None"
@@ -116,6 +124,7 @@
       "start": "2025-10-13T09:52:35.598222",
       "end": "2025-10-13T09:53:22.670168",
       "duration_seconds": 47.071946,
+      "http_requests": 22,
       "produced_results": true,
       "results_count": 0,
       "error": "None"
@@ -130,6 +139,7 @@
       "start": "2025-10-13T09:53:23.671161",
       "end": "2025-10-13T09:54:54.273920",
       "duration_seconds": 90.602759,
+      "http_requests": 700,
       "produced_results": false,
       "results_count": 0,
       "error": "fetch failed"
@@ -143,9 +153,10 @@
       "start": "2025-10-13T09:54:55.274983",
       "end": "2025-10-13T09:59:48.393933",
       "duration_seconds": 293.11895,
+      "http_requests": 25,
       "produced_results": false,
       "results_count": 0,
-      "error": "Request failed: https://data.allie.dbcls.jp/sparql"
+      "error": "DEBUG: Server reported client-side error"
     },
     {
       "query_name": "19_draft_human_metabolome_ns.rq",
@@ -156,6 +167,7 @@
       "start": "2025-10-13T09:59:49.394831",
       "end": "2025-10-13T10:12:35.070225",
       "duration_seconds": 765.675394,
+      "http_requests": 1325,
       "produced_results": false,
       "results_count": 0,
       "error": "Aborted"
@@ -169,9 +181,10 @@
       "start": "2025-10-13T10:12:36.071178",
       "end": "2025-10-13T10:16:11.196248",
       "duration_seconds": 215.12507,
+      "http_requests": 971,
       "produced_results": false,
       "results_count": 0,
-      "error": "Aborted"
+      "error": "FATAL ERROR: Reached heap limit Allocation failed"
     },
     {
       "query_name": "36_ns.rq",
@@ -182,9 +195,10 @@
       "start": "2025-10-13T10:16:12.197263",
       "end": "2025-10-13T10:16:18.942093",
       "duration_seconds": 6.74483,
+      "http_requests": 37,
       "produced_results": false,
       "results_count": 0,
-      "error": "Node.js v22.17.0"
+      "error": "DEBUG: Server-side error encountered"
     },
     {
       "query_name": "45_ns.rq",
@@ -196,6 +210,7 @@
       "start": "2025-10-13T10:16:19.943165",
       "end": "2025-10-13T10:21:32.519778",
       "duration_seconds": 312.576613,
+      "http_requests": 4443,
       "produced_results": false,
       "results_count": 0,
       "error": "fetch failed"
@@ -209,9 +224,10 @@
       "start": "2025-10-13T14:02:13.508823",
       "end": "2025-10-13T15:20:49.038466",
       "duration_seconds": 4715.529643,
+      "http_requests": 331984,
       "produced_results": false,
       "results_count": 0,
-      "error": "Request failed: https://sparql.omabrowser.org/sparql-sd/?query=SELECT%20%3Fvar1%20WHERE%20%7B%20%3Chttp%3A%2F%2Fomabrowser.org%2Fontology%2Foma%23GENE_107877543%3E%20%3Chttp%3A%2F%2Fpurl.org%2Fnet%2Forth%23organism%3E%20%3Fvar1.%20%7D"
+      "error": "DEBUG: Server reported client-side error"
     },
     {
       "query_name": "19_ns.rq",
@@ -223,6 +239,7 @@
       "start": "2025-10-13T15:20:50.039414",
       "end": "2025-10-13T15:29:14.843687",
       "duration_seconds": 504.804273,
+      "http_requests": 13129,
       "produced_results": false,
       "results_count": 0,
       "error": "Aborted"
@@ -236,9 +253,10 @@
       "start": "2025-10-13T15:29:15.844760",
       "end": "2025-10-13T15:29:20.480981",
       "duration_seconds": 4.636221,
+      "http_requests": 5,
       "produced_results": false,
       "results_count": 0,
-      "error": "Request failed: https://idsm.elixir-czech.cz/sparql/endpoint/chebi?query=ASK%20WHERE%20%7B%20%3Fchebi%20%3Chttp%3A%2F%2Fbioinfo.uochb.cas.cz%2Frdf%2Fv1.0%2Fsachem%23substructureSearch%3E%20%3Fg_0.%20%7D"
+      "error": "DEBUG: Server reported client-side error"
     },
     {
       "query_name": "017_ns.rq",
@@ -249,6 +267,7 @@
       "start": "2025-10-13T15:29:21.482006",
       "end": "2025-10-13T15:34:31.631211",
       "duration_seconds": 310.149205,
+      "http_requests": 455,
       "produced_results": false,
       "results_count": 0,
       "error": "fetch failed"
@@ -262,9 +281,10 @@
       "start": "2025-10-13T15:34:32.632209",
       "end": "2025-10-13T16:20:52.837665",
       "duration_seconds": 2780.205456,
+      "http_requests": 189678,
       "produced_results": false,
       "results_count": 0,
-      "error": "Request failed: https://sparql.omabrowser.org/sparql-sd/?query=SELECT%20%3Ftaxon%20WHERE%20%7B%20%3Chttps%3A%2F%2Fomabrowser.org%2Foma%2Fgenome%2F28377%3E%20%3Chttp%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FRO_0002162%3E%20%3Ftaxon.%20%7D"
+      "error": "DEBUG: Server reported client-side error"
     },
     {
       "query_name": "17_ns.rq",
@@ -275,9 +295,10 @@
       "start": "2025-10-13T16:20:53.838695",
       "end": "2025-10-13T16:20:58.706884",
       "duration_seconds": 4.868189,
+      "http_requests": 22,
       "produced_results": false,
       "results_count": 0,
-      "error": "Request failed: https://sparql.uniprot.org/sparql/"
+      "error": "DEBUG: Server-side error encountered"
     },
     {
       "query_name": "26_ns.rq",
@@ -289,6 +310,7 @@
       "start": "2025-10-13T16:20:59.707917",
       "end": "2025-10-13T16:59:19.645947",
       "duration_seconds": 2299.93803,
+      "http_requests": 31393,
       "produced_results": false,
       "results_count": 0,
       "error": "fetch failed"
@@ -302,6 +324,7 @@
       "start": "2025-10-13T16:59:20.646983",
       "end": "2025-10-13T18:27:24.482817",
       "duration_seconds": 5283.835834,
+      "http_requests": 10797,
       "produced_results": false,
       "results_count": 0,
       "error": "fetch failed"
@@ -316,6 +339,7 @@
       "start": "2025-10-13T18:27:25.483799",
       "end": "2025-10-13T18:28:43.632447",
       "duration_seconds": 78.148648,
+      "http_requests": 595,
       "produced_results": true,
       "results_count": 608,
       "error": "None"
@@ -330,6 +354,7 @@
       "start": "2025-10-13T18:28:44.633459",
       "end": "2025-10-13T18:28:50.094635",
       "duration_seconds": 5.461176,
+      "http_requests": 51,
       "produced_results": true,
       "results_count": 0,
       "error": "None"
@@ -344,6 +369,7 @@
       "start": "2025-10-13T18:28:51.095669",
       "end": "2025-10-13T21:31:33.898103",
       "duration_seconds": 10962.802434,
+      "http_requests": 170743,
       "produced_results": false,
       "results_count": 0,
       "error": "Node.js v22.17.0"
@@ -358,6 +384,7 @@
       "start": "2025-10-13T21:31:34.899209",
       "end": "2025-10-13T21:34:04.397353",
       "duration_seconds": 149.498144,
+      "http_requests": 1308,
       "produced_results": true,
       "results_count": 1216,
       "error": "None"
@@ -372,9 +399,10 @@
       "start": "2025-10-13T21:34:05.398374",
       "end": "2025-10-13T22:34:20.879147",
       "duration_seconds": 3615.480773,
+      "http_requests": 232413,
       "produced_results": false,
       "results_count": 0,
-      "error": "Aborted"
+      "error": "FATAL ERROR: Reached heap limit Allocation failed"
     },
     {
       "query_name": "27_ns.rq",
@@ -386,6 +414,7 @@
       "start": "2025-10-13T22:34:21.880104",
       "end": "2025-10-14T00:00:07.086919",
       "duration_seconds": 5145.206815,
+      "http_requests": 45686,
       "produced_results": false,
       "results_count": 0,
       "error": "fetch failed"
@@ -399,9 +428,10 @@
       "start": "2025-10-14T10:33:04.826268",
       "end": "2025-10-14T10:35:57.385783",
       "duration_seconds": 172.559515,
+      "http_requests": 439,
       "produced_results": false,
       "results_count": 0,
-      "error": "Node.js v22.17.0"
+      "error": "DEBUG: Server reported client-side error"
     },
     {
       "query_name": "18_ns.rq",
@@ -412,9 +442,10 @@
       "start": "2025-10-14T10:35:58.386874",
       "end": "2025-10-14T10:36:02.702761",
       "duration_seconds": 4.315887,
+      "http_requests": 5,
       "produced_results": false,
       "results_count": 0,
-      "error": "Request failed: https://idsm.elixir-czech.cz/sparql/endpoint/chebi?query=ASK%20WHERE%20%7B%20%3Fchebi%20%3Chttp%3A%2F%2Fbioinfo.uochb.cas.cz%2Frdf%2Fv1.0%2Fsachem%23substructureSearch%3E%20%3Fg_0.%20%7D"
+      "error": "DEBUG: Server reported client-side error"
     },
     {
       "query_name": "emi#examples019b_ns.rq",
@@ -425,9 +456,10 @@
       "start": "2025-10-14T10:36:03.703874",
       "end": "2025-10-14T10:36:08.020945",
       "duration_seconds": 4.317071,
+      "http_requests": 4,
       "produced_results": false,
       "results_count": 0,
-      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fintxn2%20%3Chttps%3A%2F%2Fpurl.org%2Femi%23hasTarget%3E%20%3FparasitoidX.%20%7D"
+      "error": "DEBUG: Server-side error encountered"
     },
     {
       "query_name": "11_ns.rq",
@@ -438,6 +470,7 @@
       "start": "2025-10-14T10:36:09.021964",
       "end": "2025-10-14T10:58:01.313744",
       "duration_seconds": 1312.29178,
+      "http_requests": 18449,
       "produced_results": false,
       "results_count": 0,
       "error": "fetch failed"
@@ -451,9 +484,10 @@
       "start": "2025-10-14T10:58:02.314854",
       "end": "2025-10-14T10:58:06.465706",
       "duration_seconds": 4.150852,
+      "http_requests": 4,
       "produced_results": false,
       "results_count": 0,
-      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fintxn2%20%3Chttps%3A%2F%2Fpurl.org%2Femi%23hasTarget%3E%20%3FparasiteX.%20%7D"
+      "error": "DEBUG: Server-side error encountered"
     },
     {
       "query_name": "emi#examples011a_ns.rq",
@@ -464,9 +498,10 @@
       "start": "2025-10-14T10:58:07.466706",
       "end": "2025-10-14T10:58:11.621140",
       "duration_seconds": 4.154434,
+      "http_requests": 5,
       "produced_results": false,
       "results_count": 0,
-      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fintxn%20%3Chttps%3A%2F%2Fpurl.org%2Femi%23hasTarget%3E%20%3Ftarget.%20%7D"
+      "error": "DEBUG: Server-side error encountered"
     },
     {
       "query_name": "009_ns.rq",
@@ -477,9 +512,10 @@
       "start": "2025-10-14T10:58:12.622150",
       "end": "2025-10-14T10:58:16.714627",
       "duration_seconds": 4.092477,
+      "http_requests": 4,
       "produced_results": false,
       "results_count": 0,
-      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fmaterial%20%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fsosa%2FisSampleOf%3E%20%3Forgane.%20%7D"
+      "error": "DEBUG: Server-side error encountered"
     },
     {
       "query_name": "001_ns.rq",
@@ -490,9 +526,10 @@
       "start": "2025-10-14T10:58:17.715606",
       "end": "2025-10-14T10:58:21.840392",
       "duration_seconds": 4.124786,
+      "http_requests": 4,
       "produced_results": false,
       "results_count": 0,
-      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fmaterial%20%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fsosa%2FisSampleOf%3E%20%3Forgane.%20%7D"
+      "error": "DEBUG: Server-side error encountered"
     },
     {
       "query_name": "3_ns.rq",
@@ -503,9 +540,10 @@
       "start": "2025-10-14T10:58:22.841347",
       "end": "2025-10-14T10:59:42.995409",
       "duration_seconds": 80.154062,
+      "http_requests": 1553,
       "produced_results": false,
       "results_count": 0,
-      "error": "Aborted"
+      "error": "FATAL ERROR: Reached heap limit Allocation failed"
     },
     {
       "query_name": "006_ns.rq",
@@ -516,9 +554,10 @@
       "start": "2025-10-14T10:59:43.996367",
       "end": "2025-10-14T10:59:48.148383",
       "duration_seconds": 4.152016,
+      "http_requests": 4,
       "produced_results": false,
       "results_count": 0,
-      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fs%20%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fsosa%2FisSampleOf%3E%20%3Fo.%20%7D"
+      "error": "DEBUG: Server-side error encountered"
     },
     {
       "query_name": "13_ns.rq",
@@ -529,6 +568,7 @@
       "start": "2025-10-14T10:59:49.149361",
       "end": "2025-10-14T21:24:11.175794",
       "duration_seconds": 37462.026433,
+      "http_requests": 365744,
       "produced_results": true,
       "results_count": 8584,
       "error": "None"
@@ -542,9 +582,10 @@
       "start": "2025-10-14T21:24:12.176902",
       "end": "2025-10-14T21:25:04.040036",
       "duration_seconds": 51.863134,
+      "http_requests": 13,
       "produced_results": false,
       "results_count": 0,
-      "error": "Request failed: https://data.allie.dbcls.jp/sparql"
+      "error": "DEBUG: Server reported client-side error"
     },
     {
       "query_name": "12_ns.rq",
@@ -555,6 +596,7 @@
       "start": "2025-10-14T21:25:05.041097",
       "end": "2025-10-14T23:56:54.689330",
       "duration_seconds": 9109.648233,
+      "http_requests": 95808,
       "produced_results": false,
       "results_count": 0,
       "error": "fetch failed"
@@ -568,9 +610,10 @@
       "start": "2025-10-14T23:56:55.690381",
       "end": "2025-10-14T23:56:59.938469",
       "duration_seconds": 4.248088,
+      "http_requests": 4,
       "produced_results": false,
       "results_count": 0,
-      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3FtrySpObs%20%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fsosa%2FisFeatureOfInterestOf%3E%20%3FtryObId.%20%7D"
+      "error": "DEBUG: Server-side error encountered"
     },
     {
       "query_name": "15-rat-TP53-biosodafrontend_ns.rq",
@@ -581,9 +624,10 @@
       "start": "2025-10-15T11:49:05.947653",
       "end": "2025-10-15T11:52:35.027048",
       "duration_seconds": 209.079395,
+      "http_requests": 65,
       "produced_results": false,
       "results_count": 0,
-      "error": "Aborted"
+      "error": "FATAL ERROR: Reached heap limit Allocation failed"
     },
     {
       "query_name": "118_biosodafrontend_rat_brain_human_cancer_ns.rq",
@@ -595,9 +639,10 @@
       "start": "2025-10-15T11:52:36.028074",
       "end": "2025-10-15T11:55:31.787160",
       "duration_seconds": 175.759086,
+      "http_requests": 78,
       "produced_results": false,
       "results_count": 0,
-      "error": "Aborted"
+      "error": "FATAL ERROR: Reached heap limit Allocation failed"
     },
     {
       "query_name": "emi#examples018_ns.rq",
@@ -608,9 +653,10 @@
       "start": "2025-10-15T11:55:32.788245",
       "end": "2025-10-15T11:55:37.032172",
       "duration_seconds": 4.243927,
+      "http_requests": 4,
       "produced_results": false,
       "results_count": 0,
-      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fmaterial%20%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fsosa%2FisSampleOf%3E%20%3Forgane.%20%7D"
+      "error": "DEBUG: Server-side error encountered"
     },
     {
       "query_name": "116_biosodafrontend_rabit_mouse_orthologs_ns.rq",
@@ -621,9 +667,10 @@
       "start": "2025-10-15T11:55:38.033180",
       "end": "2025-10-15T11:58:31.807323",
       "duration_seconds": 173.774143,
+      "http_requests": 423,
       "produced_results": false,
       "results_count": 0,
-      "error": "Node.js v22.17.0"
+      "error": "DEBUG: Server reported client-side error"
     },
     {
       "query_name": "117_biosodafrontend_glioblastoma_orthologs_rat_ns.rq",
@@ -635,6 +682,7 @@
       "start": "2025-10-15T11:58:32.808269",
       "end": "2025-10-15T12:06:21.351203",
       "duration_seconds": 468.542934,
+      "http_requests": 81,
       "produced_results": false,
       "results_count": 0,
       "error": "terminated"
@@ -648,9 +696,10 @@
       "start": "2025-10-15T12:06:22.352262",
       "end": "2025-10-15T12:06:26.551586",
       "duration_seconds": 4.199324,
+      "http_requests": 5,
       "produced_results": false,
       "results_count": 0,
-      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fintxn%20%3Chttps%3A%2F%2Fpurl.org%2Femi%23hasTarget%3E%20%3Ftarget.%20%7D"
+      "error": "DEBUG: Server-side error encountered"
     },
     {
       "query_name": "emi#examples012_ns.rq",
@@ -661,9 +710,10 @@
       "start": "2025-10-15T12:06:27.552516",
       "end": "2025-10-15T12:06:31.715021",
       "duration_seconds": 4.162505,
+      "http_requests": 5,
       "produced_results": false,
       "results_count": 0,
-      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3FtrySpObs%20%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fsosa%2FisFeatureOfInterestOf%3E%20%3FtryObId.%20%7D"
+      "error": "DEBUG: Server-side error encountered"
     },
     {
       "query_name": "emi#examples013_ns.rq",
@@ -674,9 +724,10 @@
       "start": "2025-10-15T12:06:32.716016",
       "end": "2025-10-15T12:06:36.910661",
       "duration_seconds": 4.194645,
+      "http_requests": 4,
       "produced_results": false,
       "results_count": 0,
-      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fmaterial%20%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fsosa%2FisSampleOf%3E%20%3Forgane.%20%7D"
+      "error": "DEBUG: Server-side error encountered"
     },
     {
       "query_name": "007_ns.rq",
@@ -687,9 +738,10 @@
       "start": "2025-10-15T12:06:37.911646",
       "end": "2025-10-15T12:06:42.079480",
       "duration_seconds": 4.167834,
+      "http_requests": 4,
       "produced_results": false,
       "results_count": 0,
-      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fs%20%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fsosa%2FisSampleOf%3E%20%3Fo.%20%7D"
+      "error": "DEBUG: Server-side error encountered"
     },
     {
       "query_name": "emi#examples021_ns.rq",
@@ -700,9 +752,10 @@
       "start": "2025-10-15T12:06:43.080452",
       "end": "2025-10-15T12:06:47.288675",
       "duration_seconds": 4.208223,
+      "http_requests": 4,
       "produced_results": false,
       "results_count": 0,
-      "error": "Request failed: https://biosoda.unil.ch/emi/sparql?query=ASK%20WHERE%20%7B%20%3Fintxn%20%3Chttps%3A%2F%2Fpurl.org%2Femi%23hasTarget%3E%20%3FyOrg.%20%7D"
+      "error": "DEBUG: Server-side error encountered"
     },
     {
       "query_name": "028-biosodafrontend_ns.rq",
@@ -713,6 +766,7 @@
       "start": "2025-10-15T12:06:48.289739",
       "end": "2025-10-15T12:07:01.443018",
       "duration_seconds": 13.153279,
+      "http_requests": 66,
       "produced_results": false,
       "results_count": 0,
       "error": "terminated"
@@ -726,9 +780,10 @@
       "start": "2025-10-15T12:07:02.444005",
       "end": "2025-10-15T12:08:17.751551",
       "duration_seconds": 75.307546,
+      "http_requests": 237,
       "produced_results": false,
       "results_count": 0,
-      "error": "Aborted"
+      "error": "FATAL ERROR: Reached heap limit Allocation failed"
     }
   ]
 }
