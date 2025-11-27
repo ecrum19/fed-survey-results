@@ -1,0 +1,34 @@
+Experiment log for: EX4-24-10-25
+Experiment EX4-24-10-25 began at 2025-11-14T12:27:16.197345
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.uniprot.org/sparql/ https://idsm.elixir-czech.cz/sparql/endpoint/chebi -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch5/71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX4-24-10-25/71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-14T12:27:16.197496
+Error executing command for 71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease_ns.rq: 
+Timestamp (end): 2025-11-14T12:27:20.321198
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.uniprot.org/sparql/ https://idsm.elixir-czech.cz/sparql/endpoint/chebi -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch5/70_enzymes_interacting_with_molecules_similar_to_dopamine_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX4-24-10-25/70_enzymes_interacting_with_molecules_similar_to_dopamine_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-14T12:27:21.322199
+Error executing command for 70_enzymes_interacting_with_molecules_similar_to_dopamine_ns.rq: 
+Timestamp (end): 2025-11-14T12:27:25.448575
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.uniprot.org/sparql/ https://idsm.elixir-czech.cz/sparql/endpoint/chebi -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch5/54_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX4-24-10-25/54_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-14T12:27:26.449527
+Error executing command for 54_ns.rq: 
+Timestamp (end): 2025-11-14T12:27:30.605904
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.uniprot.org/sparql/ https://sparql.rhea-db.org/sparql https://idsm.elixir-czech.cz/sparql/endpoint/idsm -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch5/52_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX4-24-10-25/52_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-14T12:27:31.606929
+Error executing command for 52_ns.rq: 
+Timestamp (end): 2025-11-14T12:28:24.793320
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.uniprot.org/sparql/ https://idsm.elixir-czech.cz/sparql/endpoint/chebi https://sparql.rhea-db.org/sparql -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch5/60_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX4-24-10-25/60_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-14T12:28:25.794304
+Error executing command for 60_ns.rq: 
+Timestamp (end): 2025-11-14T12:29:15.076353
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://biosoda.unil.ch/emi/sparql https://idsm.elixir-czech.cz/sparql/endpoint/wikidata -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch5/002_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX4-24-10-25/002_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-14T12:29:16.077325
+Error executing command for 002_ns.rq: 
+Timestamp (end): 2025-11-14T12:29:20.146222
+
+Experiment EX4-24-10-25 completed at 2025-11-14T12:29:20.146322
