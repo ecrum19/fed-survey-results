@@ -1,5 +1,5 @@
 query_name,sources,start,end,duration_seconds,http_requests,produced_results,results_count,error
-EX3-16-10-25,None,2025-10-16T10:08:52.766271,2025-10-23T10:47:07.661548,210451.509072,,10,6,44
+EX3-16-10-25,None,2025-10-16T10:08:52.766271,2025-11-14T12:26:53.627063,210575.33497099997,,10,6,50
 42_ns.rq,"['https://sparql.uniprot.org/sparql', 'https://data.epo.org/linked-data/query']",2025-10-16T10:08:52.766426,2025-10-16T10:09:00.868877,8.102451,11.0,True,66,None
 67_draft_human_metabolome_ns.rq,"['https://sparql.uniprot.org/sparql', 'https://sparql.rhea-db.org/sparql']",2025-10-16T10:09:01.869954,2025-10-16T11:34:11.451601,5109.581647,91028.0,False,0,fetch failed
 109_uniprot_transporter_in_liver_ns.rq,"['https://sparql.uniprot.org/sparql', 'https://www.bgee.org/sparql']",2025-10-16T11:34:12.452619,2025-10-16T11:34:19.526993,7.074374,21.0,True,0,None
@@ -54,3 +54,9 @@ emi#examples013_ns.rq,"['https://biosoda.unil.ch/emi/sparql', 'https://qlever.cs
 emi#examples021_ns.rq,"['https://biosoda.unil.ch/emi/sparql', 'https://qlever.cs.uni']",2025-10-23T10:44:23.309065,2025-10-23T10:44:27.465700,4.156635,5.0,False,0,DEBUG: Server-side error encountered
 028-biosodafrontend_ns.rq,"['https://www.bgee.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-10-23T10:44:28.475050,2025-10-23T10:45:49.421608,80.946558,331.0,False,0,FATAL ERROR: Reached heap limit Allocation failed
 027-biosodafrontend_ns.rq,"['https://www.bgee.org/sparql', 'https://sparql.uniprot.org/sparql']",2025-10-23T10:45:50.430837,2025-10-23T10:47:07.661418,77.230581,268.0,False,0,FATAL ERROR: Reached heap limit Allocation failed
+71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease_ns.rq,"['https://sparql.uniprot.org/sparql', 'https://idsm.elixir-czech.cz/sparql/endpoint/chebi']",2025-11-14T12:24:49.801334,2025-11-14T12:24:54.062919,4.261585,6.0,False,0,DEBUG: Server reported client-side error
+70_enzymes_interacting_with_molecules_similar_to_dopamine_ns.rq,"['https://sparql.uniprot.org/sparql', 'https://idsm.elixir-czech.cz/sparql/endpoint/chebi']",2025-11-14T12:24:55.063946,2025-11-14T12:24:59.161843,4.097897,4.0,False,0,DEBUG: Server reported client-side error
+54_ns.rq,"['https://sparql.uniprot.org/sparql', 'https://idsm.elixir-czech.cz/sparql/endpoint/chebi']",2025-11-14T12:25:00.162823,2025-11-14T12:25:04.310756,4.147933,7.0,False,0,DEBUG: Server reported client-side error
+52_ns.rq,"['https://sparql.uniprot.org/sparql', 'https://sparql.rhea-db.org/sparql', 'https://idsm.elixir-czech.cz/sparql/endpoint/idsm']",2025-11-14T12:25:05.311769,2025-11-14T12:26:43.294580,97.982811,2096.0,False,0,fetch failed
+60_ns.rq,"['https://sparql.uniprot.org/sparql', 'https://idsm.elixir-czech.cz/sparql/endpoint/chebi', 'https://sparql.rhea-db.org/sparql']",2025-11-14T12:26:44.295536,2025-11-14T12:26:48.421980,4.126444,9.0,False,0,DEBUG: Server reported client-side error
+002_ns.rq,"['https://biosoda.unil.ch/emi/sparql', 'https://idsm.elixir-czech.cz/sparql/endpoint/wikidata']",2025-11-14T12:26:49.422909,2025-11-14T12:26:53.626962,4.204053,7.0,False,0,DEBUG: Server reported client-side error

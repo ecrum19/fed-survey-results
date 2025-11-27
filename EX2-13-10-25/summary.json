@@ -1,20 +1,20 @@
 {
   "general_stats": {
     "run_start": "2025-10-13T09:33:15.398769",
-    "run_end": "2025-10-15T12:08:17.751662",
-    "run_duration_seconds": 88157.61628900001
+    "run_end": "2025-11-14T09:41:55.019306",
+    "run_duration_seconds": 88226.72557200001
   },
   "entries": [
     {
       "query_name": "EX2-13-10-25",
       "sources": "None",
       "start": "2025-10-13T09:33:15.398769",
-      "end": "2025-10-15T12:08:17.751662",
-      "duration_seconds": 88157.61628900001,
+      "end": "2025-11-14T09:41:55.019306",
+      "duration_seconds": 88226.72557200001,
       "http_requests": null,
       "produced_results": 9,
       "results_count": 5,
-      "error": 45
+      "error": 51
     },
     {
       "query_name": "42_ns.rq",
@@ -784,6 +784,92 @@
       "produced_results": false,
       "results_count": 0,
       "error": "FATAL ERROR: Reached heap limit Allocation failed"
+    },
+    {
+      "query_name": "71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://idsm.elixir-czech.cz/sparql/endpoint/chebi"
+      ],
+      "start": "2025-11-14T09:40:45.910138",
+      "end": "2025-11-14T09:40:50.204649",
+      "duration_seconds": 4.294511,
+      "http_requests": 7,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "70_enzymes_interacting_with_molecules_similar_to_dopamine_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://idsm.elixir-czech.cz/sparql/endpoint/chebi"
+      ],
+      "start": "2025-11-14T09:40:51.205619",
+      "end": "2025-11-14T09:40:55.305106",
+      "duration_seconds": 4.099487,
+      "http_requests": 4,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "54_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://idsm.elixir-czech.cz/sparql/endpoint/chebi"
+      ],
+      "start": "2025-11-14T09:40:56.306108",
+      "end": "2025-11-14T09:41:00.490485",
+      "duration_seconds": 4.184377,
+      "http_requests": 7,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "52_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.rhea-db.org/sparql",
+        "https://idsm.elixir-czech.cz/sparql/endpoint/idsm"
+      ],
+      "start": "2025-11-14T09:41:01.491446",
+      "end": "2025-11-14T09:41:44.788450",
+      "duration_seconds": 43.297004,
+      "http_requests": 846,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "fetch failed"
+    },
+    {
+      "query_name": "60_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://idsm.elixir-czech.cz/sparql/endpoint/chebi",
+        "https://sparql.rhea-db.org/sparql"
+      ],
+      "start": "2025-11-14T09:41:45.789425",
+      "end": "2025-11-14T09:41:49.914128",
+      "duration_seconds": 4.124703,
+      "http_requests": 8,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "002_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://idsm.elixir-czech.cz/sparql/endpoint/wikidata"
+      ],
+      "start": "2025-11-14T09:41:50.915103",
+      "end": "2025-11-14T09:41:55.019206",
+      "duration_seconds": 4.104103,
+      "http_requests": 7,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
     }
   ]
 }
