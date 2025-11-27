@@ -1,0 +1,64 @@
+Experiment log for: EX3-24-11-25
+Experiment EX3-24-11-25 began at 2025-11-26T09:48:17.079530
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.omabrowser.org/sparql https://sparql.uniprot.org/sparql/ -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch4/15-rat-TP53-biosodafrontend_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX3-24-11-25/15-rat-TP53-biosodafrontend_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-26T09:48:17.079708
+Error executing command for 15-rat-TP53-biosodafrontend_ns.rq: 
+Timestamp (end): 2025-11-26T09:48:21.237227
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.uniprot.org/sparql/ https://sparql.omabrowser.org/sparql/ https://www.bgee.org/sparql/ -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch4/118_biosodafrontend_rat_brain_human_cancer_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX3-24-11-25/118_biosodafrontend_rat_brain_human_cancer_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-26T09:48:22.238206
+Error executing command for 118_biosodafrontend_rat_brain_human_cancer_ns.rq: 
+Timestamp (end): 2025-11-26T09:48:26.351915
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://biosoda.unil.ch/emi/sparql https://qlever.cs.uni-freiburg.de/api/wikidata -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch4/emi#examples018_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX3-24-11-25/emi#examples018_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-26T09:48:27.352981
+Error executing command for emi#examples018_ns.rq: 
+Timestamp (end): 2025-11-26T09:48:31.492145
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.uniprot.org/sparql/ https://sparql.omabrowser.org/sparql/ -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch4/116_biosodafrontend_rabit_mouse_orthologs_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX3-24-11-25/116_biosodafrontend_rabit_mouse_orthologs_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-26T09:48:32.493170
+Error executing command for 116_biosodafrontend_rabit_mouse_orthologs_ns.rq: 
+Timestamp (end): 2025-11-26T09:48:36.657883
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.uniprot.org/sparql/ https://sparql.omabrowser.org/sparql/ https://www.bgee.org/sparql/ -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch4/117_biosodafrontend_glioblastoma_orthologs_rat_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX3-24-11-25/117_biosodafrontend_glioblastoma_orthologs_rat_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-26T09:48:37.658889
+Error executing command for 117_biosodafrontend_glioblastoma_orthologs_rat_ns.rq: 
+Timestamp (end): 2025-11-26T09:48:41.774037
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://biosoda.unil.ch/emi/sparql https://qlever.cs.uni-freiburg.de/api/wikidata -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch4/emi#examples015_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX3-24-11-25/emi#examples015_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-26T09:48:42.775080
+Error executing command for emi#examples015_ns.rq: 
+Timestamp (end): 2025-11-26T09:48:46.871993
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://biosoda.unil.ch/emi/sparql https://qlever.cs.uni-freiburg.de/api/wikidata -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch4/emi#examples012_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX3-24-11-25/emi#examples012_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-26T09:48:47.873029
+Error executing command for emi#examples012_ns.rq: 
+Timestamp (end): 2025-11-26T09:48:51.927549
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://biosoda.unil.ch/emi/sparql https://qlever.cs.uni-freiburg.de/api/wikidata -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch4/emi#examples013_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX3-24-11-25/emi#examples013_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-26T09:48:52.928564
+Error executing command for emi#examples013_ns.rq: 
+Timestamp (end): 2025-11-26T09:48:57.027359
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://biosoda.unil.ch/emi/sparql https://query.wikidata.org/sparql -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch4/007_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX3-24-11-25/007_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-26T09:48:58.028370
+Error executing command for 007_ns.rq: 
+Timestamp (end): 2025-11-26T09:49:02.159523
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://biosoda.unil.ch/emi/sparql https://qlever.cs.uni-freiburg.de/api/wikidata -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch4/emi#examples021_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX3-24-11-25/emi#examples021_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-26T09:49:03.160536
+Error executing command for emi#examples021_ns.rq: 
+Timestamp (end): 2025-11-26T09:49:07.264582
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://www.bgee.org/sparql/ https://sparql.uniprot.org/sparql/ -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch4/028-biosodafrontend_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX3-24-11-25/028-biosodafrontend_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-26T09:49:08.265586
+Error executing command for 028-biosodafrontend_ns.rq: 
+Timestamp (end): 2025-11-26T09:49:12.340212
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://www.bgee.org/sparql/ https://sparql.uniprot.org/sparql/ -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch4/027-biosodafrontend_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX3-24-11-25/027-biosodafrontend_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-26T09:49:13.341233
+Error executing command for 027-biosodafrontend_ns.rq: 
+Timestamp (end): 2025-11-26T09:49:17.443268
+
+Experiment EX3-24-11-25 completed at 2025-11-26T09:49:17.443376

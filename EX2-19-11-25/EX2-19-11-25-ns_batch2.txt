@@ -1,0 +1,74 @@
+Experiment log for: EX2-19-11-25
+Experiment EX2-19-11-25 began at 2025-11-20T10:29:15.208705
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://www.bgee.org/sparql https://sparql.omabrowser.org/sparql/ -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch2/019_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX2-19-11-25/019_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-20T10:29:15.208908
+Error executing command for 019_ns.rq: 
+Timestamp (end): 2025-11-20T10:44:37.715971
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.orthodb.org/sparql/ https://sparql.uniprot.org/sparql/ https://sparql.rhea-db.org/sparql -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch2/19_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX2-19-11-25/19_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-20T10:44:38.717029
+Error executing command for 19_ns.rq: 
+Timestamp (end): 2025-11-20T10:44:42.967659
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.orthodb.org/sparql/ https://sparql.nextprot.org/ -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch2/18_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX2-19-11-25/18_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-20T10:44:43.968568
+Error executing command for 18_ns.rq: 
+Timestamp (end): 2025-11-20T10:44:48.811592
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://www.bgee.org/sparql https://sparql.uniprot.org/sparql/ -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch2/017_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX2-19-11-25/017_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-20T10:44:49.812586
+Error executing command for 017_ns.rq: 
+Timestamp (end): 2025-11-20T10:44:53.922490
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://www.bgee.org/sparql https://sparql.omabrowser.org/sparql -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch2/020_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX2-19-11-25/020_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-20T10:44:54.923485
+Error executing command for 020_ns.rq: 
+Timestamp (end): 2025-11-20T11:06:20.031397
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.orthodb.org/sparql/ https://sparql.uniprot.org/sparql/ -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch2/17_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX2-19-11-25/17_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-20T11:06:21.032427
+Error executing command for 17_ns.rq: 
+Timestamp (end): 2025-11-20T11:06:25.184248
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://beta.sparql.swisslipids.org/sparql https://sparql.rhea-db.org/sparql https://sparql.uniprot.org/sparql/ -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch2/26_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX2-19-11-25/26_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-20T11:06:26.185242
+Error executing command for 26_ns.rq: 
+Timestamp (end): 2025-11-20T11:06:30.359847
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://beta.sparql.swisslipids.org/sparql https://sparql.rhea-db.org/sparql -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch2/5_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX2-19-11-25/5_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-20T11:06:31.360863
+Error executing command for 5_ns.rq: 
+Timestamp (end): 2025-11-20T14:57:20.268672
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://beta.sparql.swisslipids.org/sparql https://sparql.rhea-db.org/sparql https://sparql.uniprot.org/sparql/ -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch2/16_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX2-19-11-25/16_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-20T14:57:21.269410
+Error executing command for 16_ns.rq: 
+Timestamp (end): 2025-11-20T14:57:25.408805
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://beta.sparql.swisslipids.org/sparql https://sparql.rhea-db.org/sparql https://sparql.uniprot.org/sparql/ -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch2/7_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX2-19-11-25/7_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-20T14:57:26.409820
+Error executing command for 7_ns.rq: 
+Timestamp (end): 2025-11-20T14:57:30.531272
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://beta.sparql.swisslipids.org/sparql https://sparql.rhea-db.org/sparql https://sparql.uniprot.org/sparql/ -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch2/34_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX2-19-11-25/34_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-20T14:57:31.532247
+Error executing command for 34_ns.rq: 
+Timestamp (end): 2025-11-20T14:57:35.680406
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://beta.sparql.swisslipids.org/sparql https://sparql.rhea-db.org/sparql https://sparql.uniprot.org/sparql/ -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch2/6_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX2-19-11-25/6_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-20T14:57:36.681372
+Error executing command for 6_ns.rq: 
+Timestamp (end): 2025-11-20T14:57:40.760463
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://www.bgee.org/sparql https://sparql.uniprot.org/sparql/ https://sparql.omabrowser.org/sparql/ -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch2/016_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX2-19-11-25/016_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-20T14:57:41.761447
+Error executing command for 016_ns.rq: 
+Timestamp (end): 2025-11-20T14:57:45.914852
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://beta.sparql.swisslipids.org/sparql https://sparql.rhea-db.org/sparql https://sparql.uniprot.org/sparql/ -f /users/ecrumuge/FederatedSparqlSurveyExperiments/queries/no-service/ns_batch2/27_ns.rq -t 'application/sparql-results+json' -l debug 2> /users/ecrumuge/FederatedSparqlSurveyExperiments/experiments/EX2-19-11-25/27_ns.rq.log --httpRetryCount=50
+Timestamp (start): 2025-11-20T14:57:46.915909
+Error executing command for 27_ns.rq: 
+Timestamp (end): 2025-11-20T14:57:51.044419
+
+Experiment EX2-19-11-25 completed at 2025-11-20T14:57:51.044525
