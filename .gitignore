@@ -1,6 +1,7 @@
 .DS_store
 
 default-service-test-1/query-times.csv
+EX4-24-10-25/019_ns.rq.log.zip
 
 experiments/testbatch2/6_ns.rq.log
 experiments/testbatch2/13_ns.rq.log
