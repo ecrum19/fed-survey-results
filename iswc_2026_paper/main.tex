@@ -1,0 +1,209 @@
+\documentclass[runningheads]{llncs}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xurl}
+
+\title{How well does SPARQL federation work in practice? A real-world analysis of query federation over large biological SPARQL endpoints}
+\titlerunning{SPARQL Federation in Practice}
+
+\author{Elias Crum\inst{1,2}\orcidID{0009-0005-3991-754X} \and
+Bart Buelens\inst{1,2}\orcidID{0000-0001-7734-3747} \and
+Gökhan Ertaylan\inst{2}\orcidID{0000-0001-5602-6435} \and
+Ana-Claudia Sima \inst{3}\orcidID{0000−0003−3213−4495} \and
+Tarcisio Mendes de Farias \inst{3}\orcidID{0000−0002−3175−5372} \and
+Jerven Bolleman \inst{4}\orcidID{0000-0002-7449-1266} \and
+Ruben Taelman\inst{1}\orcidID{0000-0001-5118-256X}} 
+
+\authorrunning{E. Crum et al.}
+\institute{IDLab, Department of Electronics and Information Systems, Ghent University -- imec, Belgium \and
+Flemish institute for Technological Research (VITO) Mol, Belgium \and 
+SIB Swiss Institute of Bioinformatics, Lausanne, Switzerland \and
+Swiss-Prot group, SIB Swiss Institute of Bioinformatics, Geneva, Switzerland
+
+\email{elias.crum@ugent.be}\\
+\email{bart.buelens@vito.be}\\
+\email{gokhan.ertaylan@vito.be}\\
+\email{ana-claudia.sima@sib.swiss}\\
+\email{tarcisio.mendes@sib.swiss}\\
+\email{jerven.bolleman@sib.swiss}\\
+\email{ruben.taelman@ugent.be}}\\
+
+\date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+Federated SPARQL querying promises integrated access to distributed knowledge graphs without requiring central data replication. 
+However, most evaluations of SPARQL federation are conducted under controlled benchmark conditions and say relatively little about how federation behaves against public endpoints in everyday use. 
+We present a real-world longitudinal study of federated querying over highly-used, large public biological SPARQL endpoints. 
+Our study executes 62 federated queries obtained from users of these endpoints across more than seven public biological endpoints, and compares two families of federation strategies: a FedX/SPLENDID-style baseline and modular variants implemented in the Comunica query engine. 
+The results show that federation was fragile throughout the study period: many queries failed due to endpoint errors, timeouts, and other execution problems.
+The main finding is therefore not simply that one federation strategy outperformed another, but that the practical viability of public SPARQL federation was dominated by changing endpoint-side operational constraints. 
+These findings raise concerns for both deployment and reproducibility: conclusions drawn at one point in time may no longer hold only months later. 
+We conclude with recommendations for evaluating SPARQL federation in the wild and for designing infrastructures better suited to real cross-endpoint biological queries.
+
+\keywords{SPARQL Querying \and Federated Querying \and Semantic Web \and SPARQL Endpoints}
+\end{abstract}
+
+
+\section{Introduction}\label{sec1}
+
+Small example of the problem...
+
+
+\subsection{Large Public SPARQL Endpoints}\label{sec1.1}
+
+Intro to SPARQL Endpoints...
+
+\subsection{Federated SPARQL Querying}\label{sec1.2}
+
+Intro to SPARQL querying + federation...
+
+\subsection{Study Contributions}\label{sec1.3}
+
+RQ1: To what extent do real-world federated biological queries execute successfully over public SPARQL endpoints?
+RQ2: How do results vary across federation strategies?
+RQ3: How do failure modes evolve over time in a real deployment setting?
+
+\begin{enumerate}
+    \item A study of over 60 real-world federated queries obtained from users of large biological SPARQL endpoints.
+    \item An empirical comparison of two families of federation strategies, including FedX/SPLENDID-style approaches and modular variants implemented in Comunica.
+    \item Longitudinal findings that practical federation was limited in intial investigations, and that a small window of partial success in March–September 2025 was followed by complete failure after endpoint-side rate limits were introduced in fall 2025.
+    \item Methodological and infrastructure lessons for evaluating SPARQL federation “in the wild.”
+\end{enumerate}
+
+
+\section{Related Work}\label{sec2}
+
+Prior work largely studies algorithmic behavior under controlled conditions
+Your paper studies operational behavior under changing real-world conditions
+
+
+\subsection{Federated Querying Algorithms}\label{sec2.1}
+
+SPARQL federation and common execution strategies
+FedX, SPLENDID, and source-selection/query-planning trade-offs
+Comunica as a modular platform for federation experiments
+
+\subsection{Federated Querying Benchmarks \& Evaluations}\label{sec2.2}
+
+Prior evaluations of SPARQL federation
+Public biological SPARQL endpoints as operational infrastructure
+
+
+\section{Methods}\label{sec3}
+
+\subsection{General Study Design}\label{sec3.1}
+
+\subsection{Real-World Queries}\label{sec3.2}
+Queries: Where did they come from and why did we choose to use them?
+Endpoints: the 7+ public biological endpoints included, selection criteria, and why they matter.
+
+\subsection{Federation Approaches}\label{sec3.3}
+Federation approaches: what exactly counts as the two compared approaches, and what modular variations were implemented in Comunica.
+
+\subsection{Experimental Set-up}\label{sec3.4}
+Observation period: the time span over which experiments were rerun, and why a longitudinal design matters.
+
+Other key design decisions:
+Execution environment
+Timeout settings
+Retry policy
+Number of runs per query/configuration
+Logging and error capture
+Definition of success/failure
+Whether you assess only execution success or also result stability/completeness
+
+\subsection{Measurement Metrics}
+Metrics that matter: query success rate, runtime / timeout rate, endpoint error rate, number/type of HTTP failures, result reproducibility over time, differences across federation strategies
+
+
+\section{Results}\label{sec4}
+\subsection{Overall picture}\label{sec4.1}
+Federation never worked robustly across the full workload.
+Many queries failed throughout the study due to endpoint errors, timeouts, or other operational issues.
+Improvements from engine-side changes were limited.
+
+\subsection{Experimental Phase 1: limited federation viability}\label{sec4.2}
+(February -- Sept 2025)
+Present the queries that reliably produced results.
+
+Characterize what made them different: fewer endpoints, lighter intermediate results, more selective joins, more stable sources, or simpler source selection.
+
+Show that limited success was possible, but only for a narrow subset of the workload.
+
+This subsection should make the reader think: “perhaps federation can work in practice, but only under constrained conditions.”
+
+
+\subsection{Experimental Phase 2: endpoint-side rate limiting becomes decisive}\label{sec4.3}
+(Sept 2025 -- Present)
+Show that previously stable queries stopped succeeding. Document the failure pattern tied to rate limiting.
+
+Emphasize that the major change was not a query-engine regression, but a change in the operational environment.
+
+
+\subsection{Comparison across federation approaches}\label{sec4.3}
+
+Which approach did better before fall 2025?
+Did modular Comunica adjustments help for the few viable queries?
+Were any gains washed out once endpoint-side limits tightened?
+The framing here should be: engine differences mattered at the margins -> endpoint-side constraints dominated the final outcome
+
+\subsection{Failure taxonomy}\label{sec4.4}
+A concise taxonomy represented in this git repo:
+
+timeouts
+endpoint unavailability
+HTTP/rate-limit errors
+unstable or inconsistent responses
+planning/source-selection inefficiencies
+failures caused by contacting too many sources or issuing too many subqueries
+This subsection turns messy empirical observations into a reusable scientific result.
+
+\section{Discussion}\label{sec5}
+
+Our findings suggest that the question is not only whether federation engines can optimize distributed queries, but whether public endpoint infrastructures are willing and able to support the access patterns that federation requires.
+
+Prelim themes:
+
+The main bottleneck was operational, not purely algorithmic.
+Public endpoints may be suitable for interactive single-endpoint querying, but not necessarily for cross-endpoint federated workloads.
+Longitudinal instability matters: a result observed in one month may not reproduce a few months later.
+Benchmark-based federation evaluation may overestimate practical viability.
+Federation over public infrastructure may require a different deployment model: negotiated access, mirrors, caches, precomputed summaries, or hybrid architectures.
+
+
+\section{Limitations}\label{sec6}
+One important move here is to present temporal variability not only as a limitation, but as part of the phenomenon being studied.
+
+biological domain specificity
+only 7+ endpoints
+only ~60 queries
+real-world queries may not cover all federation patterns
+changing endpoint behavior makes causal attribution difficult
+results may depend on timeout thresholds and experimental infrastructure
+
+
+\section{Practical Implications and Recommendations}\label{sec7}
+
+Recommendations can be directed to three audiences:
+Researchers: evaluate federation longitudinally, not only on static benchmarks.
+Engine designers: incorporate rate-limit-aware planning, request budgeting, caching, and degraded-execution strategies.
+Endpoint operators / infrastructure designers: expose clearer operational policies and consider supported federation access modes.
+
+
+\begin{credits}
+\subsubsection{\ackname} 
+Project funding provided from the Research Foundation – Flanders (FWO) (SB Fellowship 1S27825N) and (Long Research Stay V416635N).
+Ruben Taelman is a postdoctoral fellow of the Research Foundation – Flanders (FWO) (1202124N).
+
+\end{credits}
+
+\bibliographystyle{splncs04}
+\bibliography{references}
+
+\end{document}
