@@ -1,0 +1,10 @@
+{
+  "name": "fed-survey-results-dashboard",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Static GitHub Pages dashboard for federated SPARQL experiment results",
+  "scripts": {
+    "build:data": "node scripts/build-dashboard-data.mjs --write-missing-summaries",
+    "build:data:no-write": "node scripts/build-dashboard-data.mjs"
+  }
+}

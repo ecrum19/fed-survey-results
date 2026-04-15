@@ -1,0 +1,263 @@
+:root {
+  --bg: #f3f5f8;
+  --panel: #ffffff;
+  --panel-alt: #f7fbff;
+  --text: #1d2a37;
+  --muted: #5a6b7d;
+  --accent: #0f5fa8;
+  --accent-soft: #dcecff;
+  --success: #1f7a4d;
+  --danger: #a03333;
+  --border: #d6e0ea;
+  --shadow: 0 8px 30px rgba(23, 45, 76, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Source Sans 3", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 0 0, #dbe9f8 0%, transparent 35%),
+    radial-gradient(circle at 95% 10%, #d9f1ea 0%, transparent 30%),
+    var(--bg);
+}
+
+code {
+  font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.94em;
+}
+
+.page-shell {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 1.2rem 1rem 2rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.hero {
+  background: linear-gradient(120deg, #0f5fa8 0%, #1f7a4d 100%);
+  color: #fff;
+  border-radius: 14px;
+  padding: 1.2rem 1.4rem;
+  box-shadow: var(--shadow);
+}
+
+.hero h1 {
+  margin: 0 0 0.35rem;
+  font-size: 1.65rem;
+}
+
+.hero p {
+  margin: 0.2rem 0;
+  line-height: 1.35;
+}
+
+.hero .meta {
+  color: #dbe9fb;
+  font-size: 0.95rem;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 1rem;
+}
+
+.panel h2 {
+  margin: 0 0 0.8rem;
+  font-size: 1.1rem;
+}
+
+.controls-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.controls-grid label {
+  display: grid;
+  gap: 0.3rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.controls-grid select,
+.controls-grid input {
+  width: 100%;
+  padding: 0.45rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text);
+}
+
+.toggle-row {
+  display: flex !important;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--text) !important;
+}
+
+.search-control {
+  grid-column: 1 / -1;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+
+.kpi-card {
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.8rem;
+}
+
+.kpi-label {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.kpi-value {
+  font-size: 1.35rem;
+  margin-top: 0.2rem;
+  font-weight: 700;
+}
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 0.9rem;
+}
+
+.chart-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.65rem;
+  background: #fff;
+}
+
+.chart-card h3 {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.chart {
+  width: 100%;
+  height: 260px;
+  display: block;
+}
+
+.table-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.55rem;
+}
+
+.table-wrap {
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+#recordsTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 980px;
+}
+
+#recordsTable th,
+#recordsTable td {
+  text-align: left;
+  border-bottom: 1px solid #e7eef5;
+  padding: 0.5rem 0.55rem;
+  font-size: 0.9rem;
+  vertical-align: top;
+}
+
+#recordsTable thead {
+  background: #eaf3fc;
+}
+
+#recordsTable tbody tr:hover {
+  background: #f4f9ff;
+  cursor: pointer;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.77rem;
+  border-radius: 999px;
+  padding: 0.15rem 0.45rem;
+  font-weight: 600;
+}
+
+.badge.success {
+  background: #ddf5e8;
+  color: var(--success);
+}
+
+.badge.failure {
+  background: #fbe3e3;
+  color: var(--danger);
+}
+
+.pagination {
+  margin-top: 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.pagination button {
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.35rem 0.65rem;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.detail-panel pre {
+  margin: 0;
+  white-space: pre-wrap;
+  background: #0c1e2b;
+  color: #d6e8f6;
+  border-radius: 10px;
+  padding: 0.9rem;
+  max-height: 280px;
+  overflow: auto;
+  font-size: 0.84rem;
+}
+
+.note-panel ul {
+  margin: 0;
+  padding-left: 1rem;
+  color: var(--muted);
+}
+
+@media (max-width: 700px) {
+  .hero h1 {
+    font-size: 1.35rem;
+  }
+
+  .chart {
+    height: 220px;
+  }
+}

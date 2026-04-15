@@ -1,0 +1,20 @@
+{
+  "generated_at": "2026-04-15T14:38:06.571Z",
+  "scope": "old-results",
+  "run_count": 1,
+  "query_count": 43,
+  "succeeded_queries": 5,
+  "failed_queries": 38,
+  "success_rate": 0.11627906976744186,
+  "non_zero_result_queries": 4,
+  "median_duration_seconds": 37.838641,
+  "known_http_requests_total": 0,
+  "earliest_query_start": "2025-09-02T08:17:00.718Z",
+  "latest_query_end": "2025-09-12T13:32:00.177Z",
+  "error_counts": {
+    "None": 5,
+    "Other Error": 13,
+    "Fetch Failure": 10,
+    "Request Failed": 15
+  }
+}

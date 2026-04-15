@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Federated Query Experiment Dashboard</title>
+    <link rel="stylesheet" href="./assets/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <h1>Federated Query Experiment Dashboard</h1>
+        <p>
+          Interactive view of run-level and query-level outcomes from the
+          <code>experiments/</code> directory.
+        </p>
+        <p class="meta" id="dataMeta">Loading dataset metadata...</p>
+      </header>
+
+      <section class="panel controls">
+        <h2>Scope &amp; Filters</h2>
+        <div class="controls-grid">
+          <label class="toggle-row">
+            <input type="checkbox" id="includeOldResults" />
+            Include <code>experiments/old-results/</code>
+          </label>
+
+          <label>
+            Run
+            <select id="runFilter">
+              <option value="">All runs</option>
+            </select>
+          </label>
+
+          <label>
+            Outcome
+            <select id="outcomeFilter">
+              <option value="all">All</option>
+              <option value="success">Produced results</option>
+              <option value="failure">Did not produce results</option>
+              <option value="nonzero">Non-zero result count</option>
+            </select>
+          </label>
+
+          <label>
+            Error category
+            <select id="errorFilter">
+              <option value="">All categories</option>
+            </select>
+          </label>
+
+          <label>
+            Service descriptions
+            <select id="serviceFilter">
+              <option value="all">All</option>
+              <option value="no-service">No service descriptions</option>
+              <option value="with-service">With service descriptions</option>
+              <option value="unknown">Unknown</option>
+            </select>
+          </label>
+
+          <label>
+            Min sources
+            <input id="minSourcesFilter" type="number" min="0" step="1" placeholder="0" />
+          </label>
+
+          <label>
+            Max duration (s)
+            <input id="maxDurationFilter" type="number" min="0" step="0.01" placeholder="No limit" />
+          </label>
+
+          <label>
+            Start date (UTC)
+            <input id="startDateFilter" type="date" />
+          </label>
+
+          <label>
+            End date (UTC)
+            <input id="endDateFilter" type="date" />
+          </label>
+
+          <label class="search-control">
+            Query name search
+            <input id="searchFilter" type="search" placeholder="e.g., 42_ns.rq" />
+          </label>
+        </div>
+      </section>
+
+      <section class="kpi-grid" id="kpiGrid"></section>
+
+      <section class="panel charts">
+        <h2>Overview Charts</h2>
+        <div class="chart-grid">
+          <div class="chart-card">
+            <h3>Success rate by run</h3>
+            <svg id="runSuccessChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+          </div>
+          <div class="chart-card">
+            <h3>Error category counts</h3>
+            <svg id="errorCategoryChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+          </div>
+          <div class="chart-card">
+            <h3>Median runtime by run (seconds)</h3>
+            <svg id="runMedianChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel table-panel">
+        <h2>Query Records</h2>
+        <div class="table-meta" id="tableMeta"></div>
+        <div class="table-wrap">
+          <table id="recordsTable">
+            <thead>
+              <tr>
+                <th>Run</th>
+                <th>Query</th>
+                <th>Start</th>
+                <th>Duration (s)</th>
+                <th>Sources</th>
+                <th>HTTP requests</th>
+                <th>Produced results</th>
+                <th>Result count</th>
+                <th>Error category</th>
+              </tr>
+            </thead>
+            <tbody id="recordsTableBody"></tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <button id="prevPageBtn" type="button">Previous</button>
+          <span id="pageStatus"></span>
+          <button id="nextPageBtn" type="button">Next</button>
+        </div>
+      </section>
+
+      <section class="panel detail-panel">
+        <h2>Selected Record</h2>
+        <pre id="recordDetail">Select a row in the table to inspect full record details.</pre>
+      </section>
+
+      <section class="panel note-panel">
+        <h2>Notes</h2>
+        <ul>
+          <li>Only values present in source files are displayed; unknown values remain blank.</li>
+          <li>Main summary metrics exclude <code>old-results</code> by default.</li>
+          <li><code>_ns</code> and <code>no-service</code> query identifiers are treated as "no service descriptions".</li>
+        </ul>
+      </section>
+    </div>
+
+    <script type="module" src="./assets/app.js"></script>
+  </body>
+</html>

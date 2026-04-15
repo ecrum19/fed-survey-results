@@ -1,0 +1,25 @@
+{
+  "generated_at": "2026-04-15T14:38:06.570Z",
+  "scope": "main",
+  "run_count": 11,
+  "query_count": 654,
+  "succeeded_queries": 47,
+  "failed_queries": 607,
+  "success_rate": 0.07186544342507645,
+  "non_zero_result_queries": 29,
+  "median_duration_seconds": 4.289151,
+  "known_http_requests_total": 17230837,
+  "earliest_query_start": "2025-09-17T13:38:56.925Z",
+  "latest_query_end": "2026-01-31T13:42:55.491Z",
+  "error_counts": {
+    "None": 47,
+    "Other Error": 40,
+    "Fetch Failure": 71,
+    "Request Failed": 3,
+    "Client-Side HTTP Error": 306,
+    "Content-Type Error": 8,
+    "Server-Side Error": 153,
+    "Out of Memory": 25,
+    "Unknown Error": 1
+  }
+}
