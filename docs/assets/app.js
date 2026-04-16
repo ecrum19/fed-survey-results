@@ -12,8 +12,11 @@ const state = {
   oldDataset: null,
   mainSummary: null,
   includeOldResults: false,
+  monthFocus: null,
   filteredRecords: [],
   currentPage: 1,
+  sortKey: "start",
+  sortDirection: "desc",
 };
 
 const dom = {
@@ -35,6 +38,12 @@ const dom = {
   errorCategoryChart: document.getElementById("errorCategoryChart"),
   runMedianChart: document.getElementById("runMedianChart"),
 
+  monthPills: document.getElementById("monthPills"),
+  monthSuccessChart: document.getElementById("monthSuccessChart"),
+  monthVolumeChart: document.getElementById("monthVolumeChart"),
+  monthlyRunGrid: document.getElementById("monthlyRunGrid"),
+
+  recordsTable: document.getElementById("recordsTable"),
   tableMeta: document.getElementById("tableMeta"),
   recordsTableBody: document.getElementById("recordsTableBody"),
   prevPageBtn: document.getElementById("prevPageBtn"),
@@ -69,6 +78,29 @@ function formatDateTime(value) {
     return "N/A";
   }
   return date.toISOString().replace("T", " ").replace(".000Z", "Z");
+}
+
+function getMonthKey(isoValue) {
+  if (!isoValue) {
+    return null;
+  }
+  const date = new Date(isoValue);
+  if (Number.isNaN(date.valueOf())) {
+    return null;
+  }
+  return date.toISOString().slice(0, 7);
+}
+
+function monthLabel(monthKey) {
+  if (!monthKey) {
+    return "Unknown";
+  }
+  const [year, month] = monthKey.split("-");
+  return `${year}-${month}`;
+}
+
+function getRecordMonthKey(record) {
+  return getMonthKey(record.start) || getMonthKey(record.end);
 }
 
 function getActiveRuns() {
@@ -132,7 +164,7 @@ function updateErrorOptions() {
   }
 }
 
-function filterRecords() {
+function filterRecords({ applyMonthFocus = true } = {}) {
   const records = getActiveRecords();
 
   const runFilter = dom.runFilter.value;
@@ -199,6 +231,12 @@ function filterRecords() {
     if (searchText) {
       const queryName = (record.query_name || "").toLowerCase();
       if (!queryName.includes(searchText)) {
+        return false;
+      }
+    }
+
+    if (applyMonthFocus && state.monthFocus) {
+      if (getRecordMonthKey(record) !== state.monthFocus) {
         return false;
       }
     }
@@ -402,41 +440,235 @@ function renderCharts(records) {
   renderBarChart(dom.runMedianChart, medianBars, (value) => formatNumber(value, 1));
 }
 
-function renderTable(records) {
-  const sorted = [...records].sort((a, b) => {
-    const aTime = a.start ? new Date(a.start).valueOf() : 0;
-    const bTime = b.start ? new Date(b.start).valueOf() : 0;
-    return bTime - aTime;
+function getMonthlyStats(records) {
+  const monthlyMap = new Map();
+
+  for (const record of records) {
+    const monthKey = getRecordMonthKey(record) || "Unknown";
+    if (!monthlyMap.has(monthKey)) {
+      monthlyMap.set(monthKey, {
+        monthKey,
+        label: monthLabel(monthKey),
+        total: 0,
+        success: 0,
+        nonZero: 0,
+        durations: [],
+        runs: new Set(),
+      });
+    }
+
+    const month = monthlyMap.get(monthKey);
+    month.total += 1;
+    if (record.produced_results) {
+      month.success += 1;
+    }
+    if (record.results_count > 0) {
+      month.nonZero += 1;
+    }
+    if (record.duration_seconds !== null && record.duration_seconds !== undefined) {
+      month.durations.push(record.duration_seconds);
+    }
+    month.runs.add(record.run_id);
+  }
+
+  return [...monthlyMap.values()]
+    .map((month) => ({
+      ...month,
+      successRate: month.total > 0 ? month.success / month.total : 0,
+      medianDuration: median(month.durations),
+    }))
+    .sort((a, b) => a.monthKey.localeCompare(b.monthKey));
+}
+
+function renderMonthlyViews(allMonthEligibleRecords) {
+  const monthlyStats = getMonthlyStats(allMonthEligibleRecords);
+
+  if (state.monthFocus && !monthlyStats.some((month) => month.monthKey === state.monthFocus)) {
+    state.monthFocus = null;
+  }
+
+  const pills = [
+    `<button type="button" class="month-pill ${state.monthFocus === null ? "active" : ""}" data-month="all">All months</button>`,
+    ...monthlyStats.map((month) => `
+      <button
+        type="button"
+        class="month-pill ${state.monthFocus === month.monthKey ? "active" : ""}"
+        data-month="${month.monthKey}"
+      >
+        ${month.label} · ${month.total} q · ${formatPercent(month.successRate)}
+      </button>
+    `),
+  ];
+  dom.monthPills.innerHTML = pills.join("");
+
+  dom.monthPills.querySelectorAll(".month-pill").forEach((button) => {
+    button.addEventListener("click", () => {
+      const month = button.dataset.month;
+      state.monthFocus = month === "all" ? null : month;
+      handleFilterChange();
+    });
   });
+
+  const successBars = monthlyStats.map((month) => ({
+    label: month.label,
+    value: month.successRate * 100,
+    color: "#1f7a4d",
+  }));
+
+  const volumeBars = monthlyStats.map((month) => ({
+    label: month.label,
+    value: month.total,
+    color: "#0f5fa8",
+  }));
+
+  renderBarChart(dom.monthSuccessChart, successBars, (value) => `${value.toFixed(1)}%`);
+  renderBarChart(dom.monthVolumeChart, volumeBars, (value) => formatNumber(value, 0));
+
+  const runStatsById = new Map();
+  for (const record of allMonthEligibleRecords) {
+    if (!runStatsById.has(record.run_id)) {
+      runStatsById.set(record.run_id, {
+        runLabel: record.run_label,
+        total: 0,
+        success: 0,
+      });
+    }
+
+    const runStats = runStatsById.get(record.run_id);
+    runStats.total += 1;
+    if (record.produced_results) {
+      runStats.success += 1;
+    }
+  }
+
+  const visibleMonths = state.monthFocus
+    ? monthlyStats.filter((month) => month.monthKey === state.monthFocus)
+    : monthlyStats;
+
+  if (!visibleMonths.length) {
+    dom.monthlyRunGrid.innerHTML = "<article class='month-card'><h4>No monthly data</h4></article>";
+    return;
+  }
+
+  dom.monthlyRunGrid.innerHTML = visibleMonths.map((month) => {
+    const runList = [...month.runs]
+      .map((runId) => ({ runId, ...runStatsById.get(runId) }))
+      .sort((a, b) => b.total - a.total);
+
+    const runItems = runList
+      .map((run) => `<li><code>${run.runLabel}</code> · ${run.success}/${run.total} produced results</li>`)
+      .join("");
+
+    return `
+      <article class="month-card">
+        <h4>${month.label}</h4>
+        <div class="kpi-label">Queries: ${month.total} · Success: ${formatPercent(month.successRate)} · Median runtime: ${formatNumber(month.medianDuration)}</div>
+        <ul class="month-card-list">${runItems}</ul>
+      </article>
+    `;
+  }).join("");
+}
+
+function sortRecords(records) {
+  const direction = state.sortDirection === "asc" ? 1 : -1;
+  const key = state.sortKey;
+
+  const normalizeValue = (record) => {
+    const value = record[key];
+
+    if (key === "start") {
+      return value ? new Date(value).valueOf() : -Infinity;
+    }
+    if (key === "produced_results") {
+      return record.produced_results ? 1 : 0;
+    }
+    if (["duration_seconds", "source_count", "http_requests", "results_count"].includes(key)) {
+      return value === null || value === undefined ? -Infinity : Number(value);
+    }
+    return (value || "").toString().toLowerCase();
+  };
+
+  return [...records].sort((a, b) => {
+    const left = normalizeValue(a);
+    const right = normalizeValue(b);
+
+    if (left < right) {
+      return -1 * direction;
+    }
+    if (left > right) {
+      return 1 * direction;
+    }
+
+    const tieLeft = a.start ? new Date(a.start).valueOf() : 0;
+    const tieRight = b.start ? new Date(b.start).valueOf() : 0;
+    return tieRight - tieLeft;
+  });
+}
+
+function updateSortIndicators() {
+  dom.recordsTable.querySelectorAll(".sort-btn").forEach((button) => {
+    const key = button.dataset.sortKey;
+    const isActive = key === state.sortKey;
+    button.classList.toggle("active", isActive);
+    if (isActive) {
+      button.textContent = `${button.textContent.replace(/ [↑↓]$/, "")} ${state.sortDirection === "asc" ? "↑" : "↓"}`;
+    } else {
+      button.textContent = button.textContent.replace(/ [↑↓]$/, "");
+    }
+  });
+}
+
+function metricBarCell(value, max, fillClass, formatter = (v) => formatNumber(v)) {
+  if (value === null || value === undefined || Number.isNaN(value)) {
+    return `<div class="metric-cell"><div class="metric-value">N/A</div><div class="metric-bar"></div></div>`;
+  }
+  const percent = max > 0 ? Math.min(100, (value / max) * 100) : 0;
+  return `
+    <div class="metric-cell">
+      <div class="metric-value">${formatter(value)}</div>
+      <div class="metric-bar"><div class="metric-fill ${fillClass}" style="width:${percent}%"></div></div>
+    </div>
+  `;
+}
+
+function renderTable(records) {
+  const sorted = sortRecords(records);
 
   const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   if (state.currentPage > totalPages) {
     state.currentPage = totalPages;
   }
 
+  const maxDuration = Math.max(0, ...sorted.map((record) => Number(record.duration_seconds || 0)));
+  const maxSources = Math.max(0, ...sorted.map((record) => Number(record.source_count || 0)));
+  const maxHttp = Math.max(0, ...sorted.map((record) => Number(record.http_requests || 0)));
+  const maxResults = Math.max(0, ...sorted.map((record) => Number(record.results_count || 0)));
+
   const startIndex = (state.currentPage - 1) * PAGE_SIZE;
   const pageRows = sorted.slice(startIndex, startIndex + PAGE_SIZE);
 
   dom.recordsTableBody.innerHTML = pageRows.map((record, index) => {
     const badgeClass = record.produced_results ? "success" : "failure";
-    const badgeText = record.produced_results ? "Yes" : "No";
+    const badgeText = record.produced_results ? "Produced results" : "No results";
+    const sourcesPreview = record.sources?.slice(0, 2).join("\n") || "No source URLs";
 
     return `
       <tr data-index="${startIndex + index}">
-        <td>${record.run_label}</td>
+        <td><code>${record.run_label}</code></td>
         <td><code>${record.query_name || "N/A"}</code></td>
         <td>${formatDateTime(record.start)}</td>
-        <td>${formatNumber(record.duration_seconds)}</td>
-        <td>${record.source_count}</td>
-        <td>${record.http_requests === null ? "N/A" : formatNumber(record.http_requests, 0)}</td>
+        <td>${metricBarCell(record.duration_seconds, maxDuration, "duration")}</td>
+        <td title="${sourcesPreview}">${metricBarCell(record.source_count, maxSources, "sources", (v) => `${formatNumber(v, 0)} sources`)}</td>
+        <td>${metricBarCell(record.http_requests, maxHttp, "http", (v) => formatNumber(v, 0))}</td>
         <td><span class="badge ${badgeClass}">${badgeText}</span></td>
-        <td>${formatNumber(record.results_count, 0)}</td>
-        <td>${record.error_category || "N/A"}</td>
+        <td>${metricBarCell(record.results_count, maxResults, "results", (v) => formatNumber(v, 0))}</td>
+        <td><span class="tag error">${record.error_category || "N/A"}</span></td>
       </tr>
     `;
   }).join("");
 
-  dom.tableMeta.textContent = `Showing ${pageRows.length} of ${sorted.length} filtered records.`;
+  const monthNote = state.monthFocus ? ` Month: ${state.monthFocus}.` : "";
+  dom.tableMeta.textContent = `Showing ${pageRows.length} of ${sorted.length} filtered records.${monthNote}`;
   dom.pageStatus.textContent = `Page ${state.currentPage} / ${totalPages}`;
   dom.prevPageBtn.disabled = state.currentPage <= 1;
   dom.nextPageBtn.disabled = state.currentPage >= totalPages;
@@ -449,14 +681,22 @@ function renderTable(records) {
       dom.recordDetail.textContent = JSON.stringify(selected, null, 2);
     });
   });
+
+  updateSortIndicators();
 }
 
 function renderAll() {
-  const records = filterRecords();
+  // Compute records with all active filters except month-focus so monthly view remains navigable.
+  const recordsBeforeMonthFocus = filterRecords({ applyMonthFocus: false });
+  const records = state.monthFocus
+    ? recordsBeforeMonthFocus.filter((record) => getRecordMonthKey(record) === state.monthFocus)
+    : recordsBeforeMonthFocus;
+
   state.filteredRecords = records;
 
   renderKpis(records);
   renderCharts(records);
+  renderMonthlyViews(recordsBeforeMonthFocus);
   renderTable(records);
 }
 
@@ -490,6 +730,20 @@ function bindEvents() {
       handleFilterChange();
     });
   }
+
+  dom.recordsTable.querySelectorAll(".sort-btn").forEach((button) => {
+    button.addEventListener("click", () => {
+      const key = button.dataset.sortKey;
+      if (state.sortKey === key) {
+        state.sortDirection = state.sortDirection === "asc" ? "desc" : "asc";
+      } else {
+        state.sortKey = key;
+        state.sortDirection = "desc";
+      }
+      state.currentPage = 1;
+      renderTable(state.filteredRecords);
+    });
+  });
 
   dom.prevPageBtn.addEventListener("click", () => {
     if (state.currentPage > 1) {
