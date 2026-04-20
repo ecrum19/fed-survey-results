@@ -88,8 +88,8 @@
 
       <section class="kpi-grid" id="kpiGrid"></section>
 
-      <section class="panel charts">
-        <h2>Overview Charts</h2>
+      <details class="panel collapsible" id="overviewPanel" open>
+        <summary>Overview Charts</summary>
         <div class="chart-grid">
           <div class="chart-card">
             <h3>Success rate by run</h3>
@@ -104,10 +104,10 @@
             <svg id="runMedianChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
           </div>
         </div>
-      </section>
+      </details>
 
-      <section class="panel monthly-panel">
-        <h2>Monthly Views</h2>
+      <details class="panel collapsible" id="monthlyPanel" open>
+        <summary>Monthly Views</summary>
         <div class="month-pill-row" id="monthPills"></div>
         <div class="chart-grid">
           <div class="chart-card">
@@ -120,39 +120,115 @@
           </div>
         </div>
         <div class="monthly-run-grid" id="monthlyRunGrid"></div>
-      </section>
+      </details>
 
-      <section class="panel table-panel">
-        <h2>Query Records</h2>
-        <div class="table-meta" id="tableMeta"></div>
-        <div class="table-wrap">
-          <table id="recordsTable">
-            <thead>
-              <tr>
-                <th><button type="button" class="sort-btn" data-sort-key="run_label">Run</button></th>
-                <th><button type="button" class="sort-btn" data-sort-key="query_name">Query</button></th>
-                <th><button type="button" class="sort-btn" data-sort-key="start">Start</button></th>
-                <th><button type="button" class="sort-btn" data-sort-key="duration_seconds">Duration</button></th>
-                <th><button type="button" class="sort-btn" data-sort-key="source_count">Sources</button></th>
-                <th><button type="button" class="sort-btn" data-sort-key="http_requests">HTTP requests</button></th>
-                <th><button type="button" class="sort-btn" data-sort-key="produced_results">Outcome</button></th>
-                <th><button type="button" class="sort-btn" data-sort-key="results_count">Result count</button></th>
-                <th><button type="button" class="sort-btn" data-sort-key="error_category">Error category</button></th>
-              </tr>
-            </thead>
-            <tbody id="recordsTableBody"></tbody>
-          </table>
+      <section class="panel explorer-panel">
+        <h2>Data Explorer</h2>
+        <div class="explorer-mode-row">
+          <button type="button" class="mode-btn active" id="modeByQuery">By Query</button>
+          <button type="button" class="mode-btn" id="modeByExperiment">By Experiment</button>
         </div>
-        <div class="pagination">
-          <button id="prevPageBtn" type="button">Previous</button>
-          <span id="pageStatus"></span>
-          <button id="nextPageBtn" type="button">Next</button>
-        </div>
-      </section>
 
-      <section class="panel detail-panel">
-        <h2>Selected Record</h2>
-        <pre id="recordDetail">Select a row in the table to inspect full record details.</pre>
+        <div class="explorer-pane" id="queryPane">
+          <div class="explorer-grid">
+            <aside class="explorer-list-pane">
+              <div class="list-pane-head">
+                <h3>Queries</h3>
+                <input id="queryListSearch" type="search" placeholder="Find query..." />
+              </div>
+              <div class="query-list" id="queryList"></div>
+            </aside>
+
+            <div class="explorer-detail-pane">
+              <h3 id="querySelectedTitle">Selected Query</h3>
+              <div class="selected-meta" id="querySelectedMeta"></div>
+
+              <div class="chart-grid">
+                <div class="chart-card">
+                  <h3>Duration across runs</h3>
+                  <svg id="queryDurationChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                </div>
+                <div class="chart-card">
+                  <h3>Result counts across runs</h3>
+                  <svg id="queryResultsChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                </div>
+              </div>
+
+              <div class="table-meta" id="queryRunTableMeta"></div>
+              <div class="table-wrap">
+                <table id="queryRunsTable">
+                  <thead>
+                    <tr>
+                      <th>Run</th>
+                      <th>Start</th>
+                      <th>Duration (s)</th>
+                      <th>Outcome</th>
+                      <th>Results</th>
+                      <th>Error</th>
+                    </tr>
+                  </thead>
+                  <tbody id="queryRunsTableBody"></tbody>
+                </table>
+              </div>
+
+              <div class="query-detail">
+                <h3>Query Text</h3>
+                <pre id="queryTextDetail">Select a query to inspect its text and metadata.</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="explorer-pane hidden" id="experimentPane">
+          <div class="explorer-grid">
+            <aside class="explorer-list-pane">
+              <div class="list-pane-head">
+                <h3>Experiments</h3>
+                <div class="tiny-actions">
+                  <button type="button" id="selectAllExperiments">All</button>
+                  <button type="button" id="clearExperiments">None</button>
+                </div>
+              </div>
+              <div class="experiment-list" id="experimentList"></div>
+            </aside>
+
+            <div class="explorer-detail-pane">
+              <h3>Selected Experiments</h3>
+              <div class="selected-meta" id="experimentSelectedMeta"></div>
+
+              <div class="chart-grid">
+                <div class="chart-card">
+                  <h3>Success rate by selected experiment</h3>
+                  <svg id="selectedRunSuccessChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                </div>
+                <div class="chart-card">
+                  <h3>Median runtime by selected experiment</h3>
+                  <svg id="selectedRunDurationChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                </div>
+                <div class="chart-card">
+                  <h3>Error categories in selection</h3>
+                  <svg id="selectedRunErrorChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                </div>
+              </div>
+
+              <div class="table-meta" id="experimentQueryTableMeta"></div>
+              <div class="table-wrap">
+                <table id="experimentQueryTable">
+                  <thead>
+                    <tr>
+                      <th>Query</th>
+                      <th>Attempts</th>
+                      <th>Success rate</th>
+                      <th>Median duration (s)</th>
+                      <th>Max results</th>
+                    </tr>
+                  </thead>
+                  <tbody id="experimentQueryTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="panel note-panel">
@@ -161,7 +237,7 @@
           <li>Only values present in source files are displayed; unknown values remain blank.</li>
           <li>Main summary metrics exclude <code>old-results</code> by default.</li>
           <li><code>_ns</code> and <code>no-service</code> query identifiers are treated as "no service descriptions".</li>
-          <li>Use month pills to focus on a month and click table headers to sort.</li>
+          <li>Overview and Monthly sections are collapsible.</li>
         </ul>
       </section>
     </div>

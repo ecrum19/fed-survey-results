@@ -15,11 +15,13 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, "..");
 const experimentsRoot = path.join(repoRoot, "experiments");
+const queriesRoot = path.join(repoRoot, "queries");
 const docsDataDir = path.join(repoRoot, "docs", "data");
 
 const ISO_RE = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?/g;
@@ -519,6 +521,315 @@ function detectServiceDescription(queryName) {
   return null;
 }
 
+function normalizeQueryStem(rawName) {
+  if (!rawName || typeof rawName !== "string") {
+    return null;
+  }
+  let stem = rawName.trim();
+  stem = stem.replace(/\.rq$/i, "");
+  stem = stem.replace(/_ns$/i, "");
+  stem = stem.replace(/_ws$/i, "");
+  return stem || null;
+}
+
+function parseQueryStatMap() {
+  const statPath = path.join(queriesRoot, "stat.json");
+  if (!fileExists(statPath)) {
+    return new Map();
+  }
+
+  let parsed;
+  try {
+    parsed = JSON.parse(fs.readFileSync(statPath, "utf8"));
+  } catch (error) {
+    console.warn(`[WARN] Failed to parse ${path.relative(repoRoot, statPath)}: ${error.message}`);
+    return new Map();
+  }
+
+  const data = parsed?.data;
+  if (!data || typeof data !== "object") {
+    return new Map();
+  }
+
+  const map = new Map();
+  for (const [rawKey, stats] of Object.entries(data)) {
+    let tail = rawKey;
+    try {
+      // Handle URL-like keys.
+      tail = decodeURIComponent(new URL(rawKey).pathname.split("/").at(-1) || rawKey);
+    } catch {
+      // Handle non-URL keys.
+      tail = rawKey.split("/").at(-1) || rawKey;
+    }
+
+    const stem = normalizeQueryStem(tail);
+    if (!stem) {
+      continue;
+    }
+
+    // Prefer the first discovered stats entry for a stem.
+    if (!map.has(stem)) {
+      map.set(stem, stats);
+    }
+  }
+
+  return map;
+}
+
+function median(values) {
+  if (!values.length) {
+    return null;
+  }
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  if (sorted.length % 2 === 0) {
+    return (sorted[mid - 1] + sorted[mid]) / 2;
+  }
+  return sorted[mid];
+}
+
+function summarizeObservedQueryStats(dataset) {
+  const map = new Map();
+  const records = dataset.records.filter((record) => !record.is_run_summary_row);
+
+  for (const record of records) {
+    const stem = normalizeQueryStem(record.query_name);
+    if (!stem) {
+      continue;
+    }
+
+    if (!map.has(stem)) {
+      map.set(stem, {
+        query_stem: stem,
+        run_ids: new Set(),
+        attempts: 0,
+        successes: 0,
+        non_zero_results: 0,
+        durations: [],
+        max_results_count: 0,
+        last_seen_start: null,
+      });
+    }
+
+    const item = map.get(stem);
+    item.run_ids.add(record.run_id);
+    item.attempts += 1;
+    if (record.produced_results) {
+      item.successes += 1;
+    }
+    if ((record.results_count || 0) > 0) {
+      item.non_zero_results += 1;
+      if (record.results_count > item.max_results_count) {
+        item.max_results_count = record.results_count;
+      }
+    }
+    if (record.duration_seconds !== null && record.duration_seconds !== undefined) {
+      item.durations.push(record.duration_seconds);
+    }
+
+    const start = parseIsoTimestamp(record.start);
+    if (start && (!item.last_seen_start || start > item.last_seen_start)) {
+      item.last_seen_start = start;
+    }
+  }
+
+  const summarized = new Map();
+  for (const [stem, item] of map.entries()) {
+    summarized.set(stem, {
+      query_stem: stem,
+      attempts: item.attempts,
+      run_count: item.run_ids.size,
+      successes: item.successes,
+      success_rate: item.attempts > 0 ? item.successes / item.attempts : null,
+      non_zero_results: item.non_zero_results,
+      max_results_count: item.max_results_count,
+      median_duration_seconds: median(item.durations),
+      last_seen_start: item.last_seen_start ? item.last_seen_start.toISOString() : null,
+    });
+  }
+
+  return summarized;
+}
+
+function extractQueryTextStats(queryText) {
+  const lines = queryText.split(/\r?\n/);
+  const trimmedLines = lines.map((line) => line.trim());
+  const nonEmpty = trimmedLines.filter((line) => line.length > 0);
+
+  const withoutComments = lines
+    .filter((line) => !line.trim().startsWith("#"))
+    .join("\n");
+
+  const count = (pattern) => (withoutComments.match(pattern) || []).length;
+
+  const selectMatch = withoutComments.match(/\bSELECT\b([\s\S]*?)\bWHERE\b/i);
+  let selectVarCount = null;
+  if (selectMatch) {
+    const body = selectMatch[1];
+    if (/\*/.test(body)) {
+      selectVarCount = null;
+    } else {
+      const vars = new Set((body.match(/\?[A-Za-z_][A-Za-z0-9_]*/g) || []).map((v) => v.toLowerCase()));
+      selectVarCount = vars.size;
+    }
+  }
+
+  const limitMatch = withoutComments.match(/\bLIMIT\s+(\d+)/i);
+  const serviceIris = new Set();
+  const servicePattern = /\bSERVICE\b\s*<([^>]+)>/ig;
+  let serviceMatch = servicePattern.exec(withoutComments);
+  while (serviceMatch) {
+    serviceIris.add(serviceMatch[1].trim());
+    serviceMatch = servicePattern.exec(withoutComments);
+  }
+
+  return {
+    line_count: lines.length,
+    non_empty_line_count: nonEmpty.length,
+    character_count: queryText.length,
+    prefix_count: count(/\bPREFIX\b/gi),
+    optional_count: count(/\bOPTIONAL\b/gi),
+    union_count: count(/\bUNION\b/gi),
+    filter_count: count(/\bFILTER\b/gi),
+    bind_count: count(/\bBIND\b/gi),
+    service_clause_count: count(/\bSERVICE\b/gi),
+    service_iri_count: serviceIris.size,
+    service_iris: [...serviceIris].sort(),
+    has_service_clause: /\bSERVICE\b/i.test(withoutComments),
+    distinct: /\bSELECT\b[\s\S]*?\bDISTINCT\b/i.test(withoutComments),
+    limit_value: limitMatch ? Number(limitMatch[1]) : null,
+    select_var_count: selectVarCount,
+  };
+}
+
+function classifyQueryVariant(relativePathFromQueries) {
+  const normalized = relativePathFromQueries.replaceAll(path.sep, "/");
+  if (normalized.startsWith("original/")) {
+    return "original";
+  }
+  if (normalized.startsWith("no-service/broken/")) {
+    return "no-service-broken";
+  }
+  if (normalized.startsWith("no-service/")) {
+    return "no-service";
+  }
+  return "other";
+}
+
+function buildQueriesDataset(mainDataset, oldDataset) {
+  if (!fs.existsSync(queriesRoot)) {
+    return {
+      generated_at: new Date().toISOString(),
+      query_file_count: 0,
+      query_summary_count: 0,
+      variants: [],
+      summaries: [],
+    };
+  }
+
+  const statMap = parseQueryStatMap();
+  const observedMain = summarizeObservedQueryStats(mainDataset);
+  const observedOld = summarizeObservedQueryStats(oldDataset);
+
+  const queryFiles = collectFilesRecursive(
+    queriesRoot,
+    (name, fullPath) => name.toLowerCase().endsWith(".rq")
+      && fullPath.includes(`${path.sep}queries${path.sep}`),
+  ).sort((a, b) => a.localeCompare(b));
+
+  const variants = [];
+  const summaryMap = new Map();
+
+  for (const fullPath of queryFiles) {
+    const relativeToRoot = path.relative(repoRoot, fullPath).replaceAll(path.sep, "/");
+    const relativeToQueries = path.relative(queriesRoot, fullPath).replaceAll(path.sep, "/");
+    const variantType = classifyQueryVariant(relativeToQueries);
+    const fileName = path.basename(fullPath);
+    const stem = normalizeQueryStem(fileName);
+    if (!stem) {
+      continue;
+    }
+
+    const queryText = fs.readFileSync(fullPath, "utf8");
+    const parsedStats = extractQueryTextStats(queryText);
+    const complexityStats = statMap.get(stem) || null;
+    const observedStatsMain = observedMain.get(stem) || null;
+    const observedStatsOld = observedOld.get(stem) || null;
+
+    const variantRecord = {
+      query_stem: stem,
+      file_name: fileName,
+      file_path: relativeToRoot,
+      query_variant: variantType,
+      content_hash: createHash("sha256").update(queryText).digest("hex"),
+      query_text: queryText,
+      parsed_stats: parsedStats,
+      complexity_stats: complexityStats,
+      observed_main: observedStatsMain,
+      observed_old_results: observedStatsOld,
+    };
+
+    variants.push(variantRecord);
+
+    if (!summaryMap.has(stem)) {
+      summaryMap.set(stem, {
+        query_stem: stem,
+        variants: [],
+        parsed_stats: parsedStats,
+        complexity_stats: complexityStats,
+        observed_main: observedStatsMain,
+        observed_old_results: observedStatsOld,
+      });
+    }
+
+    const summary = summaryMap.get(stem);
+    summary.variants.push({
+      query_variant: variantType,
+      file_path: relativeToRoot,
+      file_name: fileName,
+      has_service_clause: parsedStats.has_service_clause,
+      service_iri_count: parsedStats.service_iri_count,
+      line_count: parsedStats.line_count,
+    });
+
+    // Prefer original variant for canonical parsed stats.
+    if (variantType === "original") {
+      summary.parsed_stats = parsedStats;
+    }
+    if (!summary.complexity_stats && complexityStats) {
+      summary.complexity_stats = complexityStats;
+    }
+    if (!summary.observed_main && observedStatsMain) {
+      summary.observed_main = observedStatsMain;
+    }
+    if (!summary.observed_old_results && observedStatsOld) {
+      summary.observed_old_results = observedStatsOld;
+    }
+  }
+
+  const summaries = [...summaryMap.values()]
+    .map((summary) => {
+      const variantKinds = new Set(summary.variants.map((v) => v.query_variant));
+      return {
+        ...summary,
+        variant_count: summary.variants.length,
+        has_original: variantKinds.has("original"),
+        has_no_service: variantKinds.has("no-service"),
+        has_broken_variant: variantKinds.has("no-service-broken"),
+      };
+    })
+    .sort((a, b) => a.query_stem.localeCompare(b.query_stem));
+
+  return {
+    generated_at: new Date().toISOString(),
+    query_file_count: variants.length,
+    query_summary_count: summaries.length,
+    stat_json_entry_count: statMap.size,
+    variants,
+    summaries,
+  };
+}
+
 function summarizeRunRecords(runRecords) {
   const queryRecords = runRecords.filter((record) => !record.is_run_summary_row);
   const succeeded = queryRecords.filter((record) => record.produced_results).length;
@@ -819,6 +1130,7 @@ function main() {
 
   const mainDataset = buildDataset("main", mainRunDirs, writeMissingSummaries);
   const oldDataset = buildDataset("old-results", oldRunDirs, writeMissingSummaries);
+  const queriesDataset = buildQueriesDataset(mainDataset, oldDataset);
 
   const mainSummary = aggregateSummary(mainDataset);
   const oldSummary = aggregateSummary(oldDataset);
@@ -829,10 +1141,12 @@ function main() {
   writeJson(path.join(docsDataDir, "old-results.json"), oldDataset);
   writeJson(path.join(docsDataDir, "summary.json"), mainSummary);
   writeJson(path.join(docsDataDir, "summary-old-results.json"), oldSummary);
+  writeJson(path.join(docsDataDir, "queries.json"), queriesDataset);
 
   console.log(`[OK] Wrote dashboard datasets to ${path.relative(repoRoot, docsDataDir)}`);
   console.log(`[INFO] Main runs: ${mainDataset.run_count}, query records: ${mainSummary.query_count}`);
   console.log(`[INFO] Old-result runs: ${oldDataset.run_count}, query records: ${oldSummary.query_count}`);
+  console.log(`[INFO] Query files: ${queriesDataset.query_file_count}, canonical queries: ${queriesDataset.query_summary_count}`);
 }
 
 main();

@@ -12,6 +12,10 @@ The dashboard is located at [`docs/index.html`](./docs/index.html), and data art
 - HTTP request counts (when available)
 - Service-description indicator (`_ns` / `no-service` = no service descriptions)
 - Optional inclusion of `experiments/old-results/` (excluded from main summary by default)
+- Query Explorer views from `queries/original/` and `queries/no-service/`, including:
+  - query text inspection
+  - query-structure stats (from `queries/stat.json` when available)
+  - observed execution stats from experiment runs
 
 ## Data pipeline
 
@@ -26,6 +30,7 @@ Behavior:
    - `docs/data/old-results.json` (old results only)
    - `docs/data/summary.json` (main summary only)
    - `docs/data/summary-old-results.json`
+   - `docs/data/queries.json` (query catalog + stats + observed performance)
 
 ## Commands
 
