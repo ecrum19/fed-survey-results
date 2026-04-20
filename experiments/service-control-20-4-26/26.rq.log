@@ -1,0 +1,22 @@
+[32m[2026-04-20T10:48:07.099Z]  INFO: Requesting https://beta.sparql.swisslipids.org/sparql { headers: { accept: 'application/n-quads,application/trig;q=0.95,application/ld+json;q=0.9,application/n-triples;q=0.8,text/turtle;q=0.6,application/rdf+xml;q=0.5,text/n3;q=0.35,application/xml;q=0.3,image/svg+xml;q=0.3,text/xml;q=0.3,text/html;q=0.2,application/xhtml+xml;q=0.18,application/json;q=0.135,text/shaclc;q=0.1,text/shaclc-ext;q=0.05', 'user-agent': 'Comunica/4.0 (linux; x64) ActorHttpFetch/4.4.1 Node.js/24' }, method: undefined, actor: 'urn:comunica:default:http/actors#fetch' }
+[0m[32m[2026-04-20T10:48:07.241Z]  INFO: Identified https://beta.sparql.swisslipids.org/sparql as sparql source with service URL: https://beta.sparql.swisslipids.org/sparql { actor: 'urn:comunica:default:query-source-identify-hypermedia/actors#sparql' }
+[0m[32m[2026-04-20T10:48:07.254Z]  INFO: Requesting https://beta.sparql.swisslipids.org/sparql { headers: { accept: 'application/sparql-results+json;q=1.0,application/sparql-results+xml;q=0.7', 'content-length': '908', 'content-type': 'application/x-www-form-urlencoded', 'user-agent': 'Comunica/4.0 (linux; x64) ActorHttpFetch/4.4.1 Node.js/24' }, method: 'POST', actor: 'urn:comunica:default:http/actors#fetch' }
+[0m
+<--- Last few GCs --->
+
+[46997:0x74c8000]   350510 ms: Mark-Compact 4087.7 (4100.5) -> 4082.7 (4100.5) MB, pooled: 0 MB, 937.14 / 0.00 ms  (average mu = 0.245, current mu = 0.099) task; scavenge might not succeed
+[46997:0x74c8000]   351503 ms: Mark-Compact 4086.0 (4101.5) -> 4082.8 (4099.2) MB, pooled: 4 MB, 981.51 / 0.00 ms  (average mu = 0.133, current mu = 0.012) task; scavenge might not succeed
+
+FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 0x73f8c4 node::OOMErrorHandler(char const*, v8::OOMDetails const&) [node]
+ 2: 0xc06f90  [node]
+ 3: 0xc0707f  [node]
+ 4: 0xeaa885  [node]
+ 5: 0xeaa8b2  [node]
+ 6: 0xeaabaa  [node]
+ 7: 0xebb8aa  [node]
+ 8: 0xebfc50  [node]
+ 9: 0x1953f71  [node]
+Aborted (core dumped)

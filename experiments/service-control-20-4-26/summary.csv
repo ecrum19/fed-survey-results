@@ -1,0 +1,69 @@
+query_name,sources,start,end,duration_seconds,http_requests,produced_results,results_count,error
+service-control-20-4-26,None,2026-04-20T12:42:33.887704,2026-04-20T13:08:56.132626,1582.244922,,13,10,54
+001.rq,['https://biosoda.unil.ch/emi/sparql'],2026-04-20T12:42:33.887793,2026-04-20T12:42:38.840559,4.952766,2.0,False,0,DEBUG: Server-side error encountered
+002.rq,['https://biosoda.unil.ch/emi/sparql'],2026-04-20T12:42:39.841852,2026-04-20T12:42:44.531783,4.689931,2.0,False,0,DEBUG: Server-side error encountered
+006.rq,['https://biosoda.unil.ch/emi/sparql'],2026-04-20T12:42:45.533090,2026-04-20T12:42:50.274539,4.741449,2.0,False,0,DEBUG: Server-side error encountered
+007.rq,['https://biosoda.unil.ch/emi/sparql'],2026-04-20T12:42:51.275924,2026-04-20T12:42:56.091848,4.815924,2.0,False,0,DEBUG: Server-side error encountered
+009.rq,['https://biosoda.unil.ch/emi/sparql'],2026-04-20T12:42:57.093154,2026-04-20T12:43:01.869692,4.776538,2.0,False,0,DEBUG: Server-side error encountered
+016.rq,['https://www.bgee.org/sparql'],2026-04-20T12:43:02.870972,2026-04-20T12:43:11.571768,8.700796,2.0,False,0,DEBUG: Server-side error encountered
+017.rq,['https://www.bgee.org/sparql'],2026-04-20T12:43:12.573076,2026-04-20T12:43:18.642206,6.06913,2.0,True,20,None
+018.rq,['https://www.bgee.org/sparql'],2026-04-20T12:43:19.643551,2026-04-20T12:43:32.623169,12.979618,2.0,False,0,DEBUG: Server-side error encountered
+019.rq,['https://www.bgee.org/sparql'],2026-04-20T12:43:33.624469,2026-04-20T12:43:41.211047,7.586578,2.0,False,0,DEBUG: Server-side error encountered
+020.rq,['https://www.bgee.org/sparql'],2026-04-20T12:43:42.212351,2026-04-20T12:43:49.090300,6.877949,2.0,False,0,DEBUG: Server-side error encountered
+027-biosodafrontend.rq,['https://www.bgee.org/sparql'],2026-04-20T12:43:50.091571,2026-04-20T12:43:56.321070,6.229499,2.0,False,0,DEBUG: Server-side error encountered
+028-biosodafrontend.rq,['https://www.bgee.org/sparql'],2026-04-20T12:43:57.322381,2026-04-20T12:44:04.817173,7.494792,2.0,False,0,DEBUG: Server-side error encountered
+109_uniprot_transporter_in_liver.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T12:44:05.819125,2026-04-20T12:44:10.468664,4.649539,2.0,False,0,DEBUG: Server reported client-side error
+11.rq,['https://sparql.rhea-db.org/sparql'],2026-04-20T12:44:11.469993,2026-04-20T12:44:18.578017,7.108024,2.0,True,7,None
+116_biosodafrontend_rabit_mouse_orthologs.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T12:44:19.579315,2026-04-20T12:44:24.396633,4.817318,2.0,False,0,DEBUG: Server reported client-side error
+117_biosodafrontend_glioblastoma_orthologs_rat.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T12:44:25.398086,2026-04-20T12:44:30.091835,4.693749,2.0,False,0,DEBUG: Server reported client-side error
+118_biosodafrontend_rat_brain_human_cancer.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T12:44:31.093305,2026-04-20T12:44:35.830403,4.737098,2.0,False,0,DEBUG: Server reported client-side error
+12.rq,['https://sparql.rhea-db.org/sparql'],2026-04-20T12:44:36.831708,2026-04-20T12:44:58.306025,21.474317,2.0,True,13594,None
+13.rq,['https://sparql.rhea-db.org/sparql'],2026-04-20T12:44:59.307430,2026-04-20T12:45:07.456310,8.14888,2.0,True,2183,None
+14.rq,['https://sparql.omabrowser.org/sparql'],2026-04-20T12:45:08.457607,2026-04-20T12:45:16.619577,8.16197,2.0,False,0,DEBUG: Server-side error encountered
+15-rat-TP53-biosodafrontend.rq,['https://sparql.omabrowser.org/sparql'],2026-04-20T12:45:17.620882,2026-04-20T12:45:25.005539,7.384657,2.0,True,8,None
+16.rq,['https://beta.sparql.swisslipids.org/sparql'],2026-04-20T12:45:26.006823,2026-04-20T12:45:50.185651,24.178828,2.0,False,0,DEBUG: Server reported client-side error
+17.rq,['https://sparql.orthodb.org/sparql'],2026-04-20T12:45:51.186940,2026-04-20T12:46:08.532196,17.345256,2.0,True,11,None
+18.rq,['https://sparql.orthodb.org/sparql'],2026-04-20T12:46:09.533499,2026-04-20T12:46:24.876396,15.342897,2.0,False,0,DEBUG: Server-side error encountered
+18a.rq,['https://sparql.rhea-db.org/sparql'],2026-04-20T12:46:25.877697,2026-04-20T12:46:31.142158,5.264461,2.0,True,141,None
+19.rq,['https://sparql.orthodb.org/sparql'],2026-04-20T12:46:32.143445,2026-04-20T12:46:48.403961,16.260516,2.0,False,0,DEBUG: Server-side error encountered
+19_draft_human_metabolome.rq,['https://sparql.rhea-db.org/sparql'],2026-04-20T12:46:49.405263,2026-04-20T12:47:45.999842,56.594579,2.0,True,176288,None
+20.rq,['https://sparql.orthodb.org/sparql'],2026-04-20T12:47:47.001370,2026-04-20T12:47:52.579103,5.577733,2.0,True,0,None
+20_search_chemical_names_in_japanese.rq,['https://sparql.rhea-db.org/sparql'],2026-04-20T12:47:53.580558,2026-04-20T12:48:01.318491,7.737933,2.0,True,0,None
+26.rq,['https://beta.sparql.swisslipids.org/sparql'],2026-04-20T12:48:02.319789,2026-04-20T12:53:57.394802,355.075013,2.0,False,0,Aborted (core dumped)
+27.rq,['https://beta.sparql.swisslipids.org/sparql'],2026-04-20T12:53:58.396242,2026-04-20T12:59:18.968174,320.571932,2.0,False,0,Aborted (core dumped)
+29.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T12:59:19.969575,2026-04-20T12:59:24.607419,4.637844,2.0,False,0,DEBUG: Server reported client-side error
+3.rq,['https://sparql.omabrowser.org/sparql'],2026-04-20T12:59:25.608790,2026-04-20T12:59:39.023287,13.414497,2.0,True,75,None
+34.rq,['https://beta.sparql.swisslipids.org/sparql'],2026-04-20T12:59:40.024574,2026-04-20T13:05:35.054799,355.030225,2.0,False,0,Aborted (core dumped)
+36.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:05:36.056183,2026-04-20T13:05:40.621047,4.564864,2.0,False,0,DEBUG: Server reported client-side error
+38.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:05:41.622349,2026-04-20T13:05:46.453708,4.831359,2.0,False,0,DEBUG: Server reported client-side error
+40.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:05:47.454988,2026-04-20T13:05:52.182993,4.728005,2.0,False,0,DEBUG: Server reported client-side error
+42.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:05:53.184295,2026-04-20T13:05:57.928240,4.743945,2.0,False,0,DEBUG: Server reported client-side error
+43.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:05:58.929558,2026-04-20T13:06:03.744816,4.815258,2.0,False,0,DEBUG: Server reported client-side error
+45.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:06:04.746203,2026-04-20T13:06:09.415067,4.668864,2.0,False,0,DEBUG: Server reported client-side error
+46.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:06:10.416429,2026-04-20T13:06:15.311558,4.895129,2.0,False,0,DEBUG: Server reported client-side error
+48.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:06:16.312856,2026-04-20T13:06:21.073448,4.760592,2.0,False,0,DEBUG: Server reported client-side error
+49.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:06:22.074770,2026-04-20T13:06:26.609851,4.535081,2.0,False,0,DEBUG: Server reported client-side error
+5.rq,['https://beta.sparql.swisslipids.org/sparql'],2026-04-20T13:06:27.611144,2026-04-20T13:06:37.462349,9.851205,2.0,True,284,None
+50.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:06:38.463636,2026-04-20T13:06:43.272992,4.809356,2.0,False,0,DEBUG: Server reported client-side error
+51.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:06:44.274301,2026-04-20T13:06:49.035242,4.760941,2.0,False,0,DEBUG: Server reported client-side error
+52.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:06:50.036655,2026-04-20T13:06:54.873848,4.837193,2.0,False,0,DEBUG: Server reported client-side error
+53.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:06:55.875144,2026-04-20T13:07:00.533846,4.658702,2.0,False,0,DEBUG: Server reported client-side error
+54.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:07:01.535144,2026-04-20T13:07:06.082396,4.547252,2.0,False,0,DEBUG: Server reported client-side error
+6.rq,['https://beta.sparql.swisslipids.org/sparql'],2026-04-20T13:07:07.083712,2026-04-20T13:07:19.352069,12.268357,2.0,False,0,DEBUG: Server reported client-side error
+60.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:07:20.353386,2026-04-20T13:07:25.255760,4.902374,2.0,False,0,DEBUG: Server reported client-side error
+67_draft_human_metabolome.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:07:26.257059,2026-04-20T13:07:30.864917,4.607858,2.0,False,0,DEBUG: Server reported client-side error
+7.rq,['https://beta.sparql.swisslipids.org/sparql'],2026-04-20T13:07:31.866220,2026-04-20T13:07:38.044832,6.178612,2.0,True,0,None
+70_enzymes_interacting_with_molecules_similar_to_dopamine.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:07:39.046134,2026-04-20T13:07:43.830914,4.78478,2.0,False,0,DEBUG: Server reported client-side error
+71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:07:44.832252,2026-04-20T13:07:49.499885,4.667633,2.0,False,0,DEBUG: Server reported client-side error
+90_uniprot_affected_by_metabolic_diseases_using_MeSH.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:07:50.501195,2026-04-20T13:07:55.244863,4.743668,2.0,False,0,DEBUG: Server reported client-side error
+92_uniprot_bioregistry_iri_translation.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:07:56.246251,2026-04-20T13:08:01.145638,4.899387,2.0,False,0,DEBUG: Server reported client-side error
+99_uniprot_identifiers_org_translation.rq,['https://sparql.uniprot.org/sparql'],2026-04-20T13:08:02.146871,2026-04-20T13:08:06.922429,4.775558,2.0,False,0,DEBUG: Server reported client-side error
+emi#examples011a.rq,['https://biosoda.unil.ch/emi/sparql'],2026-04-20T13:08:07.923726,2026-04-20T13:08:12.665408,4.741682,2.0,False,0,DEBUG: Server-side error encountered
+emi#examples011b.rq,['https://biosoda.unil.ch/emi/sparql'],2026-04-20T13:08:13.666801,2026-04-20T13:08:18.060557,4.393756,2.0,False,0,DEBUG: Server-side error encountered
+emi#examples012.rq,['https://biosoda.unil.ch/emi/sparql'],2026-04-20T13:08:19.061851,2026-04-20T13:08:23.556509,4.494658,2.0,False,0,DEBUG: Server-side error encountered
+emi#examples013.rq,['https://biosoda.unil.ch/emi/sparql'],2026-04-20T13:08:24.557824,2026-04-20T13:08:29.015641,4.457817,2.0,False,0,DEBUG: Server-side error encountered
+emi#examples015.rq,['https://biosoda.unil.ch/emi/sparql'],2026-04-20T13:08:30.016936,2026-04-20T13:08:34.503769,4.486833,2.0,False,0,DEBUG: Server-side error encountered
+emi#examples018.rq,['https://biosoda.unil.ch/emi/sparql'],2026-04-20T13:08:35.505042,2026-04-20T13:08:39.950867,4.445825,2.0,False,0,DEBUG: Server-side error encountered
+emi#examples019a.rq,['https://biosoda.unil.ch/emi/sparql'],2026-04-20T13:08:40.952160,2026-04-20T13:08:45.364324,4.412164,2.0,False,0,DEBUG: Server-side error encountered
+emi#examples019b.rq,['https://biosoda.unil.ch/emi/sparql'],2026-04-20T13:08:46.365616,2026-04-20T13:08:50.785680,4.420064,2.0,False,0,DEBUG: Server-side error encountered
+emi#examples021.rq,['https://biosoda.unil.ch/emi/sparql'],2026-04-20T13:08:51.786956,2026-04-20T13:08:56.132520,4.345564,2.0,False,0,DEBUG: Server-side error encountered
