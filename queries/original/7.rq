@@ -1,0 +1,30 @@
+# Datasources: https://beta.sparql.swisslipids.org/sparql
+PREFIX SWISSLIPID: <https://swisslipids.org/rdf/SLM_>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rh: <http://rdf.rhea-db.org/>
+PREFIX up: <http://purl.uniprot.org/core/>
+# Example 7
+SELECT ?startId ?startLabel ?id ?name 
+WHERE {
+  # Queried lipid species
+  VALUES ?startId { SWISSLIPID:000056871 }
+  ?startId rdfs:label ?startLabel . 
+  # Corresponding Isomeric subspecies
+  ?id rdfs:subClassOf+ ?startId .  
+  ?id SWISSLIPID:rank SWISSLIPID:Isomeric_Subspecie ;
+	  rdfs:label ?name .
+  # Mapped ChEBI
+  ?id owl:equivalentClass ?chebi .  
+  # federated query to Rhea
+  SERVICE <https://sparql.rhea-db.org/sparql> {
+  	?rhea rh:equation ?rheaEquation .
+  	?rhea rh:side/rh:contains/rh:compound/rh:chebi ?chebi .
+  }    
+  # federated query to UniProt
+  SERVICE <https://sparql.uniprot.org/sparql/> {
+    ?uniprot up:reviewed true .
+    ?uniprot up:recommendedName/up:fullName ?uniprotName .
+    ?uniprot up:annotation/up:catalyticActivity/up:catalyzedReaction ?rhea .
+  }
+}

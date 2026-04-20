@@ -1,0 +1,16 @@
+# Datasources: https://beta.sparql.swisslipids.org/sparql https://sparql.rhea-db.org/sparql https://sparql.uniprot.org/sparql/
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rh: <http://rdf.rhea-db.org/>
+PREFIX up: <http://purl.uniprot.org/core/>
+SELECT ?swisslipid  ?organism {
+  ?swisslipid owl:equivalentClass ?chebi .
+	{
+    ?rhea rh:side/rh:contains/rh:compound ?compound .
+    ?compound (rh:chebi|(rh:reactivePart/rh:chebi)|(rh:underlyingChebi/rh:chebi)) ?metabolite .
+  }
+	{
+    ?catalyticActivityAnnotation up:catalyticActivity/up:catalyzedReaction ?rhea .
+    ?protein up:annotation ?catalyticActivityAnnotation ;
+             up:organism ?organism .
+  }
+}

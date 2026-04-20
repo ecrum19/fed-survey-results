@@ -1,0 +1,15 @@
+# Datasources: https://sparql.orthodb.org/sparql/ https://sparql.uniprot.org/sparql/
+PREFIX up: <http://purl.uniprot.org/core/>
+PREFIX odbgroup: <http://purl.orthodb.org/odbgroup/>
+PREFIX : <http://purl.orthodb.org/>
+SELECT *
+WHERE {
+    ?gene a :Gene;
+        :memberOf odbgroup:6400at314295 .
+    ?gene :xref [a :Xref; :xrefResource ?xref] .
+    ?xref a :Uniprot .
+	{
+        ?xref a up:Protein ;
+            up:recommendedName [up:fullName ?name] .
+    }
+}

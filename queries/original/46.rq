@@ -1,0 +1,26 @@
+# Datasources: https://sparql.uniprot.org/sparql/
+PREFIX eunisSpecies: <http://eunis.eea.europa.eu/rdf/species-schema.rdf#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX taxon: <http://purl.uniprot.org/taxonomy/>
+PREFIX up: <http://purl.uniprot.org/core/>
+SELECT 
+    ?taxon
+    ?ncbiTaxid
+    ?eunisTaxon
+    ?eunisName 
+    ?image
+WHERE
+{
+    GRAPH <http://sparql.uniprot.org/taxonomy> {
+        ?taxon a up:Taxon .
+        # Taxon subclasses are materialized, do not use rdfs:subClassOf+
+        ?taxon rdfs:subClassOf taxon:8835 .
+        BIND(strafter(str(?taxon), 'onomy/') AS ?ncbiTaxid)
+    }
+    SERVICE <https://semantic.eea.europa.eu/sparql> {
+        ?eunisTaxon a eunisSpecies:SpeciesSynonym ;
+           eunisSpecies:binomialName ?eunisName ;
+           eunisSpecies:sameSpeciesNCBI ?ncbiTaxid ;
+           <http://xmlns.com/foaf/0.1/depiction> ?image .
+    }
+}

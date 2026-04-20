@@ -1,0 +1,14 @@
+# Datasources: https://sparql.uniprot.org/sparql/ https://bioregistry.io/sparql
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX uniprotkb: <http://purl.uniprot.org/uniprot/>
+PREFIX up: <http://purl.uniprot.org/core/>
+SELECT 
+    ?protein 
+    ?otherIdentifier
+WHERE {
+    BIND(uniprotkb:P00750 AS ?protein)
+    ?protein a up:Protein .
+	{
+        ?protein owl:sameAs ?otherIdentifier .
+    }
+}
