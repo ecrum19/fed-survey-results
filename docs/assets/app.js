@@ -654,15 +654,15 @@ function renderTable(records) {
 
     return `
       <tr data-index="${startIndex + index}">
-        <td><code>${record.run_label}</code></td>
-        <td><code>${record.query_name || "N/A"}</code></td>
-        <td>${formatDateTime(record.start)}</td>
-        <td>${metricBarCell(record.duration_seconds, maxDuration, "duration")}</td>
-        <td title="${sourcesPreview}">${metricBarCell(record.source_count, maxSources, "sources", (v) => `${formatNumber(v, 0)} sources`)}</td>
-        <td>${metricBarCell(record.http_requests, maxHttp, "http", (v) => formatNumber(v, 0))}</td>
-        <td><span class="badge ${badgeClass}">${badgeText}</span></td>
-        <td>${metricBarCell(record.results_count, maxResults, "results", (v) => formatNumber(v, 0))}</td>
-        <td><span class="tag error">${record.error_category || "N/A"}</span></td>
+        <td data-label="Run"><code>${record.run_label}</code></td>
+        <td data-label="Query"><code>${record.query_name || "N/A"}</code></td>
+        <td data-label="Start">${formatDateTime(record.start)}</td>
+        <td data-label="Duration">${metricBarCell(record.duration_seconds, maxDuration, "duration")}</td>
+        <td data-label="Sources" title="${sourcesPreview}">${metricBarCell(record.source_count, maxSources, "sources", (v) => `${formatNumber(v, 0)} sources`)}</td>
+        <td data-label="HTTP requests">${metricBarCell(record.http_requests, maxHttp, "http", (v) => formatNumber(v, 0))}</td>
+        <td data-label="Outcome"><span class="badge ${badgeClass}">${badgeText}</span></td>
+        <td data-label="Result count">${metricBarCell(record.results_count, maxResults, "results", (v) => formatNumber(v, 0))}</td>
+        <td data-label="Error category"><span class="tag error">${record.error_category || "N/A"}</span></td>
       </tr>
     `;
   }).join("");
