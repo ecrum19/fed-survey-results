@@ -345,6 +345,15 @@ code {
 .item-title {
   font-size: 0.86rem;
   font-weight: 700;
+  min-width: 0;
+}
+
+.item-title code {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .item-meta {
@@ -394,7 +403,8 @@ code {
 }
 
 .table-wrap {
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: hidden;
   border: 1px solid var(--border);
   border-radius: 10px;
 }
@@ -403,27 +413,83 @@ code {
 #experimentQueryTable {
   width: 100%;
   border-collapse: collapse;
-  min-width: 760px;
+  table-layout: fixed;
+  min-width: 0;
+}
+
+#querySibTable {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  min-width: 0;
 }
 
 #queryRunsTable th,
 #queryRunsTable td,
 #experimentQueryTable th,
-#experimentQueryTable td {
+#experimentQueryTable td,
+#querySibTable th,
+#querySibTable td {
   text-align: left;
   border-bottom: 1px solid #e7eef5;
   padding: 0.46rem 0.52rem;
   font-size: 0.85rem;
   vertical-align: top;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#queryRunsTable td code,
+#experimentQueryTable td code {
+  max-width: 100%;
+}
+
+#queryRunsTable th:nth-child(1),
+#queryRunsTable td:nth-child(1) {
+  width: 24%;
+}
+
+#queryRunsTable th:nth-child(2),
+#queryRunsTable td:nth-child(2) {
+  width: 19%;
+}
+
+#queryRunsTable th:nth-child(3),
+#queryRunsTable td:nth-child(3) {
+  width: 12%;
+}
+
+#queryRunsTable th:nth-child(4),
+#queryRunsTable td:nth-child(4) {
+  width: 13%;
+}
+
+#queryRunsTable th:nth-child(5),
+#queryRunsTable td:nth-child(5) {
+  width: 10%;
+}
+
+#queryRunsTable th:nth-child(6),
+#queryRunsTable td:nth-child(6) {
+  width: 22%;
+}
+
+#experimentQueryTable th:nth-child(1),
+#experimentQueryTable td:nth-child(1) {
+  width: 40%;
 }
 
 #queryRunsTable thead,
-#experimentQueryTable thead {
+#experimentQueryTable thead,
+#querySibTable thead {
   background: #eaf3fc;
 }
 
 #queryRunsTable tbody tr:hover,
-#experimentQueryTable tbody tr:hover {
+#experimentQueryTable tbody tr:hover,
+#querySibTable tbody tr:hover {
   background: #f4f9ff;
 }
 
@@ -464,6 +530,34 @@ code {
   margin-top: 0.78rem;
 }
 
+.query-text-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 0.65rem;
+  margin-bottom: 0.45rem;
+}
+
+.query-text-head h3 {
+  margin: 0;
+}
+
+.query-variant-select {
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.query-variant-select select {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.32rem 0.44rem;
+  min-width: 190px;
+  background: #fff;
+  color: var(--text);
+}
+
 .query-detail pre {
   margin: 0;
   white-space: pre-wrap;
@@ -485,6 +579,132 @@ code {
   width: auto;
   padding: 0.28rem 0.46rem;
   cursor: pointer;
+}
+
+.optional-insights {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  padding: 0.5rem 0.6rem 0.7rem;
+}
+
+.optional-insights > summary {
+  list-style: none;
+  cursor: pointer;
+  font-weight: 700;
+  color: #214362;
+  margin-bottom: 0.65rem;
+}
+
+.optional-insights > summary::-webkit-details-marker {
+  display: none;
+}
+
+.optional-insights > summary::before {
+  content: "▸";
+  display: inline-block;
+  margin-right: 0.35rem;
+}
+
+.optional-insights[open] > summary::before {
+  content: "▾";
+}
+
+.http-matrix-wrap {
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.http-matrix-table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 720px;
+  table-layout: fixed;
+}
+
+.http-matrix-table th,
+.http-matrix-table td {
+  border-bottom: 1px solid #e7eef5;
+  border-right: 1px solid #e7eef5;
+  padding: 0.38rem 0.46rem;
+  font-size: 0.78rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.http-matrix-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #eaf3fc;
+  color: #2d4a66;
+}
+
+.http-matrix-table .query-col {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  text-align: left;
+  background: #f8fbff;
+  max-width: 210px;
+}
+
+.http-matrix-table .query-col .truncate-scroll {
+  max-width: 190px;
+}
+
+.http-matrix-table tbody td.empty {
+  background: #f6f8fb;
+  color: #7b8da1;
+}
+
+.http-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 0.62rem;
+}
+
+.http-controls label {
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.http-controls input,
+.http-controls select {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.34rem 0.42rem;
+  background: #fff;
+  color: var(--text);
+}
+
+.http-chart-wrap {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.35rem;
+  background: #fff;
+}
+
+.truncate-text,
+.truncate-scroll {
+  display: inline-block;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+  scrollbar-width: thin;
+}
+
+.truncate-scroll:hover,
+.truncate-scroll:focus {
+  overflow-x: auto;
+  text-overflow: clip;
 }
 
 .hidden {
@@ -515,14 +735,16 @@ code {
   }
 
   #queryRunsTable,
-  #experimentQueryTable {
+  #experimentQueryTable,
+  #querySibTable {
     min-width: 0;
     border-collapse: separate;
     border-spacing: 0 0.5rem;
   }
 
   #queryRunsTable thead,
-  #experimentQueryTable thead {
+  #experimentQueryTable thead,
+  #querySibTable thead {
     display: none;
   }
 
@@ -557,7 +779,8 @@ code {
   }
 
   #queryRunsTable td::before,
-  #experimentQueryTable td::before {
+  #experimentQueryTable td::before,
+  #querySibTable td::before {
     content: attr(data-label);
     color: var(--muted);
     font-size: 0.75rem;
@@ -566,8 +789,33 @@ code {
   }
 
   #queryRunsTable td:last-child,
-  #experimentQueryTable td:last-child {
+  #experimentQueryTable td:last-child,
+  #querySibTable td:last-child {
     border-bottom: none;
+  }
+
+  #querySibTable,
+  #querySibTable tbody,
+  #querySibTable tr,
+  #querySibTable td {
+    display: block;
+    width: 100%;
+  }
+
+  #querySibTable tr {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  #querySibTable td {
+    border-bottom: 1px dashed #e2ecf5;
+    padding: 0.42rem 0.52rem;
+    display: grid;
+    grid-template-columns: 125px minmax(0, 1fr);
+    gap: 0.42rem;
+    align-items: center;
   }
 }
 

@@ -19,6 +19,7 @@ const state = {
 
   explorerMode: "query",
   selectedQueryStem: null,
+  selectedQueryVariantByStem: new Map(),
   selectedExperimentIds: new Set(),
   experimentSelectionInitialized: false,
 };
@@ -61,6 +62,10 @@ const dom = {
   queryRunTableMeta: document.getElementById("queryRunTableMeta"),
   queryRunsTableBody: document.getElementById("queryRunsTableBody"),
   queryTextDetail: document.getElementById("queryTextDetail"),
+  queryVariantSelect: document.getElementById("queryVariantSelect"),
+  querySibMeta: document.getElementById("querySibMeta"),
+  querySibTableHead: document.getElementById("querySibTableHead"),
+  querySibTableBody: document.getElementById("querySibTableBody"),
 
   selectAllExperiments: document.getElementById("selectAllExperiments"),
   clearExperiments: document.getElementById("clearExperiments"),
@@ -69,6 +74,20 @@ const dom = {
   selectedRunSuccessChart: document.getElementById("selectedRunSuccessChart"),
   selectedRunDurationChart: document.getElementById("selectedRunDurationChart"),
   selectedRunErrorChart: document.getElementById("selectedRunErrorChart"),
+  httpRequestMatrixMeta: document.getElementById("httpRequestMatrixMeta"),
+  httpDisplayMode: document.getElementById("httpDisplayMode"),
+  httpQueryFilter: document.getElementById("httpQueryFilter"),
+  httpTopN: document.getElementById("httpTopN"),
+  httpAggregateMode: document.getElementById("httpAggregateMode"),
+  httpMatrixContainer: document.getElementById("httpMatrixContainer"),
+  httpBarContainer: document.getElementById("httpBarContainer"),
+  httpRequestMatrix: document.getElementById("httpRequestMatrix"),
+  httpRequestBarChart: document.getElementById("httpRequestBarChart"),
+  successOnlyMeta: document.getElementById("successOnlyMeta"),
+  successOnlyResultsChart: document.getElementById("successOnlyResultsChart"),
+  successOnlyDurationChart: document.getElementById("successOnlyDurationChart"),
+  failureErrorChart: document.getElementById("failureErrorChart"),
+  httpByRunChart: document.getElementById("httpByRunChart"),
   experimentQueryTableMeta: document.getElementById("experimentQueryTableMeta"),
   experimentQueryTableBody: document.getElementById("experimentQueryTableBody"),
 };
@@ -105,6 +124,15 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;");
 }
 
+function escapeHtmlAttr(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 function parseIso(value) {
   if (!value) {
     return null;
@@ -125,6 +153,13 @@ function median(values) {
   return sorted[mid];
 }
 
+function mean(values) {
+  if (!values.length) {
+    return null;
+  }
+  return values.reduce((sum, value) => sum + value, 0) / values.length;
+}
+
 function normalizeQueryStem(rawName) {
   if (!rawName || typeof rawName !== "string") {
     return null;
@@ -134,6 +169,78 @@ function normalizeQueryStem(rawName) {
   stem = stem.replace(/_ns$/i, "");
   stem = stem.replace(/_ws$/i, "");
   return stem || null;
+}
+
+function formatServiceMode(mode) {
+  if (mode === "with-service") {
+    return "with service descriptions";
+  }
+  if (mode === "no-service") {
+    return "no service descriptions";
+  }
+  if (mode === "mixed") {
+    return "mixed service/no-service";
+  }
+  return "service mode unknown";
+}
+
+function variantRank(variantType) {
+  if (variantType === "original") {
+    return 0;
+  }
+  if (variantType === "no-service") {
+    return 1;
+  }
+  if (variantType === "no-service-broken") {
+    return 2;
+  }
+  return 3;
+}
+
+function variantLabel(variantType) {
+  if (variantType === "original") {
+    return "Service version (original)";
+  }
+  if (variantType === "no-service") {
+    return "No-service version";
+  }
+  if (variantType === "no-service-broken") {
+    return "No-service broken variant";
+  }
+  return variantType;
+}
+
+function truncateLabel(text, maxLength = 22) {
+  if (!text || text.length <= maxLength) {
+    return text;
+  }
+  return `${text.slice(0, Math.max(1, maxLength - 2))}..`;
+}
+
+const HTTP_BAR_PALETTE = [
+  "#2d7dd2",
+  "#45b39d",
+  "#f39c12",
+  "#8e44ad",
+  "#e74c3c",
+  "#1abc9c",
+  "#6c5ce7",
+  "#16a085",
+  "#2980b9",
+  "#d35400",
+];
+
+function aggregateHttp(values, mode) {
+  if (!values.length) {
+    return null;
+  }
+  if (mode === "mean") {
+    return mean(values);
+  }
+  if (mode === "max") {
+    return Math.max(...values);
+  }
+  return median(values);
 }
 
 function getMonthKey(isoValue) {
@@ -257,7 +364,7 @@ function renderBarChart(svg, data, valueLabelFormatter) {
       "font-size": 11,
     }).textContent = valueLabelFormatter(item.value);
 
-    const label = item.label.length > 18 ? `${item.label.slice(0, 16)}..` : item.label;
+    const label = truncateLabel(item.label, 18);
     appendSvgElement(svg, "text", {
       x: x + barWidth / 2,
       y: margin.top + innerHeight + 12,
@@ -267,6 +374,138 @@ function renderBarChart(svg, data, valueLabelFormatter) {
       "font-size": 11,
     }).textContent = label;
   });
+}
+
+function renderGroupedBarChart(svg, groups, series) {
+  clearSvg(svg);
+
+  const width = 640;
+  const height = 300;
+  const margin = { top: 40, right: 16, bottom: 104, left: 58 };
+  const innerWidth = width - margin.left - margin.right;
+  const innerHeight = height - margin.top - margin.bottom;
+
+  if (!groups.length || !series.length) {
+    appendSvgElement(svg, "text", {
+      x: width / 2,
+      y: height / 2,
+      "text-anchor": "middle",
+      fill: "#5a6b7d",
+      "font-size": 14,
+    }).textContent = "No data for current selection";
+    return;
+  }
+
+  const values = groups.flatMap((group) => series.map((run) => group.values.get(run.run_id) || 0));
+  const maxValue = Math.max(...values, 0);
+  const yMax = maxValue === 0 ? 1 : maxValue;
+
+  appendSvgElement(svg, "line", {
+    x1: margin.left,
+    y1: margin.top + innerHeight,
+    x2: margin.left + innerWidth,
+    y2: margin.top + innerHeight,
+    stroke: "#adc4db",
+  });
+
+  appendSvgElement(svg, "line", {
+    x1: margin.left,
+    y1: margin.top,
+    x2: margin.left,
+    y2: margin.top + innerHeight,
+    stroke: "#adc4db",
+  });
+
+  const tickCount = 4;
+  for (let i = 0; i <= tickCount; i += 1) {
+    const value = (yMax / tickCount) * i;
+    const y = margin.top + innerHeight - (value / yMax) * innerHeight;
+    appendSvgElement(svg, "line", {
+      x1: margin.left,
+      y1: y,
+      x2: margin.left + innerWidth,
+      y2: y,
+      stroke: "#edf3fa",
+    });
+    appendSvgElement(svg, "text", {
+      x: margin.left - 8,
+      y: y + 4,
+      "text-anchor": "end",
+      fill: "#5a6b7d",
+      "font-size": 11,
+    }).textContent = formatNumber(value, 1);
+  }
+
+  const seriesColors = new Map(series.map((run, index) => [run.run_id, HTTP_BAR_PALETTE[index % HTTP_BAR_PALETTE.length]]));
+  const groupWidth = innerWidth / groups.length;
+  const groupPadding = Math.min(14, Math.max(4, groupWidth * 0.16));
+  const innerGroupWidth = Math.max(4, groupWidth - groupPadding * 2);
+  const barGap = Math.min(4, Math.max(1, innerGroupWidth * 0.03));
+  const availableBarWidth = innerGroupWidth - (series.length - 1) * barGap;
+  const barWidth = Math.max(1, availableBarWidth / Math.max(1, series.length));
+
+  groups.forEach((group, groupIndex) => {
+    const groupStartX = margin.left + groupIndex * groupWidth + groupPadding;
+
+    series.forEach((run, runIndex) => {
+      const value = group.values.get(run.run_id);
+      if (value === null || value === undefined) {
+        return;
+      }
+
+      const barHeight = (value / yMax) * innerHeight;
+      const x = groupStartX + runIndex * (barWidth + barGap);
+      const y = margin.top + innerHeight - barHeight;
+      const fill = seriesColors.get(run.run_id) || "#0f5fa8";
+
+      const rect = appendSvgElement(svg, "rect", {
+        x,
+        y,
+        width: Math.max(1, barWidth),
+        height: Math.max(0, barHeight),
+        fill,
+        rx: 2,
+      });
+      const titleNode = document.createElementNS("http://www.w3.org/2000/svg", "title");
+      titleNode.textContent = `${group.label} · ${run.run_label}: ${formatNumber(value, 0)}`;
+      rect.appendChild(titleNode);
+    });
+
+    const labelX = margin.left + groupIndex * groupWidth + groupWidth / 2;
+    appendSvgElement(svg, "text", {
+      x: labelX,
+      y: margin.top + innerHeight + 11,
+      transform: `rotate(35 ${labelX} ${margin.top + innerHeight + 11})`,
+      "text-anchor": "start",
+      fill: "#5a6b7d",
+      "font-size": 11,
+    }).textContent = truncateLabel(group.label, 18);
+  });
+
+  // Compact legend so users can map run colors quickly.
+  const legendY = 16;
+  series.forEach((run, index) => {
+    const x = margin.left + index * 108;
+    if (x > width - 90) {
+      return;
+    }
+    const fill = seriesColors.get(run.run_id) || "#0f5fa8";
+    appendSvgElement(svg, "rect", {
+      x,
+      y: legendY - 8,
+      width: 10,
+      height: 10,
+      fill,
+      rx: 1,
+    });
+    appendSvgElement(svg, "text", {
+      x: x + 14,
+      y: legendY,
+      fill: "#2d4a66",
+      "font-size": 10,
+    }).textContent = truncateLabel(run.run_label, 14);
+  });
+
 }
 
 function getActiveRuns() {
@@ -295,7 +534,8 @@ function updateRunOptions() {
 
   const options = ["<option value=''>All runs</option>"];
   for (const run of runs) {
-    options.push(`<option value="${run.run_id}">${run.run_label}</option>`);
+    const modeLabel = formatServiceMode(run.service_description_mode);
+    options.push(`<option value="${run.run_id}">${run.run_label} (${modeLabel})</option>`);
   }
   dom.runFilter.innerHTML = options.join("");
 
@@ -644,10 +884,9 @@ function preferredVariantForStem(stem) {
   if (!variants.length) {
     return null;
   }
-  const rank = { original: 0, "no-service": 1, "no-service-broken": 2, other: 3 };
   return [...variants].sort((a, b) => {
-    const aRank = rank[a.query_variant] ?? rank.other;
-    const bRank = rank[b.query_variant] ?? rank.other;
+    const aRank = variantRank(a.query_variant);
+    const bRank = variantRank(b.query_variant);
     return aRank - bRank;
   })[0];
 }
@@ -677,8 +916,8 @@ function renderQueryList(records) {
 
     return `
       <div class="query-item ${state.selectedQueryStem === summary.query_stem ? "active" : ""}">
-        <button type="button" data-query-stem="${escapeHtml(summary.query_stem)}">
-          <div class="item-title"><code>${escapeHtml(summary.query_stem)}</code></div>
+        <button type="button" data-query-stem="${escapeHtmlAttr(summary.query_stem)}">
+          <div class="item-title"><code class="truncate-scroll" title="${escapeHtmlAttr(summary.query_stem)}">${escapeHtml(summary.query_stem)}</code></div>
           <div class="item-meta">Variants: ${summary.variant_count} · Main attempts: ${attempts} · Success: ${formatPercent(successRate)}</div>
         </button>
       </div>
@@ -702,13 +941,20 @@ function renderQueryDetail(records) {
     dom.queryRunsTableBody.innerHTML = "";
     dom.queryRunTableMeta.textContent = "No query selected.";
     dom.queryTextDetail.textContent = "Select a query to inspect its text and metadata.";
+    dom.queryVariantSelect.innerHTML = "<option value=''>No variants</option>";
+    dom.queryVariantSelect.disabled = true;
+    dom.querySibMeta.textContent = "No query selected.";
+    dom.querySibTableHead.innerHTML = "";
+    dom.querySibTableBody.innerHTML = "";
     clearSvg(dom.queryDurationChart);
     clearSvg(dom.queryResultsChart);
     return;
   }
 
   const summary = getQuerySummaries().find((item) => item.query_stem === state.selectedQueryStem);
-  const variants = getQueryVariants().filter((item) => item.query_stem === state.selectedQueryStem);
+  const variants = getQueryVariants()
+    .filter((item) => item.query_stem === state.selectedQueryStem)
+    .sort((a, b) => variantRank(a.query_variant) - variantRank(b.query_variant));
   const preferred = preferredVariantForStem(state.selectedQueryStem);
 
   const queryRecords = records
@@ -764,27 +1010,78 @@ function renderQueryDetail(records) {
 
     return `
       <tr>
-        <td data-label="Run"><code>${escapeHtml(record.run_label)}</code></td>
+        <td data-label="Run"><code class="truncate-scroll" title="${escapeHtmlAttr(record.run_label)}">${escapeHtml(record.run_label)}</code></td>
         <td data-label="Start">${formatDateTime(record.start)}</td>
         <td data-label="Duration (s)">${formatNumber(record.duration_seconds)}</td>
         <td data-label="Outcome"><span class="badge ${badgeClass}">${badgeText}</span></td>
         <td data-label="Results">${formatNumber(record.results_count, 0)}</td>
-        <td data-label="Error"><span class="tag error">${escapeHtml(record.error_category || "N/A")}</span></td>
+        <td data-label="Error"><span class="tag error truncate-scroll" title="${escapeHtmlAttr(record.error_category || "N/A")}">${escapeHtml(record.error_category || "N/A")}</span></td>
       </tr>
     `;
   }).join("");
 
-  const info = {
-    query_stem: summary?.query_stem || state.selectedQueryStem,
-    variant_count: summary?.variant_count || variants.length,
-    complexity_stats: summary?.complexity_stats || null,
-    parsed_stats: summary?.parsed_stats || null,
-    preferred_variant: preferred ? { query_variant: preferred.query_variant, file_path: preferred.file_path } : null,
+  const byType = new Map();
+  for (const variant of variants) {
+    if (!byType.has(variant.query_variant)) {
+      byType.set(variant.query_variant, variant);
+    }
+  }
+  const variantOptions = [...byType.values()]
+    .sort((a, b) => variantRank(a.query_variant) - variantRank(b.query_variant));
+
+  const remembered = state.selectedQueryVariantByStem.get(state.selectedQueryStem);
+  const preferredType = preferred?.query_variant || (variantOptions[0]?.query_variant ?? null);
+  const selectedType = variantOptions.some((variant) => variant.query_variant === remembered)
+    ? remembered
+    : preferredType;
+  const selectedVariant = variantOptions.find((variant) => variant.query_variant === selectedType)
+    || variantOptions[0]
+    || null;
+
+  dom.queryVariantSelect.innerHTML = variantOptions.length
+    ? variantOptions
+      .map((variant) => `<option value="${escapeHtml(variant.query_variant)}">${escapeHtml(variantLabel(variant.query_variant))}</option>`)
+      .join("")
+    : "<option value=''>No variants</option>";
+  dom.queryVariantSelect.disabled = variantOptions.length <= 1;
+
+  if (selectedVariant) {
+    dom.queryVariantSelect.value = selectedVariant.query_variant;
+    state.selectedQueryVariantByStem.set(state.selectedQueryStem, selectedVariant.query_variant);
+    dom.queryTextDetail.textContent = selectedVariant.query_text || "No query text available for this variant.";
+  } else {
+    dom.queryVariantSelect.value = "";
+    dom.queryTextDetail.textContent = "No query text available for this selection.";
+  }
+
+  dom.queryVariantSelect.onchange = () => {
+    const requestedType = dom.queryVariantSelect.value;
+    state.selectedQueryVariantByStem.set(state.selectedQueryStem, requestedType);
+    const nextVariant = variantOptions.find((variant) => variant.query_variant === requestedType) || null;
+    dom.queryTextDetail.textContent = nextVariant?.query_text || "No query text available for this variant.";
   };
 
-  const header = `${JSON.stringify(info, null, 2)}\n\n`;
-  const text = preferred?.query_text || "No query text available for this selection.";
-  dom.queryTextDetail.textContent = `${header}${text}`;
+  const sibColumns = state.queriesDataset?.sib_columns || [];
+  const sibRows = summary?.sib_rows || [];
+
+  if (!sibColumns.length || !sibRows.length) {
+    dom.querySibMeta.textContent = "No SIB curation metadata available for this query.";
+    dom.querySibTableHead.innerHTML = "";
+    dom.querySibTableBody.innerHTML = "";
+    return;
+  }
+
+  dom.querySibMeta.textContent = `Showing ${sibRows.length} SIB curation row(s).`;
+  dom.querySibTableHead.innerHTML = `
+    <tr>${sibColumns.map((column) => `<th>${escapeHtml(column)}</th>`).join("")}</tr>
+  `;
+  dom.querySibTableBody.innerHTML = sibRows.map((row) => `
+    <tr>
+      ${sibColumns.map((column) => `
+        <td data-label="${escapeHtml(column)}">${escapeHtml(row[column] ?? "-")}</td>
+      `).join("")}
+    </tr>
+  `).join("");
 }
 
 function renderExplorerQueryMode() {
@@ -808,11 +1105,12 @@ function syncExperimentSelection(activeRuns) {
 function renderExperimentList(activeRuns) {
   dom.experimentList.innerHTML = activeRuns.map((run) => {
     const checked = state.selectedExperimentIds.has(run.run_id) ? "checked" : "";
+    const modeLabel = formatServiceMode(run.service_description_mode);
     return `
       <label class="experiment-item">
-        <input type="checkbox" data-run-id="${escapeHtml(run.run_id)}" ${checked} />
-        <div class="item-title"><code>${escapeHtml(run.run_label)}</code></div>
-        <div class="item-meta">${formatDateTime(run.run_start)} · ${run.query_count} queries · ${formatPercent(run.success_rate)} success</div>
+        <input type="checkbox" data-run-id="${escapeHtmlAttr(run.run_id)}" ${checked} />
+        <div class="item-title"><code class="truncate-scroll" title="${escapeHtmlAttr(run.run_label)}">${escapeHtml(run.run_label)}</code></div>
+        <div class="item-meta">${formatDateTime(run.run_start)} · ${run.query_count} queries · ${formatPercent(run.success_rate)} success · ${modeLabel}</div>
       </label>
     `;
   }).join("");
@@ -886,6 +1184,246 @@ function renderExperimentCharts(selectedRuns, selectedRecords) {
   renderBarChart(dom.selectedRunErrorChart, errorBars, (value) => formatNumber(value, 0));
 }
 
+function buildHttpViewData(selectedRuns, selectedRecords) {
+  const aggregateMode = dom.httpAggregateMode.value || "median";
+  const queryFilter = dom.httpQueryFilter.value.trim().toLowerCase();
+  const requestedTopN = Number(dom.httpTopN.value);
+  const topN = Number.isFinite(requestedTopN) && requestedTopN > 0 ? Math.min(200, requestedTopN) : 20;
+
+  const byQueryRun = new Map();
+  for (const record of selectedRecords) {
+    const stem = normalizeQueryStem(record.query_name);
+    if (!stem) {
+      continue;
+    }
+    if (queryFilter && !stem.toLowerCase().includes(queryFilter)) {
+      continue;
+    }
+    if (record.http_requests === null || record.http_requests === undefined) {
+      continue;
+    }
+    const key = `${stem}::${record.run_id}`;
+    if (!byQueryRun.has(key)) {
+      byQueryRun.set(key, []);
+    }
+    byQueryRun.get(key).push(record.http_requests);
+  }
+
+  const allStems = [...new Set(
+    [...byQueryRun.keys()]
+      .map((key) => key.split("::")[0])
+      .filter(Boolean),
+  )];
+
+  const rows = allStems.map((stem) => {
+    const values = new Map();
+    let total = 0;
+    selectedRuns.forEach((run) => {
+      const runValues = byQueryRun.get(`${stem}::${run.run_id}`) || [];
+      const value = aggregateHttp(runValues, aggregateMode);
+      values.set(run.run_id, value);
+      if (value !== null) {
+        total += value;
+      }
+    });
+    return { stem, total, values };
+  })
+    .sort((a, b) => b.total - a.total || a.stem.localeCompare(b.stem))
+    .slice(0, topN);
+
+  const maxValue = rows.reduce((currentMax, row) => {
+    const rowMax = Math.max(0, ...selectedRuns.map((run) => row.values.get(run.run_id) || 0));
+    return Math.max(currentMax, rowMax);
+  }, 0);
+
+  const filledCells = rows.reduce((count, row) => (
+    count + selectedRuns.filter((run) => row.values.get(run.run_id) !== null).length
+  ), 0);
+
+  return {
+    aggregateMode,
+    queryFilter,
+    topN,
+    rows,
+    maxValue,
+    filledCells,
+  };
+}
+
+function renderHttpMatrixTable(selectedRuns, httpData) {
+  const header = `
+    <thead>
+      <tr>
+        <th class="query-col">Query</th>
+        ${selectedRuns.map((run) => `
+          <th title="${escapeHtmlAttr(run.run_id)}">
+            <span class="truncate-text" title="${escapeHtmlAttr(run.run_label)}">${escapeHtml(truncateLabel(run.run_label, 16))}</span>
+          </th>
+        `).join("")}
+      </tr>
+    </thead>
+  `;
+
+  const bodyRows = httpData.rows.map((row) => {
+    const cells = selectedRuns.map((run) => {
+      const value = row.values.get(run.run_id);
+      if (value === null || value === undefined) {
+        return "<td class='empty' title='No HTTP request data'>-</td>";
+      }
+      const display = formatNumber(value, 0);
+      return `<td data-http-value="${value}" title="${escapeHtmlAttr(`${httpData.aggregateMode} HTTP requests: ${display}`)}">${display}</td>`;
+    }).join("");
+
+    return `
+      <tr>
+        <th class="query-col">
+          <code class="truncate-scroll" title="${escapeHtmlAttr(row.stem)}">${escapeHtml(row.stem)}</code>
+        </th>
+        ${cells}
+      </tr>
+    `;
+  }).join("");
+
+  dom.httpRequestMatrix.innerHTML = `<table class="http-matrix-table">${header}<tbody>${bodyRows}</tbody></table>`;
+
+  const matrixCells = dom.httpRequestMatrix.querySelectorAll("td[data-http-value]");
+  matrixCells.forEach((cell) => {
+    const value = Number(cell.dataset.httpValue);
+    const ratio = httpData.maxValue > 0 ? value / httpData.maxValue : 0;
+    const lightness = 96 - ratio * 42;
+    cell.style.background = `hsl(210 72% ${lightness}%)`;
+  });
+}
+
+function renderHttpBarView(selectedRuns, httpData) {
+  const groups = httpData.rows.map((row) => ({
+    label: row.stem,
+    values: row.values,
+  }));
+  renderGroupedBarChart(dom.httpRequestBarChart, groups, selectedRuns);
+}
+
+function renderHttpRequestMatrix(selectedRuns, selectedRecords) {
+  const mode = dom.httpDisplayMode.value || "matrix";
+  const showBar = mode === "bar";
+  dom.httpMatrixContainer.classList.toggle("hidden", showBar);
+  dom.httpBarContainer.classList.toggle("hidden", !showBar);
+
+  if (!selectedRuns.length) {
+    dom.httpRequestMatrixMeta.textContent = "Select one or more experiments to view HTTP request data.";
+    dom.httpRequestMatrix.innerHTML = "<div class='item-meta'>No experiments selected.</div>";
+    renderGroupedBarChart(dom.httpRequestBarChart, [], []);
+    return;
+  }
+
+  const httpData = buildHttpViewData(selectedRuns, selectedRecords);
+
+  if (!httpData.rows.length) {
+    dom.httpRequestMatrixMeta.textContent = "No HTTP request values match the current query filter.";
+    dom.httpRequestMatrix.innerHTML = "<div class='item-meta'>No HTTP request data for the current filter.</div>";
+    renderGroupedBarChart(dom.httpRequestBarChart, [], []);
+    return;
+  }
+
+  renderHttpMatrixTable(selectedRuns, httpData);
+  renderHttpBarView(selectedRuns, httpData);
+
+  const aggLabel = httpData.aggregateMode === "mean"
+    ? "mean"
+    : httpData.aggregateMode === "max"
+      ? "max"
+      : "median";
+
+  dom.httpRequestMatrixMeta.textContent = [
+    `Queries shown: ${httpData.rows.length} (top ${httpData.topN})`,
+    `Experiments: ${selectedRuns.length}`,
+    `Cells with HTTP data: ${httpData.filledCells}`,
+    `Max ${aggLabel} HTTP requests: ${formatNumber(httpData.maxValue, 0)}`,
+    httpData.queryFilter ? `Filter: "${httpData.queryFilter}"` : "Filter: none",
+  ].join(" · ");
+}
+
+function renderOptionalInsights(selectedRuns, selectedRecords) {
+  if (!selectedRuns.length) {
+    dom.successOnlyMeta.innerHTML = "<span class='stat-chip'>No experiments selected</span>";
+    renderBarChart(dom.successOnlyResultsChart, [], (value) => formatNumber(value, 0));
+    renderBarChart(dom.successOnlyDurationChart, [], (value) => formatNumber(value, 1));
+    renderBarChart(dom.failureErrorChart, [], (value) => formatNumber(value, 0));
+    renderBarChart(dom.httpByRunChart, [], (value) => formatNumber(value, 0));
+    return;
+  }
+
+  const successRecords = selectedRecords.filter((record) => record.produced_results);
+  const failureRecords = selectedRecords.filter((record) => !record.produced_results);
+  const knownHttpRecords = selectedRecords.filter(
+    (record) => record.http_requests !== null && record.http_requests !== undefined,
+  );
+
+  const successDurations = successRecords
+    .map((record) => record.duration_seconds)
+    .filter((value) => value !== null && value !== undefined);
+  const successResults = successRecords
+    .map((record) => record.results_count || 0);
+  const avgResults = successResults.length
+    ? successResults.reduce((sum, value) => sum + value, 0) / successResults.length
+    : null;
+
+  dom.successOnlyMeta.innerHTML = [
+    `<span class="stat-chip">Successful records: ${formatNumber(successRecords.length, 0)}</span>`,
+    `<span class="stat-chip">Median successful runtime: ${formatNumber(median(successDurations))} s</span>`,
+    `<span class="stat-chip">Avg results on success: ${formatNumber(avgResults)}</span>`,
+    `<span class="stat-chip">Known HTTP records: ${formatNumber(knownHttpRecords.length, 0)}</span>`,
+  ].join("");
+
+  const successResultsBars = selectedRuns.map((run) => {
+    const runSuccesses = successRecords.filter((record) => record.run_id === run.run_id);
+    const totalResults = runSuccesses.reduce((sum, record) => sum + (record.results_count || 0), 0);
+    return {
+      label: run.run_label,
+      value: totalResults,
+      color: "#1f7a4d",
+    };
+  });
+
+  const successDurationBars = selectedRuns.map((run) => {
+    const runDurations = successRecords
+      .filter((record) => record.run_id === run.run_id)
+      .map((record) => record.duration_seconds)
+      .filter((value) => value !== null && value !== undefined);
+    return {
+      label: run.run_label,
+      value: median(runDurations) || 0,
+      color: "#0f5fa8",
+    };
+  });
+
+  const failureErrorCounts = new Map();
+  for (const record of failureRecords) {
+    const category = record.error_category || "Unknown Error";
+    failureErrorCounts.set(category, (failureErrorCounts.get(category) || 0) + 1);
+  }
+  const failureErrorBars = [...failureErrorCounts.entries()]
+    .map(([label, value]) => ({ label, value, color: "#a03333" }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 12);
+
+  const httpByRunBars = selectedRuns.map((run) => {
+    const runHttp = knownHttpRecords
+      .filter((record) => record.run_id === run.run_id)
+      .map((record) => record.http_requests);
+    return {
+      label: run.run_label,
+      value: median(runHttp) || 0,
+      color: "#2a8a8d",
+    };
+  });
+
+  renderBarChart(dom.successOnlyResultsChart, successResultsBars, (value) => formatNumber(value, 0));
+  renderBarChart(dom.successOnlyDurationChart, successDurationBars, (value) => formatNumber(value, 1));
+  renderBarChart(dom.failureErrorChart, failureErrorBars, (value) => formatNumber(value, 0));
+  renderBarChart(dom.httpByRunChart, httpByRunBars, (value) => formatNumber(value, 0));
+}
+
 function renderExperimentQueryTable(selectedRecords) {
   const map = new Map();
 
@@ -925,7 +1463,7 @@ function renderExperimentQueryTable(selectedRecords) {
     const successRate = row.attempts ? row.successes / row.attempts : null;
     return `
       <tr>
-        <td data-label="Query"><code>${escapeHtml(row.stem)}</code></td>
+        <td data-label="Query"><code class="truncate-scroll" title="${escapeHtmlAttr(row.stem)}">${escapeHtml(row.stem)}</code></td>
         <td data-label="Attempts">${formatNumber(row.attempts, 0)}</td>
         <td data-label="Success rate">${formatPercent(successRate)}</td>
         <td data-label="Median duration (s)">${formatNumber(median(row.durations))}</td>
@@ -946,6 +1484,8 @@ function renderExplorerExperimentMode() {
 
   renderExperimentSelectionMeta(selectedRuns, selectedRecords);
   renderExperimentCharts(selectedRuns, selectedRecords);
+  renderHttpRequestMatrix(selectedRuns, selectedRecords);
+  renderOptionalInsights(selectedRuns, selectedRecords);
   renderExperimentQueryTable(selectedRecords);
 }
 
@@ -1026,6 +1566,28 @@ function bindEvents() {
     if (state.explorerMode === "experiment") {
       renderExplorerExperimentMode();
     }
+  });
+
+  [dom.httpDisplayMode, dom.httpAggregateMode].forEach((element) => {
+    element.addEventListener("change", () => {
+      if (state.explorerMode === "experiment") {
+        renderExplorerExperimentMode();
+      }
+    });
+  });
+
+  dom.httpQueryFilter.addEventListener("input", () => {
+    if (state.explorerMode === "experiment") {
+      renderExplorerExperimentMode();
+    }
+  });
+
+  ["input", "change"].forEach((eventName) => {
+    dom.httpTopN.addEventListener(eventName, () => {
+      if (state.explorerMode === "experiment") {
+        renderExplorerExperimentMode();
+      }
+    });
   });
 }
 

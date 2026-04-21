@@ -172,8 +172,25 @@
               </div>
 
               <div class="query-detail">
-                <h3>Query Text</h3>
+                <div class="query-text-head">
+                  <h3>Query Text</h3>
+                  <label class="query-variant-select">
+                    Version
+                    <select id="queryVariantSelect"></select>
+                  </label>
+                </div>
                 <pre id="queryTextDetail">Select a query to inspect its text and metadata.</pre>
+              </div>
+
+              <div class="query-detail">
+                <h3>SIB Query Context</h3>
+                <div class="table-meta" id="querySibMeta">No SIB metadata loaded.</div>
+                <div class="table-wrap">
+                  <table id="querySibTable">
+                    <thead id="querySibTableHead"></thead>
+                    <tbody id="querySibTableBody"></tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
@@ -210,6 +227,65 @@
                   <svg id="selectedRunErrorChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
                 </div>
               </div>
+
+              <div class="chart-card">
+                <h3>HTTP requests by query and experiment</h3>
+                <div class="table-meta" id="httpRequestMatrixMeta"></div>
+                <div class="http-controls">
+                  <label>
+                    View
+                    <select id="httpDisplayMode">
+                      <option value="matrix">Matrix</option>
+                      <option value="bar">Bar chart</option>
+                    </select>
+                  </label>
+                  <label>
+                    Query filter
+                    <input id="httpQueryFilter" type="search" placeholder="e.g., 18a or biosoda" />
+                  </label>
+                  <label>
+                    Top queries
+                    <input id="httpTopN" type="number" min="1" max="200" step="1" value="20" />
+                  </label>
+                  <label>
+                    HTTP aggregate
+                    <select id="httpAggregateMode">
+                      <option value="median">Median</option>
+                      <option value="mean">Mean</option>
+                      <option value="max">Max</option>
+                    </select>
+                  </label>
+                </div>
+                <div id="httpMatrixContainer">
+                  <div class="http-matrix-wrap" id="httpRequestMatrix"></div>
+                </div>
+                <div class="http-chart-wrap hidden" id="httpBarContainer">
+                  <svg id="httpRequestBarChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                </div>
+              </div>
+
+              <details class="optional-insights">
+                <summary>Optional Analytics</summary>
+                <div class="selected-meta" id="successOnlyMeta"></div>
+                <div class="chart-grid">
+                  <div class="chart-card">
+                    <h3>Successful query results by experiment</h3>
+                    <svg id="successOnlyResultsChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                  </div>
+                  <div class="chart-card">
+                    <h3>Median runtime of successful queries</h3>
+                    <svg id="successOnlyDurationChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                  </div>
+                  <div class="chart-card">
+                    <h3>Failure-only error categories</h3>
+                    <svg id="failureErrorChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                  </div>
+                  <div class="chart-card">
+                    <h3>Median HTTP requests by experiment</h3>
+                    <svg id="httpByRunChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                  </div>
+                </div>
+              </details>
 
               <div class="table-meta" id="experimentQueryTableMeta"></div>
               <div class="table-wrap">

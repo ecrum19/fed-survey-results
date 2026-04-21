@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-20T10:31:28.107Z",
+  "generated_at": "2026-04-20T18:13:51.318Z",
   "scope": "old-results",
   "run_count": 1,
   "query_record_count": 43,
@@ -11,6 +11,8 @@
       "run_scope": "old-results",
       "summary_source": "summary.json",
       "has_summary_file": true,
+      "force_has_service_description": false,
+      "fill_missing_record_timestamps_from_run": false,
       "run_start": "2025-09-02T08:17:00.718Z",
       "run_end": "2025-09-12T13:32:00.177Z",
       "run_duration_seconds": 392152.355323,
@@ -18,7 +20,11 @@
       "succeeded_queries": 5,
       "failed_queries": 38,
       "non_zero_result_queries": 4,
-      "success_rate": 0.11627906976744186
+      "success_rate": 0.11627906976744186,
+      "service_description_mode": "no-service",
+      "with_service_query_count": 0,
+      "no_service_query_count": 43,
+      "unknown_service_query_count": 0
     }
   ],
   "records": [

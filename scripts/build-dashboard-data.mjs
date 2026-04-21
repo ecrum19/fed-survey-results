@@ -23,6 +23,67 @@ const repoRoot = path.resolve(__dirname, "..");
 const experimentsRoot = path.join(repoRoot, "experiments");
 const queriesRoot = path.join(repoRoot, "queries");
 const docsDataDir = path.join(repoRoot, "docs", "data");
+const sibQueriesCsvPath = path.join(queriesRoot, "SIB_queries.csv");
+const promotedLegacyRuns = [
+  // Keep this legacy run visible in the primary dashboard flow.
+  // It contains default-service (SERVICE-enabled) experiment data.
+  path.join("old-results", "default-service-test-1"),
+];
+const forceServiceDescriptionRuns = new Set([
+  // This run is a service-description control run.
+  "experiments/service-control-20-4-26",
+  // Promoted legacy default-service run.
+  "experiments/old-results/default-service-test-1",
+]);
+const legacyDefaultServiceQueryAliasMap = new Map([
+  ["Q00000004", "027-biosodafrontend"],
+  ["Q00000005", "028-biosodafrontend"],
+  ["Q00000007", "15-rat-TP53-biosodafrontend"],
+  ["Q00000008", "116_biosodafrontend_rabit_mouse_orthologs"],
+  ["Q00000010", "117_biosodafrontend_glioblastoma_orthologs_rat"],
+  ["Q00000011", "118_biosodafrontend_rat_brain_human_cancer"],
+]);
+const runIdsWithKnown18Vs18aIssue = new Set([
+  "experiments/EX1-17-9-25",
+  "experiments/EX2-13-10-25",
+  "experiments/EX3-16-10-25",
+  "experiments/EX4-24-10-25",
+]);
+
+function normalizeSourceUrl(url) {
+  if (typeof url !== "string") {
+    return null;
+  }
+  let trimmed = url.trim();
+  if (!trimmed) {
+    return null;
+  }
+  // Some legacy summaries store Python-list-like quoted values ('https://...').
+  trimmed = trimmed.replace(/^['"]+/, "").replace(/['"]+$/, "");
+  return trimmed.replace(/\/+$/, "");
+}
+
+function applyKnownQueryCorrections(runId, queryName, sources) {
+  if (!queryName) {
+    return queryName;
+  }
+
+  if (runIdsWithKnown18Vs18aIssue.has(runId) && queryName === "18_ns.rq") {
+    const normalizedSources = new Set(
+      sources
+        .map((source) => normalizeSourceUrl(source))
+        .filter(Boolean),
+    );
+    if (
+      normalizedSources.has("https://sparql.rhea-db.org/sparql")
+      && normalizedSources.has("https://idsm.elixir-czech.cz/sparql/endpoint/chebi")
+    ) {
+      return "18a_ns.rq";
+    }
+  }
+
+  return queryName;
+}
 
 const ISO_RE = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?/g;
 const URL_RE = /https?:\/\/[^\s']+/g;
@@ -101,12 +162,214 @@ function toBool(value) {
 function readTextMaybeZipped(filePath) {
   if (filePath.endsWith(".zip")) {
     try {
-      return execFileSync("unzip", ["-p", filePath], { encoding: "utf8" });
+      return execFileSync("unzip", ["-p", filePath], {
+        encoding: "utf8",
+        // Old query-times archives can be very large.
+        maxBuffer: 512 * 1024 * 1024,
+      });
     } catch (error) {
       throw new Error(`Failed to read zipped file ${filePath}: ${error.message}`);
     }
   }
   return fs.readFileSync(filePath, "utf8");
+}
+
+function parseDelimitedLine(line, delimiter = ",") {
+  const values = [];
+  let current = "";
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i += 1) {
+    const char = line[i];
+    const next = line[i + 1];
+
+    if (char === '"') {
+      if (inQuotes && next === '"') {
+        current += '"';
+        i += 1;
+      } else {
+        inQuotes = !inQuotes;
+      }
+      continue;
+    }
+
+    if (!inQuotes && char === delimiter) {
+      values.push(current);
+      current = "";
+      continue;
+    }
+
+    current += char;
+  }
+
+  values.push(current);
+  return values;
+}
+
+function parseDelimitedCsv(text, delimiter = ",") {
+  const lines = text.split(/\r?\n/).filter((line) => line.trim() !== "");
+  if (lines.length === 0) {
+    return [];
+  }
+
+  const headers = parseDelimitedLine(lines[0], delimiter);
+  const rows = [];
+
+  for (let i = 1; i < lines.length; i += 1) {
+    const values = parseDelimitedLine(lines[i], delimiter);
+    const row = {};
+
+    for (let colIndex = 0; colIndex < headers.length; colIndex += 1) {
+      const key = headers[colIndex];
+      row[key] = values[colIndex] ?? "";
+    }
+
+    rows.push(row);
+  }
+
+  return rows;
+}
+
+function parseDelimitedLineSelected(line, delimiter, selectedIndices) {
+  const values = {};
+  let fieldIndex = 0;
+  let inQuotes = false;
+  let current = "";
+  let captureCurrent = selectedIndices.has(fieldIndex);
+
+  for (let i = 0; i < line.length; i += 1) {
+    const char = line[i];
+    const next = line[i + 1];
+
+    if (char === '"') {
+      if (inQuotes && next === '"') {
+        if (captureCurrent) {
+          current += '"';
+        }
+        i += 1;
+      } else {
+        inQuotes = !inQuotes;
+      }
+      continue;
+    }
+
+    if (!inQuotes && char === delimiter) {
+      if (captureCurrent) {
+        values[fieldIndex] = current;
+      }
+      fieldIndex += 1;
+      captureCurrent = selectedIndices.has(fieldIndex);
+      current = "";
+      continue;
+    }
+
+    if (captureCurrent) {
+      current += char;
+    }
+  }
+
+  if (captureCurrent) {
+    values[fieldIndex] = current;
+  }
+
+  return values;
+}
+
+function parseLegacyQueryTimesRows(text) {
+  let cursor = 0;
+  const firstBreak = text.indexOf("\n");
+  if (firstBreak < 0) {
+    return [];
+  }
+
+  const headerLine = text
+    .slice(0, firstBreak)
+    .replace(/\r$/, "");
+  const headers = parseDelimitedLine(headerLine, ";");
+
+  const wantedColumns = [
+    "name",
+    "error",
+    "errorDescription",
+    "httpRequests",
+    "results",
+    "time",
+  ];
+
+  const headerIndexByName = new Map();
+  headers.forEach((header, index) => headerIndexByName.set(header, index));
+
+  const selectedIndices = new Set(
+    wantedColumns
+      .map((name) => headerIndexByName.get(name))
+      .filter((index) => index !== undefined),
+  );
+
+  cursor = firstBreak + 1;
+  const rows = [];
+
+  while (cursor < text.length) {
+    const nextBreak = text.indexOf("\n", cursor);
+    const line = text
+      .slice(cursor, nextBreak === -1 ? text.length : nextBreak)
+      .replace(/\r$/, "");
+    cursor = nextBreak === -1 ? text.length : nextBreak + 1;
+
+    if (line.trim() === "") {
+      continue;
+    }
+
+    const parsed = parseDelimitedLineSelected(line, ";", selectedIndices);
+    const row = {};
+    for (const column of wantedColumns) {
+      const index = headerIndexByName.get(column);
+      row[column] = index === undefined ? "" : (parsed[index] ?? "");
+    }
+    rows.push(row);
+  }
+
+  return rows;
+}
+
+function extractLogTimeBoundsFromRun(runDir) {
+  const logFiles = collectFilesRecursive(
+    runDir,
+    (name) => name.toLowerCase().endsWith(".txt") || name.toLowerCase().endsWith(".txt.zip"),
+  );
+
+  let earliest = null;
+  let latest = null;
+
+  for (const logFile of logFiles) {
+    let text;
+    try {
+      text = readTextMaybeZipped(logFile);
+    } catch {
+      continue;
+    }
+
+    const matches = stripAnsi(text).match(ISO_RE) || [];
+    for (const match of matches) {
+      const stamp = parseIsoTimestamp(match);
+      if (!stamp) {
+        continue;
+      }
+      if (!earliest || stamp < earliest) {
+        earliest = stamp;
+      }
+      if (!latest || stamp > latest) {
+        latest = stamp;
+      }
+    }
+  }
+
+  return {
+    run_start: earliest ? earliest.toISOString() : null,
+    run_end: latest ? latest.toISOString() : null,
+    run_duration_seconds: earliest && latest
+      ? (latest.getTime() - earliest.getTime()) / 1000
+      : null,
+  };
 }
 
 function fileExists(filePath) {
@@ -405,6 +668,80 @@ function buildSummaryFromBatches(runDir) {
       run_duration_seconds: totalDuration,
     },
     entries: allEntries,
+  };
+}
+
+function findLegacyQueryTimesFile(runDir) {
+  const candidates = collectFilesRecursive(runDir, (name) => {
+    const lowered = name.toLowerCase();
+    return lowered === "query-times.csv" || lowered === "query-times.csv.zip";
+  }).sort((a, b) => a.localeCompare(b));
+
+  if (!candidates.length) {
+    return null;
+  }
+
+  // Prefer zipped files because old runs often store the authoritative query-times in zip form.
+  const preferred = candidates.find((filePath) => filePath.toLowerCase().endsWith(".zip"));
+  return preferred || candidates[0];
+}
+
+function buildSummaryFromLegacyQueryTimes(runDir) {
+  const queryTimesPath = findLegacyQueryTimesFile(runDir);
+  if (!queryTimesPath) {
+    return null;
+  }
+
+  let text;
+  try {
+    text = readTextMaybeZipped(queryTimesPath);
+  } catch (error) {
+    console.warn(`[WARN] Could not read ${path.relative(repoRoot, queryTimesPath)}: ${error.message}`);
+    return null;
+  }
+
+  const rows = parseLegacyQueryTimesRows(text);
+  if (!rows.length || !Object.hasOwn(rows[0], "name")) {
+    return null;
+  }
+
+  const logBounds = extractLogTimeBoundsFromRun(runDir);
+  const runPath = path.relative(repoRoot, runDir).replaceAll(path.sep, "/");
+  const shouldApplyLegacyAliases = runPath === "experiments/old-results/default-service-test-1";
+
+  const entries = rows.map((row) => {
+    const rawQueryName = row.name && String(row.name).trim() !== "" ? String(row.name).trim() : null;
+    const queryName = shouldApplyLegacyAliases && rawQueryName
+      ? (legacyDefaultServiceQueryAliasMap.get(rawQueryName) || rawQueryName)
+      : rawQueryName;
+    const isError = toBool(row.error);
+    const rawTimeMs = toNumber(row.time);
+
+    return {
+      query_name: queryName,
+      sources: [],
+      // Legacy query-times artifacts do not expose per-query absolute timestamps.
+      start: null,
+      end: null,
+      duration_seconds: rawTimeMs !== null ? rawTimeMs / 1000 : null,
+      http_requests: toNumber(row.httpRequests),
+      produced_results: !isError,
+      results_count: toNumber(row.results) ?? 0,
+      error: isError
+        ? (row.errorDescription && String(row.errorDescription).trim() !== ""
+          ? String(row.errorDescription).trim()
+          : "Unknown Error")
+        : "None",
+    };
+  });
+
+  return {
+    general_stats: {
+      run_start: logBounds.run_start,
+      run_end: logBounds.run_end,
+      run_duration_seconds: logBounds.run_duration_seconds,
+    },
+    entries,
   };
 }
 
@@ -716,6 +1053,141 @@ function classifyQueryVariant(relativePathFromQueries) {
   return "other";
 }
 
+function extractQueryTailFromReference(rawReference) {
+  if (!rawReference || typeof rawReference !== "string") {
+    return null;
+  }
+
+  const trimmed = rawReference.trim();
+  if (!trimmed || trimmed === "-") {
+    return null;
+  }
+
+  let tail = trimmed;
+  try {
+    const parsed = new URL(trimmed);
+    const pathTail = decodeURIComponent(parsed.pathname.split("/").at(-1) || "").trim();
+    const hash = decodeURIComponent((parsed.hash || "").trim());
+    // Preserve fragment-based identifiers, e.g. https://purl.org/emi#examples011a -> emi#examples011a
+    tail = hash ? `${pathTail}${hash}` : (pathTail || trimmed);
+  } catch {
+    tail = trimmed.split("/").at(-1) || trimmed;
+  }
+
+  const stem = normalizeQueryStem(tail);
+  return stem || null;
+}
+
+function mapSibReferenceToQueryStem(referenceStem, canonicalStems) {
+  if (!referenceStem) {
+    return null;
+  }
+
+  if (canonicalStems.has(referenceStem)) {
+    return referenceStem;
+  }
+
+  const suffixMatches = [...canonicalStems].filter((stem) => stem.endsWith(`_${referenceStem}`));
+  if (suffixMatches.length === 1) {
+    return suffixMatches[0];
+  }
+
+  const containsMatches = [...canonicalStems].filter((stem) => stem.includes(referenceStem));
+  if (containsMatches.length === 1) {
+    return containsMatches[0];
+  }
+
+  return null;
+}
+
+function disambiguateSibReferenceStem(referenceStem, row) {
+  if (referenceStem !== "18") {
+    return referenceStem;
+  }
+
+  const queryRef = (row?.Query || row?.query || "").toLowerCase();
+  const targetEndpoint = (row?.["Target endpoint"] || row?.target_endpoint || "").toLowerCase();
+  const federatedEndpoints = (row?.["Federated endpoints"] || row?.federated_endpoints || "").toLowerCase();
+  const combined = `${queryRef} ${targetEndpoint} ${federatedEndpoints}`;
+
+  // SIB "example/18" appears in two ecosystems:
+  // - OrthoDB + NextProt => local query stem "18"
+  // - Rhea + IDSM/ChEBI => local query stem "18a"
+  if (combined.includes("sparql.rhea-db.org") && combined.includes("idsm.elixir-czech.cz")) {
+    return "18a";
+  }
+  if (combined.includes("sparql.orthodb.org") && combined.includes("sparql.nextprot.org")) {
+    return "18";
+  }
+
+  return referenceStem;
+}
+
+function parseSibQueryRows() {
+  if (!fileExists(sibQueriesCsvPath)) {
+    return { columns: [], rows: [] };
+  }
+
+  const text = fs.readFileSync(sibQueriesCsvPath, "utf8");
+  const rows = parseDelimitedCsv(text, ",");
+  const columns = rows.length > 0 ? Object.keys(rows[0]) : [];
+
+  const normalizedRows = rows.map((row) => {
+    const normalized = {};
+    for (const column of columns) {
+      const value = row[column];
+      const textValue = value === null || value === undefined ? "" : String(value).trim();
+      normalized[column] = textValue === "" ? "-" : textValue;
+    }
+    return normalized;
+  });
+
+  return { columns, rows: normalizedRows };
+}
+
+function attachSibQueryContext(summaries) {
+  const canonicalStems = new Set(summaries.map((summary) => summary.query_stem));
+  const parsed = parseSibQueryRows();
+  const rowsByStem = new Map();
+  const unmatchedRows = [];
+  let matchedRows = 0;
+
+  for (const row of parsed.rows) {
+    const rawReferenceStem = extractQueryTailFromReference(row.Query || row.query || null);
+    const referenceStem = disambiguateSibReferenceStem(rawReferenceStem, row);
+    const mappedStem = mapSibReferenceToQueryStem(referenceStem, canonicalStems);
+
+    if (!mappedStem) {
+      unmatchedRows.push(row);
+      continue;
+    }
+
+    if (!rowsByStem.has(mappedStem)) {
+      rowsByStem.set(mappedStem, []);
+    }
+    rowsByStem.get(mappedStem).push(row);
+    matchedRows += 1;
+  }
+
+  const enriched = summaries.map((summary) => {
+    const sibRows = rowsByStem.get(summary.query_stem) || [];
+    return {
+      ...summary,
+      sib_row_count: sibRows.length,
+      sib_rows: sibRows,
+    };
+  });
+
+  return {
+    summaries: enriched,
+    sib_columns: parsed.columns,
+    sib_query_row_count: parsed.rows.length,
+    sib_matched_row_count: matchedRows,
+    sib_unmatched_row_count: unmatchedRows.length,
+    sib_unmatched_rows: unmatchedRows,
+  };
+}
+
 function buildQueriesDataset(mainDataset, oldDataset) {
   if (!fs.existsSync(queriesRoot)) {
     return {
@@ -820,13 +1292,20 @@ function buildQueriesDataset(mainDataset, oldDataset) {
     })
     .sort((a, b) => a.query_stem.localeCompare(b.query_stem));
 
+  const sibContext = attachSibQueryContext(summaries);
+
   return {
     generated_at: new Date().toISOString(),
     query_file_count: variants.length,
-    query_summary_count: summaries.length,
+    query_summary_count: sibContext.summaries.length,
     stat_json_entry_count: statMap.size,
+    sib_columns: sibContext.sib_columns,
+    sib_query_row_count: sibContext.sib_query_row_count,
+    sib_matched_row_count: sibContext.sib_matched_row_count,
+    sib_unmatched_row_count: sibContext.sib_unmatched_row_count,
+    sib_unmatched_rows: sibContext.sib_unmatched_rows,
     variants,
-    summaries,
+    summaries: sibContext.summaries,
   };
 }
 
@@ -844,17 +1323,62 @@ function summarizeRunRecords(runRecords) {
   };
 }
 
+function inferRunServiceDescriptionMode(runRecords) {
+  const queryRecords = runRecords.filter((record) => !record.is_run_summary_row);
+  const values = queryRecords
+    .map((record) => record.has_service_description)
+    .filter((value) => value === true || value === false);
+
+  if (values.length === 0) {
+    return {
+      service_description_mode: "unknown",
+      with_service_query_count: 0,
+      no_service_query_count: 0,
+      unknown_service_query_count: queryRecords.length,
+    };
+  }
+
+  const withService = values.filter((value) => value === true).length;
+  const noService = values.filter((value) => value === false).length;
+  const unknown = queryRecords.length - (withService + noService);
+
+  let mode = "mixed";
+  if (withService > 0 && noService === 0) {
+    mode = "with-service";
+  } else if (noService > 0 && withService === 0) {
+    mode = "no-service";
+  }
+
+  return {
+    service_description_mode: mode,
+    with_service_query_count: withService,
+    no_service_query_count: noService,
+    unknown_service_query_count: unknown,
+  };
+}
+
 function normalizeRunSummary(runMeta, summary) {
   const records = [];
+  const runStartFallback = safeIso(summary?.general_stats?.run_start);
+  const runEndFallback = safeIso(summary?.general_stats?.run_end);
+  const shouldApplyLegacyAliases = runMeta.run_id === "experiments/old-results/default-service-test-1";
 
   for (const entry of summary.entries) {
-    const queryName = typeof entry.query_name === "string" ? entry.query_name : null;
-    const isRunSummaryRow = queryName === runMeta.run_label;
-
+    const rawQueryName = typeof entry.query_name === "string" ? entry.query_name : null;
+    let queryName = shouldApplyLegacyAliases && rawQueryName
+      ? (legacyDefaultServiceQueryAliasMap.get(rawQueryName) || rawQueryName)
+      : rawQueryName;
     const sources = parseSources(entry.sources);
+    queryName = applyKnownQueryCorrections(runMeta.run_id, queryName, sources);
+    const isRunSummaryRow = queryName === runMeta.run_label;
     const producedResults = isRunSummaryRow
       ? false
       : toBool(entry.produced_results);
+
+    const forcedServiceDescription = runMeta.force_has_service_description;
+
+    const startIso = safeIso(entry.start);
+    const endIso = safeIso(entry.end);
 
     const record = {
       run_id: runMeta.run_id,
@@ -866,8 +1390,16 @@ function normalizeRunSummary(runMeta, summary) {
 
       is_run_summary_row: isRunSummaryRow,
       query_name: queryName,
-      start: safeIso(entry.start),
-      end: safeIso(entry.end),
+      start: startIso ?? (
+        !isRunSummaryRow && runMeta.fill_missing_record_timestamps_from_run
+          ? runStartFallback
+          : null
+      ),
+      end: endIso ?? (
+        !isRunSummaryRow && runMeta.fill_missing_record_timestamps_from_run
+          ? runEndFallback
+          : null
+      ),
       duration_seconds: toNumber(entry.duration_seconds),
       http_requests: toNumber(entry.http_requests),
 
@@ -880,7 +1412,11 @@ function normalizeRunSummary(runMeta, summary) {
       error_raw: entry.error === undefined ? null : entry.error,
       error_category: classifyError(entry.error, producedResults),
 
-      has_service_description: isRunSummaryRow ? null : detectServiceDescription(queryName),
+      has_service_description: isRunSummaryRow
+        ? null
+        : (typeof forcedServiceDescription === "boolean"
+          ? forcedServiceDescription
+          : detectServiceDescription(queryName)),
     };
 
     records.push(record);
@@ -914,9 +1450,16 @@ function buildDataset(scopeName, runDirs, writeMissingSummaries = false) {
     if (!summary) {
       summary = buildSummaryFromBatches(runDir);
 
-      if (!summary) {
-        console.warn(`[WARN] Could not build summary for ${runPath}; skipping run.`);
-        continue;
+      if (summary) {
+        summarySource = "generated_from_logs";
+      } else {
+        summary = buildSummaryFromLegacyQueryTimes(runDir);
+        if (summary) {
+          summarySource = "generated_from_query_times_csv";
+        } else {
+          console.warn(`[WARN] Could not build summary for ${runPath}; skipping run.`);
+          continue;
+        }
       }
 
       if (writeMissingSummaries) {
@@ -941,10 +1484,15 @@ function buildDataset(scopeName, runDirs, writeMissingSummaries = false) {
       run_scope: scopeName,
       summary_source: summarySource,
       has_summary_file: hasSummaryFile,
+      // Force service-description classification for known service-enabled control runs.
+      force_has_service_description: forceServiceDescriptionRuns.has(runPath),
+      // Legacy query-times summaries only have run-level timestamps; propagate those to records.
+      fill_missing_record_timestamps_from_run: summarySource === "generated_from_query_times_csv",
     };
 
     const runRecords = normalizeRunSummary(runMeta, sanitized);
     const runStats = summarizeRunRecords(runRecords);
+    const serviceModeStats = inferRunServiceDescriptionMode(runRecords);
 
     runs.push({
       ...runMeta,
@@ -952,6 +1500,7 @@ function buildDataset(scopeName, runDirs, writeMissingSummaries = false) {
       run_end: safeIso(sanitized.general_stats.run_end),
       run_duration_seconds: toNumber(sanitized.general_stats.run_duration_seconds),
       ...runStats,
+      ...serviceModeStats,
     });
 
     records.push(...runRecords);
@@ -1074,10 +1623,21 @@ function toCsv(rows) {
 
 function getMainRunDirs() {
   const entries = fs.readdirSync(experimentsRoot, { withFileTypes: true });
-  return entries
+  const defaultRunDirs = entries
     .filter((entry) => entry.isDirectory() && entry.name !== "old-results")
     .map((entry) => path.join(experimentsRoot, entry.name))
     .sort((a, b) => a.localeCompare(b));
+
+  const promoted = promotedLegacyRuns
+    .map((relativePath) => path.join(experimentsRoot, relativePath))
+    .filter((fullPath) => fs.existsSync(fullPath) && fs.statSync(fullPath).isDirectory());
+
+  const deduped = new Map();
+  for (const runDir of [...defaultRunDirs, ...promoted]) {
+    deduped.set(path.resolve(runDir), runDir);
+  }
+
+  return [...deduped.values()].sort((a, b) => a.localeCompare(b));
 }
 
 function getOldRunDirs() {
@@ -1115,7 +1675,13 @@ function getOldRunDirs() {
     }
   }
 
-  return [...candidates].sort((a, b) => a.localeCompare(b));
+  const promotedAbs = new Set(
+    promotedLegacyRuns.map((relativePath) => path.resolve(path.join(experimentsRoot, relativePath))),
+  );
+
+  return [...candidates]
+    .filter((candidate) => !promotedAbs.has(path.resolve(candidate)))
+    .sort((a, b) => a.localeCompare(b));
 }
 
 function writeJson(filePath, data) {
