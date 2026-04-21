@@ -1,8 +1,23 @@
 {
-  "generated_at": "2026-04-20T18:13:51.350Z",
+  "generated_at": "2026-04-21T09:19:52.269Z",
   "query_file_count": 134,
   "query_summary_count": 67,
   "stat_json_entry_count": 58,
+  "query_aliases": {
+    "109_uniprot_transporter_in_liver": "109-transporter-liver",
+    "116_biosodafrontend_rabit_mouse_orthologs": "116-rabbit-mouse-orthologs",
+    "117_biosodafrontend_glioblastoma_orthologs_rat": "117-glioblastoma-rat",
+    "118_biosodafrontend_rat_brain_human_cancer": "118-rat-brain-cancer",
+    "15-rat-TP53-biosodafrontend": "15-rat-TP53",
+    "19_draft_human_metabolome": "19-metabolome-draft",
+    "20_search_chemical_names_in_japanese": "20-japanese-chem-search",
+    "67_draft_human_metabolome": "67-metabolome-draft",
+    "70_enzymes_interacting_with_molecules_similar_to_dopamine": "70-dopamine-sim-enzymes",
+    "71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease": "71-dopamine-disease-variants",
+    "90_uniprot_affected_by_metabolic_diseases_using_MeSH": "90-metabolic-disease-mesh",
+    "92_uniprot_bioregistry_iri_translation": "92-bioregistry-xref",
+    "99_uniprot_identifiers_org_translation": "99-identifiers-xref"
+  },
   "sib_columns": [
     "Query",
     "Description",
@@ -11,7 +26,8 @@
     "Real world relevance or background of the query",
     "Is this query a toy example?",
     "Are there any tricks to make the query executable?",
-    "Is this query similar to another query?"
+    "Is this query similar to another query?",
+    "Query alias"
   ],
   "sib_query_row_count": 74,
   "sib_matched_row_count": 67,
@@ -25,7 +41,8 @@
       "Real world relevance or background of the query": "-",
       "Is this query a toy example?": "-",
       "Are there any tricks to make the query executable?": "-",
-      "Is this query similar to another query?": "-"
+      "Is this query similar to another query?": "-",
+      "Query alias": "-"
     },
     {
       "Query": "-",
@@ -35,7 +52,8 @@
       "Real world relevance or background of the query": "-",
       "Is this query a toy example?": "-",
       "Are there any tricks to make the query executable?": "-",
-      "Is this query similar to another query?": "-"
+      "Is this query similar to another query?": "-",
+      "Query alias": "-"
     },
     {
       "Query": "-",
@@ -45,7 +63,8 @@
       "Real world relevance or background of the query": "-",
       "Is this query a toy example?": "-",
       "Are there any tricks to make the query executable?": "-",
-      "Is this query similar to another query?": "-"
+      "Is this query similar to another query?": "-",
+      "Query alias": "-"
     },
     {
       "Query": "-",
@@ -55,7 +74,8 @@
       "Real world relevance or background of the query": "-",
       "Is this query a toy example?": "-",
       "Are there any tricks to make the query executable?": "-",
-      "Is this query similar to another query?": "-"
+      "Is this query similar to another query?": "-",
+      "Query alias": "-"
     },
     {
       "Query": "-",
@@ -65,7 +85,8 @@
       "Real world relevance or background of the query": "-",
       "Is this query a toy example?": "-",
       "Are there any tricks to make the query executable?": "-",
-      "Is this query similar to another query?": "-"
+      "Is this query similar to another query?": "-",
+      "Query alias": "-"
     },
     {
       "Query": "-",
@@ -75,7 +96,8 @@
       "Real world relevance or background of the query": "-",
       "Is this query a toy example?": "-",
       "Are there any tricks to make the query executable?": "-",
-      "Is this query similar to another query?": "-"
+      "Is this query similar to another query?": "-",
+      "Query alias": "-"
     },
     {
       "Query": "-",
@@ -85,7 +107,8 @@
       "Real world relevance or background of the query": "-",
       "Is this query a toy example?": "-",
       "Are there any tricks to make the query executable?": "-",
-      "Is this query similar to another query?": "-"
+      "Is this query similar to another query?": "-",
+      "Query alias": "-"
     }
   ],
   "variants": [
@@ -127,11 +150,11 @@
       },
       "observed_main": {
         "query_stem": "001",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 10,
         "median_duration_seconds": 4.318523000000001,
         "last_seen_start": "2026-04-20T10:42:33.887Z"
@@ -146,7 +169,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 17.190871,
         "last_seen_start": "2025-09-03T01:27:31.229Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "001"
     },
     {
       "query_stem": "002",
@@ -186,8 +211,8 @@
       },
       "observed_main": {
         "query_stem": "002",
-        "attempts": 17,
-        "run_count": 17,
+        "attempts": 19,
+        "run_count": 19,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -195,7 +220,9 @@
         "median_duration_seconds": 4.207682,
         "last_seen_start": "2026-04-20T10:42:39.841Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "002"
     },
     {
       "query_stem": "006",
@@ -235,11 +262,11 @@
       },
       "observed_main": {
         "query_stem": "006",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 5,
         "median_duration_seconds": 4.319240499999999,
         "last_seen_start": "2026-04-20T10:42:45.533Z"
@@ -254,7 +281,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 17.24972,
         "last_seen_start": "2025-09-03T02:03:04.288Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "006"
     },
     {
       "query_stem": "007",
@@ -294,11 +323,11 @@
       },
       "observed_main": {
         "query_stem": "007",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 92,
         "median_duration_seconds": 4.235297,
         "last_seen_start": "2026-04-20T10:42:51.275Z"
@@ -313,7 +342,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.873382,
         "last_seen_start": "2025-09-08T12:27:34.971Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "007"
     },
     {
       "query_stem": "009",
@@ -353,11 +384,11 @@
       },
       "observed_main": {
         "query_stem": "009",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 1,
         "median_duration_seconds": 4.284088,
         "last_seen_start": "2026-04-20T10:42:57.093Z"
@@ -372,7 +403,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 37.838641,
         "last_seen_start": "2025-09-08T12:26:50.876Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "009"
     },
     {
       "query_stem": "016",
@@ -412,11 +445,11 @@
       },
       "observed_main": {
         "query_stem": "016",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 13,
         "median_duration_seconds": 4.489917,
         "last_seen_start": "2026-04-20T10:43:02.870Z"
@@ -431,7 +464,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.366316,
         "last_seen_start": "2025-09-05T16:48:18.416Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "016"
     },
     {
       "query_stem": "017",
@@ -471,11 +506,11 @@
       },
       "observed_main": {
         "query_stem": "017",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 2,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 4,
+        "success_rate": 0.2,
+        "non_zero_results": 4,
         "max_results_count": 20,
         "median_duration_seconds": 4.5911965,
         "last_seen_start": "2026-04-20T10:43:12.573Z"
@@ -490,7 +525,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 24.993029,
         "last_seen_start": "2025-09-02T08:17:52.805Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "017"
     },
     {
       "query_stem": "018",
@@ -530,8 +567,8 @@
       },
       "observed_main": {
         "query_stem": "018",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -549,7 +586,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 25.063998,
         "last_seen_start": "2025-09-02T08:17:00.718Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "018"
     },
     {
       "query_stem": "019",
@@ -608,7 +647,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 25.020688,
         "last_seen_start": "2025-09-02T08:17:26.783Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "019"
     },
     {
       "query_stem": "020",
@@ -648,11 +689,11 @@
       },
       "observed_main": {
         "query_stem": "020",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 297,
         "median_duration_seconds": 127.2581835,
         "last_seen_start": "2026-04-20T10:43:42.212Z"
@@ -667,7 +708,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 25.06044,
         "last_seen_start": "2025-09-02T08:18:18.799Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "020"
     },
     {
       "query_stem": "027-biosodafrontend",
@@ -707,16 +750,18 @@
       },
       "observed_main": {
         "query_stem": "027-biosodafrontend",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
-        "max_results_count": 10,
-        "median_duration_seconds": 4.5716285,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
+        "max_results_count": 8,
+        "median_duration_seconds": 4.428047,
         "last_seen_start": "2026-04-20T10:43:50.091Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "027-biosodafrontend"
     },
     {
       "query_stem": "028-biosodafrontend",
@@ -756,16 +801,18 @@
       },
       "observed_main": {
         "query_stem": "028-biosodafrontend",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
-        "max_results_count": 71,
-        "median_duration_seconds": 4.4242170000000005,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 0,
+        "success_rate": 0,
+        "non_zero_results": 0,
+        "max_results_count": 0,
+        "median_duration_seconds": 4.381655,
         "last_seen_start": "2026-04-20T10:43:57.322Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "028-biosodafrontend"
     },
     {
       "query_stem": "109_uniprot_transporter_in_liver",
@@ -805,16 +852,18 @@
       },
       "observed_main": {
         "query_stem": "109_uniprot_transporter_in_liver",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 5,
-        "success_rate": 0.2777777777777778,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 7,
+        "success_rate": 0.35,
+        "non_zero_results": 2,
+        "max_results_count": 2,
         "median_duration_seconds": 4.5639544999999995,
         "last_seen_start": "2026-04-20T10:44:05.819Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": "109-transporter-liver",
+      "query_display_name": "109-transporter-liver"
     },
     {
       "query_stem": "11",
@@ -854,11 +903,11 @@
       },
       "observed_main": {
         "query_stem": "11",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 2,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 4,
+        "success_rate": 0.2,
+        "non_zero_results": 4,
         "max_results_count": 7,
         "median_duration_seconds": 4.403562,
         "last_seen_start": "2026-04-20T10:44:11.469Z"
@@ -873,7 +922,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 61011.599218,
         "last_seen_start": "2025-09-02T08:18:44.860Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "11"
     },
     {
       "query_stem": "116_biosodafrontend_rabit_mouse_orthologs",
@@ -913,12 +964,12 @@
       },
       "observed_main": {
         "query_stem": "116_biosodafrontend_rabit_mouse_orthologs",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
+        "max_results_count": 24,
         "median_duration_seconds": 4.509552,
         "last_seen_start": "2026-04-20T10:44:19.579Z"
       },
@@ -932,7 +983,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 47.553026,
         "last_seen_start": "2025-09-08T12:25:41.758Z"
-      }
+      },
+      "query_alias": "116-rabbit-mouse-orthologs",
+      "query_display_name": "116-rabbit-mouse-orthologs"
     },
     {
       "query_stem": "117_biosodafrontend_glioblastoma_orthologs_rat",
@@ -972,16 +1025,18 @@
       },
       "observed_main": {
         "query_stem": "117_biosodafrontend_glioblastoma_orthologs_rat",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
-        "max_results_count": 24,
-        "median_duration_seconds": 4.5422615,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
+        "max_results_count": 10,
+        "median_duration_seconds": 4.5910225,
         "last_seen_start": "2026-04-20T10:44:25.398Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": "117-glioblastoma-rat",
+      "query_display_name": "117-glioblastoma-rat"
     },
     {
       "query_stem": "118_biosodafrontend_rat_brain_human_cancer",
@@ -1021,16 +1076,18 @@
       },
       "observed_main": {
         "query_stem": "118_biosodafrontend_rat_brain_human_cancer",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
-        "max_results_count": 12,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
+        "max_results_count": 71,
         "median_duration_seconds": 4.597924,
         "last_seen_start": "2026-04-20T10:44:31.093Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": "118-rat-brain-cancer",
+      "query_display_name": "118-rat-brain-cancer"
     },
     {
       "query_stem": "12",
@@ -1070,11 +1127,11 @@
       },
       "observed_main": {
         "query_stem": "12",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 5,
-        "success_rate": 0.2777777777777778,
-        "non_zero_results": 5,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 7,
+        "success_rate": 0.35,
+        "non_zero_results": 7,
         "max_results_count": 52700,
         "median_duration_seconds": 4.5324915,
         "last_seen_start": "2026-04-20T10:44:36.831Z"
@@ -1089,7 +1146,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 72.736208,
         "last_seen_start": "2025-09-05T16:47:04.679Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "12"
     },
     {
       "query_stem": "13",
@@ -1129,10 +1188,10 @@
       },
       "observed_main": {
         "query_stem": "13",
-        "attempts": 17,
-        "run_count": 17,
+        "attempts": 19,
+        "run_count": 19,
         "successes": 5,
-        "success_rate": 0.29411764705882354,
+        "success_rate": 0.2631578947368421,
         "non_zero_results": 5,
         "max_results_count": 8584,
         "median_duration_seconds": 4.508979,
@@ -1148,7 +1207,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 41932.708224,
         "last_seen_start": "2025-09-03T02:03:22.539Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "13"
     },
     {
       "query_stem": "15-rat-TP53-biosodafrontend",
@@ -1188,13 +1249,13 @@
       },
       "observed_main": {
         "query_stem": "15-rat-TP53-biosodafrontend",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 2,
-        "max_results_count": 8,
-        "median_duration_seconds": 4.3971215,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 4,
+        "success_rate": 0.2,
+        "non_zero_results": 4,
+        "max_results_count": 12,
+        "median_duration_seconds": 4.5926065000000005,
         "last_seen_start": "2026-04-20T10:45:17.620Z"
       },
       "observed_old_results": {
@@ -1207,7 +1268,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 29.269062,
         "last_seen_start": "2025-09-08T12:25:01.122Z"
-      }
+      },
+      "query_alias": "15-rat-TP53",
+      "query_display_name": "15-rat-TP53"
     },
     {
       "query_stem": "16",
@@ -1247,16 +1310,18 @@
       },
       "observed_main": {
         "query_stem": "16",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 4,
-        "success_rate": 0.2222222222222222,
-        "non_zero_results": 3,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 6,
+        "success_rate": 0.3,
+        "non_zero_results": 5,
         "max_results_count": 608,
         "median_duration_seconds": 4.473113,
         "last_seen_start": "2026-04-20T10:45:26.006Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "16"
     },
     {
       "query_stem": "17",
@@ -1296,16 +1361,18 @@
       },
       "observed_main": {
         "query_stem": "17",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 3,
-        "success_rate": 0.16666666666666666,
-        "non_zero_results": 2,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 5,
+        "success_rate": 0.25,
+        "non_zero_results": 4,
         "max_results_count": 11,
         "median_duration_seconds": 4.4633945,
         "last_seen_start": "2026-04-20T10:45:51.186Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "17"
     },
     {
       "query_stem": "18",
@@ -1345,8 +1412,8 @@
       },
       "observed_main": {
         "query_stem": "18",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -1354,7 +1421,9 @@
         "median_duration_seconds": 5.0216405,
         "last_seen_start": "2026-04-20T10:46:09.533Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "18"
     },
     {
       "query_stem": "18a",
@@ -1383,16 +1452,18 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "18a",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 2,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 4,
+        "success_rate": 0.2,
+        "non_zero_results": 4,
         "max_results_count": 141,
         "median_duration_seconds": 4.388713,
         "last_seen_start": "2026-04-20T10:46:25.877Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "18a"
     },
     {
       "query_stem": "19_draft_human_metabolome",
@@ -1432,11 +1503,11 @@
       },
       "observed_main": {
         "query_stem": "19_draft_human_metabolome",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 2,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 176288,
         "median_duration_seconds": 4.8561635,
         "last_seen_start": "2026-04-20T10:46:49.405Z"
@@ -1451,7 +1522,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 72.083984,
         "last_seen_start": "2025-09-12T12:07:39.750Z"
-      }
+      },
+      "query_alias": "19-metabolome-draft",
+      "query_display_name": "19-metabolome-draft"
     },
     {
       "query_stem": "19",
@@ -1491,16 +1564,18 @@
       },
       "observed_main": {
         "query_stem": "19",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 17,
         "median_duration_seconds": 4.8021205,
         "last_seen_start": "2026-04-20T10:46:32.143Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "19"
     },
     {
       "query_stem": "20_search_chemical_names_in_japanese",
@@ -1540,12 +1615,12 @@
       },
       "observed_main": {
         "query_stem": "20_search_chemical_names_in_japanese",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 1,
+        "max_results_count": 2,
         "median_duration_seconds": 51.401962,
         "last_seen_start": "2026-04-20T10:47:53.580Z"
       },
@@ -1559,7 +1634,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 3535.132911,
         "last_seen_start": "2025-09-03T13:42:16.248Z"
-      }
+      },
+      "query_alias": "20-japanese-chem-search",
+      "query_display_name": "20-japanese-chem-search"
     },
     {
       "query_stem": "26",
@@ -1599,8 +1676,8 @@
       },
       "observed_main": {
         "query_stem": "26",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -1618,7 +1695,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 61762.063847,
         "last_seen_start": "2025-09-11T09:18:01.211Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "26"
     },
     {
       "query_stem": "27",
@@ -1658,8 +1737,8 @@
       },
       "observed_main": {
         "query_stem": "27",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -1677,7 +1756,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4591.584858,
         "last_seen_start": "2025-09-12T12:12:54.034Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "27"
     },
     {
       "query_stem": "29",
@@ -1717,12 +1798,12 @@
       },
       "observed_main": {
         "query_stem": "29",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 2,
+        "max_results_count": 51,
         "median_duration_seconds": 4.8003685,
         "last_seen_start": "2026-04-20T10:59:19.969Z"
       },
@@ -1736,7 +1817,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 34727.445409,
         "last_seen_start": "2025-09-12T02:28:51.303Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "29"
     },
     {
       "query_stem": "3",
@@ -1776,12 +1859,12 @@
       },
       "observed_main": {
         "query_stem": "3",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 2,
-        "max_results_count": 75,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 4,
+        "success_rate": 0.2,
+        "non_zero_results": 4,
+        "max_results_count": 76,
         "median_duration_seconds": 4.583069500000001,
         "last_seen_start": "2026-04-20T10:59:25.608Z"
       },
@@ -1795,7 +1878,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 2108.363774,
         "last_seen_start": "2025-09-03T01:27:54.923Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "3"
     },
     {
       "query_stem": "34",
@@ -1835,8 +1920,8 @@
       },
       "observed_main": {
         "query_stem": "34",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -1854,7 +1939,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 74.107595,
         "last_seen_start": "2025-09-12T12:10:11.404Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "34"
     },
     {
       "query_stem": "36",
@@ -1894,12 +1981,12 @@
       },
       "observed_main": {
         "query_stem": "36",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 2,
+        "success_rate": 0.1,
+        "non_zero_results": 2,
+        "max_results_count": 2,
         "median_duration_seconds": 4.479134999999999,
         "last_seen_start": "2026-04-20T11:05:36.056Z"
       },
@@ -1913,7 +2000,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 86.520491,
         "last_seen_start": "2025-09-12T12:11:26.513Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "36"
     },
     {
       "query_stem": "40",
@@ -1953,8 +2042,8 @@
       },
       "observed_main": {
         "query_stem": "40",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -1972,7 +2061,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 80.223763,
         "last_seen_start": "2025-09-11T09:16:34.176Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "40"
     },
     {
       "query_stem": "42",
@@ -2012,11 +2103,11 @@
       },
       "observed_main": {
         "query_stem": "42",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 7,
-        "success_rate": 0.3888888888888889,
-        "non_zero_results": 7,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 9,
+        "success_rate": 0.45,
+        "non_zero_results": 9,
         "max_results_count": 66,
         "median_duration_seconds": 4.60993,
         "last_seen_start": "2026-04-20T11:05:53.184Z"
@@ -2031,7 +2122,9 @@
         "max_results_count": 66,
         "median_duration_seconds": 16.41529,
         "last_seen_start": "2025-09-11T09:10:18.818Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "42"
     },
     {
       "query_stem": "43",
@@ -2071,11 +2164,11 @@
       },
       "observed_main": {
         "query_stem": "43",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 7,
-        "success_rate": 0.3888888888888889,
-        "non_zero_results": 7,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 9,
+        "success_rate": 0.45,
+        "non_zero_results": 9,
         "max_results_count": 71,
         "median_duration_seconds": 4.802198499999999,
         "last_seen_start": "2026-04-20T11:05:58.929Z"
@@ -2090,7 +2183,9 @@
         "max_results_count": 71,
         "median_duration_seconds": 178.660832,
         "last_seen_start": "2025-09-11T09:11:56.020Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "43"
     },
     {
       "query_stem": "45",
@@ -2130,11 +2225,11 @@
       },
       "observed_main": {
         "query_stem": "45",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 26,
         "median_duration_seconds": 4.600816,
         "last_seen_start": "2026-04-20T11:06:04.746Z"
@@ -2149,7 +2244,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 153.556618,
         "last_seen_start": "2025-09-12T13:29:26.620Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "45"
     },
     {
       "query_stem": "48",
@@ -2189,10 +2286,10 @@
       },
       "observed_main": {
         "query_stem": "48",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 2,
-        "success_rate": 0.1111111111111111,
+        "success_rate": 0.1,
         "non_zero_results": 0,
         "max_results_count": 0,
         "median_duration_seconds": 4.561921,
@@ -2208,7 +2305,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 86.026873,
         "last_seen_start": "2025-09-12T02:27:24.275Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "48"
     },
     {
       "query_stem": "5",
@@ -2248,11 +2347,11 @@
       },
       "observed_main": {
         "query_stem": "5",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 5,
-        "success_rate": 0.2777777777777778,
-        "non_zero_results": 4,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 7,
+        "success_rate": 0.35,
+        "non_zero_results": 6,
         "max_results_count": 284,
         "median_duration_seconds": 418.848081,
         "last_seen_start": "2026-04-20T11:06:27.611Z"
@@ -2267,7 +2366,9 @@
         "max_results_count": 266,
         "median_duration_seconds": 712.767349,
         "last_seen_start": "2025-09-03T01:15:37.461Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "5"
     },
     {
       "query_stem": "50",
@@ -2307,8 +2408,8 @@
       },
       "observed_main": {
         "query_stem": "50",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -2316,7 +2417,9 @@
         "median_duration_seconds": 4.536638,
         "last_seen_start": "2026-04-20T11:06:38.463Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "50"
     },
     {
       "query_stem": "51",
@@ -2356,12 +2459,12 @@
       },
       "observed_main": {
         "query_stem": "51",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
-        "max_results_count": 24366,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
+        "max_results_count": 24733,
         "median_duration_seconds": 4.766044,
         "last_seen_start": "2026-04-20T11:06:44.274Z"
       },
@@ -2375,7 +2478,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 77.568384,
         "last_seen_start": "2025-09-12T12:08:52.835Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "51"
     },
     {
       "query_stem": "52",
@@ -2415,16 +2520,18 @@
       },
       "observed_main": {
         "query_stem": "52",
-        "attempts": 17,
-        "run_count": 17,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 19,
+        "run_count": 19,
+        "successes": 2,
+        "success_rate": 0.10526315789473684,
+        "non_zero_results": 2,
+        "max_results_count": 2,
         "median_duration_seconds": 4.457074,
         "last_seen_start": "2026-04-20T11:06:50.036Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "52"
     },
     {
       "query_stem": "53",
@@ -2464,12 +2571,12 @@
       },
       "observed_main": {
         "query_stem": "53",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 2,
+        "success_rate": 0.1,
+        "non_zero_results": 2,
+        "max_results_count": 2,
         "median_duration_seconds": 4.4514335,
         "last_seen_start": "2026-04-20T11:06:55.875Z"
       },
@@ -2483,7 +2590,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 97.492298,
         "last_seen_start": "2025-09-11T09:14:55.682Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "53"
     },
     {
       "query_stem": "54",
@@ -2523,16 +2632,18 @@
       },
       "observed_main": {
         "query_stem": "54",
-        "attempts": 17,
-        "run_count": 17,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 19,
+        "run_count": 19,
+        "successes": 2,
+        "success_rate": 0.10526315789473684,
+        "non_zero_results": 2,
+        "max_results_count": 2,
         "median_duration_seconds": 4.242757,
         "last_seen_start": "2026-04-20T11:07:01.535Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "54"
     },
     {
       "query_stem": "6",
@@ -2572,11 +2683,11 @@
       },
       "observed_main": {
         "query_stem": "6",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 4,
-        "success_rate": 0.2222222222222222,
-        "non_zero_results": 3,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 6,
+        "success_rate": 0.3,
+        "non_zero_results": 5,
         "max_results_count": 1216,
         "median_duration_seconds": 4.578621,
         "last_seen_start": "2026-04-20T11:07:07.083Z"
@@ -2591,7 +2702,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 180351.295899,
         "last_seen_start": "2025-09-03T14:41:12.382Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "6"
     },
     {
       "query_stem": "60",
@@ -2631,16 +2744,18 @@
       },
       "observed_main": {
         "query_stem": "60",
-        "attempts": 17,
-        "run_count": 17,
-        "successes": 1,
-        "success_rate": 0.058823529411764705,
-        "non_zero_results": 1,
+        "attempts": 19,
+        "run_count": 19,
+        "successes": 3,
+        "success_rate": 0.15789473684210525,
+        "non_zero_results": 3,
         "max_results_count": 39,
         "median_duration_seconds": 4.147341,
         "last_seen_start": "2026-04-20T11:07:20.353Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "60"
     },
     {
       "query_stem": "67_draft_human_metabolome",
@@ -2680,12 +2795,12 @@
       },
       "observed_main": {
         "query_stem": "67_draft_human_metabolome",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 2,
+        "success_rate": 0.1,
+        "non_zero_results": 2,
+        "max_results_count": 2,
         "median_duration_seconds": 4.528513,
         "last_seen_start": "2026-04-20T11:07:26.257Z"
       },
@@ -2699,7 +2814,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 78.785052,
         "last_seen_start": "2025-09-11T09:10:36.234Z"
-      }
+      },
+      "query_alias": "67-metabolome-draft",
+      "query_display_name": "67-metabolome-draft"
     },
     {
       "query_stem": "7",
@@ -2739,10 +2856,10 @@
       },
       "observed_main": {
         "query_stem": "7",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 7,
-        "success_rate": 0.3888888888888889,
+        "success_rate": 0.35,
         "non_zero_results": 0,
         "max_results_count": 0,
         "median_duration_seconds": 4.533576,
@@ -2758,7 +2875,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.500965,
         "last_seen_start": "2025-09-03T01:27:49.421Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "7"
     },
     {
       "query_stem": "70_enzymes_interacting_with_molecules_similar_to_dopamine",
@@ -2798,16 +2917,18 @@
       },
       "observed_main": {
         "query_stem": "70_enzymes_interacting_with_molecules_similar_to_dopamine",
-        "attempts": 17,
-        "run_count": 17,
-        "successes": 1,
-        "success_rate": 0.058823529411764705,
-        "non_zero_results": 1,
+        "attempts": 19,
+        "run_count": 19,
+        "successes": 3,
+        "success_rate": 0.15789473684210525,
+        "non_zero_results": 3,
         "max_results_count": 406,
         "median_duration_seconds": 4.120376,
         "last_seen_start": "2026-04-20T11:07:39.046Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": "70-dopamine-sim-enzymes",
+      "query_display_name": "70-dopamine-sim-enzymes"
     },
     {
       "query_stem": "71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease",
@@ -2847,8 +2968,8 @@
       },
       "observed_main": {
         "query_stem": "71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease",
-        "attempts": 17,
-        "run_count": 17,
+        "attempts": 19,
+        "run_count": 19,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -2856,7 +2977,9 @@
         "median_duration_seconds": 4.262,
         "last_seen_start": "2026-04-20T11:07:44.832Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": "71-dopamine-disease-variants",
+      "query_display_name": "71-dopamine-disease-variants"
     },
     {
       "query_stem": "92_uniprot_bioregistry_iri_translation",
@@ -2896,10 +3019,10 @@
       },
       "observed_main": {
         "query_stem": "92_uniprot_bioregistry_iri_translation",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 7,
-        "success_rate": 0.3888888888888889,
+        "success_rate": 0.35,
         "non_zero_results": 1,
         "max_results_count": 194,
         "median_duration_seconds": 4.6050015,
@@ -2915,7 +3038,9 @@
         "max_results_count": 194,
         "median_duration_seconds": 4.809371,
         "last_seen_start": "2025-09-11T09:17:55.400Z"
-      }
+      },
+      "query_alias": "92-bioregistry-xref",
+      "query_display_name": "92-bioregistry-xref"
     },
     {
       "query_stem": "028-biosodafrontend",
@@ -2955,16 +3080,18 @@
       },
       "observed_main": {
         "query_stem": "028-biosodafrontend",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
-        "max_results_count": 71,
-        "median_duration_seconds": 4.4242170000000005,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 0,
+        "success_rate": 0,
+        "non_zero_results": 0,
+        "max_results_count": 0,
+        "median_duration_seconds": 4.381655,
         "last_seen_start": "2026-04-20T10:43:57.322Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "028-biosodafrontend"
     },
     {
       "query_stem": "109_uniprot_transporter_in_liver",
@@ -3004,16 +3131,18 @@
       },
       "observed_main": {
         "query_stem": "109_uniprot_transporter_in_liver",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 5,
-        "success_rate": 0.2777777777777778,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 7,
+        "success_rate": 0.35,
+        "non_zero_results": 2,
+        "max_results_count": 2,
         "median_duration_seconds": 4.5639544999999995,
         "last_seen_start": "2026-04-20T10:44:05.819Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": "109-transporter-liver",
+      "query_display_name": "109-transporter-liver"
     },
     {
       "query_stem": "118_biosodafrontend_rat_brain_human_cancer",
@@ -3053,16 +3182,18 @@
       },
       "observed_main": {
         "query_stem": "118_biosodafrontend_rat_brain_human_cancer",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
-        "max_results_count": 12,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
+        "max_results_count": 71,
         "median_duration_seconds": 4.597924,
         "last_seen_start": "2026-04-20T10:44:31.093Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": "118-rat-brain-cancer",
+      "query_display_name": "118-rat-brain-cancer"
     },
     {
       "query_stem": "16",
@@ -3102,16 +3233,18 @@
       },
       "observed_main": {
         "query_stem": "16",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 4,
-        "success_rate": 0.2222222222222222,
-        "non_zero_results": 3,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 6,
+        "success_rate": 0.3,
+        "non_zero_results": 5,
         "max_results_count": 608,
         "median_duration_seconds": 4.473113,
         "last_seen_start": "2026-04-20T10:45:26.006Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "16"
     },
     {
       "query_stem": "49",
@@ -3151,16 +3284,18 @@
       },
       "observed_main": {
         "query_stem": "49",
-        "attempts": 2,
-        "run_count": 2,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 4,
+        "run_count": 4,
+        "successes": 2,
+        "success_rate": 0.5,
+        "non_zero_results": 2,
+        "max_results_count": 54105,
         "median_duration_seconds": 2.2675405,
         "last_seen_start": "2026-04-20T11:06:22.074Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "49"
     },
     {
       "query_stem": "50",
@@ -3200,8 +3335,8 @@
       },
       "observed_main": {
         "query_stem": "50",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -3209,7 +3344,9 @@
         "median_duration_seconds": 4.536638,
         "last_seen_start": "2026-04-20T11:06:38.463Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "50"
     },
     {
       "query_stem": "53",
@@ -3249,12 +3386,12 @@
       },
       "observed_main": {
         "query_stem": "53",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 2,
+        "success_rate": 0.1,
+        "non_zero_results": 2,
+        "max_results_count": 2,
         "median_duration_seconds": 4.4514335,
         "last_seen_start": "2026-04-20T11:06:55.875Z"
       },
@@ -3268,7 +3405,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 97.492298,
         "last_seen_start": "2025-09-11T09:14:55.682Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "53"
     },
     {
       "query_stem": "emi#examples011a",
@@ -3297,8 +3436,8 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples011a",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -3316,7 +3455,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.138572,
         "last_seen_start": "2025-09-08T12:26:35.443Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "emi#examples011a"
     },
     {
       "query_stem": "emi#examples011b",
@@ -3345,12 +3486,12 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples011b",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 1,
+        "success_rate": 0.05,
+        "non_zero_results": 1,
+        "max_results_count": 152,
         "median_duration_seconds": 4.2473105,
         "last_seen_start": "2026-04-20T11:08:13.666Z"
       },
@@ -3364,7 +3505,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.091684,
         "last_seen_start": "2025-09-08T12:27:45.962Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "emi#examples011b"
     },
     {
       "query_stem": "emi#examples012",
@@ -3393,10 +3536,10 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples012",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 1,
-        "success_rate": 0.05555555555555555,
+        "success_rate": 0.05,
         "non_zero_results": 0,
         "max_results_count": 0,
         "median_duration_seconds": 4.19101,
@@ -3412,7 +3555,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.15049,
         "last_seen_start": "2025-09-08T12:26:45.724Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "emi#examples012"
     },
     {
       "query_stem": "emi#examples013",
@@ -3441,11 +3586,11 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples013",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 10000,
         "median_duration_seconds": 4.185659,
         "last_seen_start": "2026-04-20T11:08:24.557Z"
@@ -3460,7 +3605,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.254538,
         "last_seen_start": "2025-09-08T12:27:29.715Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "emi#examples013"
     },
     {
       "query_stem": "emi#examples015",
@@ -3489,11 +3636,11 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples015",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 10000,
         "median_duration_seconds": 4.170119,
         "last_seen_start": "2026-04-20T11:08:30.016Z"
@@ -3508,7 +3655,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.140424,
         "last_seen_start": "2025-09-08T12:26:40.583Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "emi#examples015"
     },
     {
       "query_stem": "emi#examples018",
@@ -3537,11 +3686,11 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples018",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 1000,
         "median_duration_seconds": 4.2535025,
         "last_seen_start": "2026-04-20T11:08:35.505Z"
@@ -3556,7 +3705,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.161139,
         "last_seen_start": "2025-09-08T12:25:31.392Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "emi#examples018"
     },
     {
       "query_stem": "emi#examples019a",
@@ -3585,8 +3736,8 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples019a",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -3604,7 +3755,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.130354,
         "last_seen_start": "2025-09-08T12:26:30.312Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "emi#examples019a"
     },
     {
       "query_stem": "emi#examples019b",
@@ -3633,12 +3786,12 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples019b",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 2,
+        "success_rate": 0.1,
+        "non_zero_results": 2,
+        "max_results_count": 10000,
         "median_duration_seconds": 4.281581,
         "last_seen_start": "2026-04-20T11:08:46.365Z"
       },
@@ -3652,7 +3805,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.20217,
         "last_seen_start": "2025-09-08T12:25:36.555Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "emi#examples019b"
     },
     {
       "query_stem": "emi#examples021",
@@ -3681,8 +3836,8 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples021",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -3700,7 +3855,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.115934,
         "last_seen_start": "2025-09-08T12:27:40.845Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "emi#examples021"
     },
     {
       "query_stem": "001",
@@ -3742,11 +3899,11 @@
       },
       "observed_main": {
         "query_stem": "001",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 10,
         "median_duration_seconds": 4.318523000000001,
         "last_seen_start": "2026-04-20T10:42:33.887Z"
@@ -3761,7 +3918,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 17.190871,
         "last_seen_start": "2025-09-03T01:27:31.229Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "001"
     },
     {
       "query_stem": "002",
@@ -3803,8 +3962,8 @@
       },
       "observed_main": {
         "query_stem": "002",
-        "attempts": 17,
-        "run_count": 17,
+        "attempts": 19,
+        "run_count": 19,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -3812,7 +3971,9 @@
         "median_duration_seconds": 4.207682,
         "last_seen_start": "2026-04-20T10:42:39.841Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "002"
     },
     {
       "query_stem": "006",
@@ -3854,11 +4015,11 @@
       },
       "observed_main": {
         "query_stem": "006",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 5,
         "median_duration_seconds": 4.319240499999999,
         "last_seen_start": "2026-04-20T10:42:45.533Z"
@@ -3873,7 +4034,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 17.24972,
         "last_seen_start": "2025-09-03T02:03:04.288Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "006"
     },
     {
       "query_stem": "007",
@@ -3915,11 +4078,11 @@
       },
       "observed_main": {
         "query_stem": "007",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 92,
         "median_duration_seconds": 4.235297,
         "last_seen_start": "2026-04-20T10:42:51.275Z"
@@ -3934,7 +4097,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.873382,
         "last_seen_start": "2025-09-08T12:27:34.971Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "007"
     },
     {
       "query_stem": "009",
@@ -3976,11 +4141,11 @@
       },
       "observed_main": {
         "query_stem": "009",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 1,
         "median_duration_seconds": 4.284088,
         "last_seen_start": "2026-04-20T10:42:57.093Z"
@@ -3995,7 +4160,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 37.838641,
         "last_seen_start": "2025-09-08T12:26:50.876Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "009"
     },
     {
       "query_stem": "016",
@@ -4038,11 +4205,11 @@
       },
       "observed_main": {
         "query_stem": "016",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 13,
         "median_duration_seconds": 4.489917,
         "last_seen_start": "2026-04-20T10:43:02.870Z"
@@ -4057,7 +4224,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.366316,
         "last_seen_start": "2025-09-05T16:48:18.416Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "016"
     },
     {
       "query_stem": "017",
@@ -4099,11 +4268,11 @@
       },
       "observed_main": {
         "query_stem": "017",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 2,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 4,
+        "success_rate": 0.2,
+        "non_zero_results": 4,
         "max_results_count": 20,
         "median_duration_seconds": 4.5911965,
         "last_seen_start": "2026-04-20T10:43:12.573Z"
@@ -4118,7 +4287,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 24.993029,
         "last_seen_start": "2025-09-02T08:17:52.805Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "017"
     },
     {
       "query_stem": "018",
@@ -4160,8 +4331,8 @@
       },
       "observed_main": {
         "query_stem": "018",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -4179,7 +4350,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 25.063998,
         "last_seen_start": "2025-09-02T08:17:00.718Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "018"
     },
     {
       "query_stem": "019",
@@ -4240,7 +4413,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 25.020688,
         "last_seen_start": "2025-09-02T08:17:26.783Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "019"
     },
     {
       "query_stem": "020",
@@ -4282,11 +4457,11 @@
       },
       "observed_main": {
         "query_stem": "020",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 297,
         "median_duration_seconds": 127.2581835,
         "last_seen_start": "2026-04-20T10:43:42.212Z"
@@ -4301,7 +4476,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 25.06044,
         "last_seen_start": "2025-09-02T08:18:18.799Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "020"
     },
     {
       "query_stem": "027-biosodafrontend",
@@ -4343,16 +4520,18 @@
       },
       "observed_main": {
         "query_stem": "027-biosodafrontend",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
-        "max_results_count": 10,
-        "median_duration_seconds": 4.5716285,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
+        "max_results_count": 8,
+        "median_duration_seconds": 4.428047,
         "last_seen_start": "2026-04-20T10:43:50.091Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "027-biosodafrontend"
     },
     {
       "query_stem": "028-biosodafrontend",
@@ -4394,16 +4573,18 @@
       },
       "observed_main": {
         "query_stem": "028-biosodafrontend",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
-        "max_results_count": 71,
-        "median_duration_seconds": 4.4242170000000005,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 0,
+        "success_rate": 0,
+        "non_zero_results": 0,
+        "max_results_count": 0,
+        "median_duration_seconds": 4.381655,
         "last_seen_start": "2026-04-20T10:43:57.322Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "028-biosodafrontend"
     },
     {
       "query_stem": "109_uniprot_transporter_in_liver",
@@ -4445,16 +4626,18 @@
       },
       "observed_main": {
         "query_stem": "109_uniprot_transporter_in_liver",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 5,
-        "success_rate": 0.2777777777777778,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 7,
+        "success_rate": 0.35,
+        "non_zero_results": 2,
+        "max_results_count": 2,
         "median_duration_seconds": 4.5639544999999995,
         "last_seen_start": "2026-04-20T10:44:05.819Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": "109-transporter-liver",
+      "query_display_name": "109-transporter-liver"
     },
     {
       "query_stem": "11",
@@ -4496,11 +4679,11 @@
       },
       "observed_main": {
         "query_stem": "11",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 2,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 4,
+        "success_rate": 0.2,
+        "non_zero_results": 4,
         "max_results_count": 7,
         "median_duration_seconds": 4.403562,
         "last_seen_start": "2026-04-20T10:44:11.469Z"
@@ -4515,7 +4698,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 61011.599218,
         "last_seen_start": "2025-09-02T08:18:44.860Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "11"
     },
     {
       "query_stem": "116_biosodafrontend_rabit_mouse_orthologs",
@@ -4557,12 +4742,12 @@
       },
       "observed_main": {
         "query_stem": "116_biosodafrontend_rabit_mouse_orthologs",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
+        "max_results_count": 24,
         "median_duration_seconds": 4.509552,
         "last_seen_start": "2026-04-20T10:44:19.579Z"
       },
@@ -4576,7 +4761,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 47.553026,
         "last_seen_start": "2025-09-08T12:25:41.758Z"
-      }
+      },
+      "query_alias": "116-rabbit-mouse-orthologs",
+      "query_display_name": "116-rabbit-mouse-orthologs"
     },
     {
       "query_stem": "117_biosodafrontend_glioblastoma_orthologs_rat",
@@ -4619,16 +4806,18 @@
       },
       "observed_main": {
         "query_stem": "117_biosodafrontend_glioblastoma_orthologs_rat",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
-        "max_results_count": 24,
-        "median_duration_seconds": 4.5422615,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
+        "max_results_count": 10,
+        "median_duration_seconds": 4.5910225,
         "last_seen_start": "2026-04-20T10:44:25.398Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": "117-glioblastoma-rat",
+      "query_display_name": "117-glioblastoma-rat"
     },
     {
       "query_stem": "118_biosodafrontend_rat_brain_human_cancer",
@@ -4671,16 +4860,18 @@
       },
       "observed_main": {
         "query_stem": "118_biosodafrontend_rat_brain_human_cancer",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
-        "max_results_count": 12,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
+        "max_results_count": 71,
         "median_duration_seconds": 4.597924,
         "last_seen_start": "2026-04-20T10:44:31.093Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": "118-rat-brain-cancer",
+      "query_display_name": "118-rat-brain-cancer"
     },
     {
       "query_stem": "12",
@@ -4722,11 +4913,11 @@
       },
       "observed_main": {
         "query_stem": "12",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 5,
-        "success_rate": 0.2777777777777778,
-        "non_zero_results": 5,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 7,
+        "success_rate": 0.35,
+        "non_zero_results": 7,
         "max_results_count": 52700,
         "median_duration_seconds": 4.5324915,
         "last_seen_start": "2026-04-20T10:44:36.831Z"
@@ -4741,7 +4932,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 72.736208,
         "last_seen_start": "2025-09-05T16:47:04.679Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "12"
     },
     {
       "query_stem": "13",
@@ -4783,10 +4976,10 @@
       },
       "observed_main": {
         "query_stem": "13",
-        "attempts": 17,
-        "run_count": 17,
+        "attempts": 19,
+        "run_count": 19,
         "successes": 5,
-        "success_rate": 0.29411764705882354,
+        "success_rate": 0.2631578947368421,
         "non_zero_results": 5,
         "max_results_count": 8584,
         "median_duration_seconds": 4.508979,
@@ -4802,7 +4995,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 41932.708224,
         "last_seen_start": "2025-09-03T02:03:22.539Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "13"
     },
     {
       "query_stem": "14",
@@ -4844,8 +5039,8 @@
       },
       "observed_main": {
         "query_stem": "14",
-        "attempts": 1,
-        "run_count": 1,
+        "attempts": 3,
+        "run_count": 3,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -4853,7 +5048,9 @@
         "median_duration_seconds": 8.16197,
         "last_seen_start": "2026-04-20T10:45:08.457Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "14"
     },
     {
       "query_stem": "15-rat-TP53-biosodafrontend",
@@ -4895,13 +5092,13 @@
       },
       "observed_main": {
         "query_stem": "15-rat-TP53-biosodafrontend",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 2,
-        "max_results_count": 8,
-        "median_duration_seconds": 4.3971215,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 4,
+        "success_rate": 0.2,
+        "non_zero_results": 4,
+        "max_results_count": 12,
+        "median_duration_seconds": 4.5926065000000005,
         "last_seen_start": "2026-04-20T10:45:17.620Z"
       },
       "observed_old_results": {
@@ -4914,7 +5111,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 29.269062,
         "last_seen_start": "2025-09-08T12:25:01.122Z"
-      }
+      },
+      "query_alias": "15-rat-TP53",
+      "query_display_name": "15-rat-TP53"
     },
     {
       "query_stem": "16",
@@ -4957,16 +5156,18 @@
       },
       "observed_main": {
         "query_stem": "16",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 4,
-        "success_rate": 0.2222222222222222,
-        "non_zero_results": 3,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 6,
+        "success_rate": 0.3,
+        "non_zero_results": 5,
         "max_results_count": 608,
         "median_duration_seconds": 4.473113,
         "last_seen_start": "2026-04-20T10:45:26.006Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "16"
     },
     {
       "query_stem": "17",
@@ -5008,16 +5209,18 @@
       },
       "observed_main": {
         "query_stem": "17",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 3,
-        "success_rate": 0.16666666666666666,
-        "non_zero_results": 2,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 5,
+        "success_rate": 0.25,
+        "non_zero_results": 4,
         "max_results_count": 11,
         "median_duration_seconds": 4.4633945,
         "last_seen_start": "2026-04-20T10:45:51.186Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "17"
     },
     {
       "query_stem": "18",
@@ -5059,8 +5262,8 @@
       },
       "observed_main": {
         "query_stem": "18",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -5068,7 +5271,9 @@
         "median_duration_seconds": 5.0216405,
         "last_seen_start": "2026-04-20T10:46:09.533Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "18"
     },
     {
       "query_stem": "18a",
@@ -5099,16 +5304,18 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "18a",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 2,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 4,
+        "success_rate": 0.2,
+        "non_zero_results": 4,
         "max_results_count": 141,
         "median_duration_seconds": 4.388713,
         "last_seen_start": "2026-04-20T10:46:25.877Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "18a"
     },
     {
       "query_stem": "19_draft_human_metabolome",
@@ -5150,11 +5357,11 @@
       },
       "observed_main": {
         "query_stem": "19_draft_human_metabolome",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 2,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 176288,
         "median_duration_seconds": 4.8561635,
         "last_seen_start": "2026-04-20T10:46:49.405Z"
@@ -5169,7 +5376,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 72.083984,
         "last_seen_start": "2025-09-12T12:07:39.750Z"
-      }
+      },
+      "query_alias": "19-metabolome-draft",
+      "query_display_name": "19-metabolome-draft"
     },
     {
       "query_stem": "19",
@@ -5212,16 +5421,18 @@
       },
       "observed_main": {
         "query_stem": "19",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 17,
         "median_duration_seconds": 4.8021205,
         "last_seen_start": "2026-04-20T10:46:32.143Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "19"
     },
     {
       "query_stem": "20_search_chemical_names_in_japanese",
@@ -5263,12 +5474,12 @@
       },
       "observed_main": {
         "query_stem": "20_search_chemical_names_in_japanese",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 1,
+        "max_results_count": 2,
         "median_duration_seconds": 51.401962,
         "last_seen_start": "2026-04-20T10:47:53.580Z"
       },
@@ -5282,7 +5493,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 3535.132911,
         "last_seen_start": "2025-09-03T13:42:16.248Z"
-      }
+      },
+      "query_alias": "20-japanese-chem-search",
+      "query_display_name": "20-japanese-chem-search"
     },
     {
       "query_stem": "20",
@@ -5324,16 +5537,18 @@
       },
       "observed_main": {
         "query_stem": "20",
-        "attempts": 1,
-        "run_count": 1,
+        "attempts": 3,
+        "run_count": 3,
         "successes": 1,
-        "success_rate": 1,
+        "success_rate": 0.3333333333333333,
         "non_zero_results": 0,
         "max_results_count": 0,
         "median_duration_seconds": 5.577733,
         "last_seen_start": "2026-04-20T10:47:47.001Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "20"
     },
     {
       "query_stem": "26",
@@ -5376,8 +5591,8 @@
       },
       "observed_main": {
         "query_stem": "26",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -5395,7 +5610,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 61762.063847,
         "last_seen_start": "2025-09-11T09:18:01.211Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "26"
     },
     {
       "query_stem": "27",
@@ -5438,8 +5655,8 @@
       },
       "observed_main": {
         "query_stem": "27",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -5457,7 +5674,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4591.584858,
         "last_seen_start": "2025-09-12T12:12:54.034Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "27"
     },
     {
       "query_stem": "29",
@@ -5499,12 +5718,12 @@
       },
       "observed_main": {
         "query_stem": "29",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 2,
+        "max_results_count": 51,
         "median_duration_seconds": 4.8003685,
         "last_seen_start": "2026-04-20T10:59:19.969Z"
       },
@@ -5518,7 +5737,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 34727.445409,
         "last_seen_start": "2025-09-12T02:28:51.303Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "29"
     },
     {
       "query_stem": "3",
@@ -5560,12 +5781,12 @@
       },
       "observed_main": {
         "query_stem": "3",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 2,
-        "max_results_count": 75,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 4,
+        "success_rate": 0.2,
+        "non_zero_results": 4,
+        "max_results_count": 76,
         "median_duration_seconds": 4.583069500000001,
         "last_seen_start": "2026-04-20T10:59:25.608Z"
       },
@@ -5579,7 +5800,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 2108.363774,
         "last_seen_start": "2025-09-03T01:27:54.923Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "3"
     },
     {
       "query_stem": "34",
@@ -5622,8 +5845,8 @@
       },
       "observed_main": {
         "query_stem": "34",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -5641,7 +5864,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 74.107595,
         "last_seen_start": "2025-09-12T12:10:11.404Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "34"
     },
     {
       "query_stem": "36",
@@ -5683,12 +5908,12 @@
       },
       "observed_main": {
         "query_stem": "36",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 2,
+        "success_rate": 0.1,
+        "non_zero_results": 2,
+        "max_results_count": 2,
         "median_duration_seconds": 4.479134999999999,
         "last_seen_start": "2026-04-20T11:05:36.056Z"
       },
@@ -5702,7 +5927,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 86.520491,
         "last_seen_start": "2025-09-12T12:11:26.513Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "36"
     },
     {
       "query_stem": "38",
@@ -5744,16 +5971,18 @@
       },
       "observed_main": {
         "query_stem": "38",
-        "attempts": 2,
-        "run_count": 2,
-        "successes": 1,
-        "success_rate": 0.5,
-        "non_zero_results": 1,
+        "attempts": 4,
+        "run_count": 4,
+        "successes": 3,
+        "success_rate": 0.75,
+        "non_zero_results": 3,
         "max_results_count": 2,
         "median_duration_seconds": 3.1896795,
         "last_seen_start": "2026-04-20T11:05:41.622Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "38"
     },
     {
       "query_stem": "40",
@@ -5795,8 +6024,8 @@
       },
       "observed_main": {
         "query_stem": "40",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -5814,7 +6043,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 80.223763,
         "last_seen_start": "2025-09-11T09:16:34.176Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "40"
     },
     {
       "query_stem": "42",
@@ -5856,11 +6087,11 @@
       },
       "observed_main": {
         "query_stem": "42",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 7,
-        "success_rate": 0.3888888888888889,
-        "non_zero_results": 7,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 9,
+        "success_rate": 0.45,
+        "non_zero_results": 9,
         "max_results_count": 66,
         "median_duration_seconds": 4.60993,
         "last_seen_start": "2026-04-20T11:05:53.184Z"
@@ -5875,7 +6106,9 @@
         "max_results_count": 66,
         "median_duration_seconds": 16.41529,
         "last_seen_start": "2025-09-11T09:10:18.818Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "42"
     },
     {
       "query_stem": "43",
@@ -5917,11 +6150,11 @@
       },
       "observed_main": {
         "query_stem": "43",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 7,
-        "success_rate": 0.3888888888888889,
-        "non_zero_results": 7,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 9,
+        "success_rate": 0.45,
+        "non_zero_results": 9,
         "max_results_count": 71,
         "median_duration_seconds": 4.802198499999999,
         "last_seen_start": "2026-04-20T11:05:58.929Z"
@@ -5936,7 +6169,9 @@
         "max_results_count": 71,
         "median_duration_seconds": 178.660832,
         "last_seen_start": "2025-09-11T09:11:56.020Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "43"
     },
     {
       "query_stem": "45",
@@ -5979,11 +6214,11 @@
       },
       "observed_main": {
         "query_stem": "45",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 26,
         "median_duration_seconds": 4.600816,
         "last_seen_start": "2026-04-20T11:06:04.746Z"
@@ -5998,7 +6233,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 153.556618,
         "last_seen_start": "2025-09-12T13:29:26.620Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "45"
     },
     {
       "query_stem": "46",
@@ -6040,8 +6277,8 @@
       },
       "observed_main": {
         "query_stem": "46",
-        "attempts": 1,
-        "run_count": 1,
+        "attempts": 3,
+        "run_count": 3,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -6049,7 +6286,9 @@
         "median_duration_seconds": 4.895129,
         "last_seen_start": "2026-04-20T11:06:10.416Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "46"
     },
     {
       "query_stem": "48",
@@ -6091,10 +6330,10 @@
       },
       "observed_main": {
         "query_stem": "48",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 2,
-        "success_rate": 0.1111111111111111,
+        "success_rate": 0.1,
         "non_zero_results": 0,
         "max_results_count": 0,
         "median_duration_seconds": 4.561921,
@@ -6110,7 +6349,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 86.026873,
         "last_seen_start": "2025-09-12T02:27:24.275Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "48"
     },
     {
       "query_stem": "49",
@@ -6153,16 +6394,18 @@
       },
       "observed_main": {
         "query_stem": "49",
-        "attempts": 2,
-        "run_count": 2,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 4,
+        "run_count": 4,
+        "successes": 2,
+        "success_rate": 0.5,
+        "non_zero_results": 2,
+        "max_results_count": 54105,
         "median_duration_seconds": 2.2675405,
         "last_seen_start": "2026-04-20T11:06:22.074Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "49"
     },
     {
       "query_stem": "5",
@@ -6204,11 +6447,11 @@
       },
       "observed_main": {
         "query_stem": "5",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 5,
-        "success_rate": 0.2777777777777778,
-        "non_zero_results": 4,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 7,
+        "success_rate": 0.35,
+        "non_zero_results": 6,
         "max_results_count": 284,
         "median_duration_seconds": 418.848081,
         "last_seen_start": "2026-04-20T11:06:27.611Z"
@@ -6223,7 +6466,9 @@
         "max_results_count": 266,
         "median_duration_seconds": 712.767349,
         "last_seen_start": "2025-09-03T01:15:37.461Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "5"
     },
     {
       "query_stem": "50",
@@ -6266,8 +6511,8 @@
       },
       "observed_main": {
         "query_stem": "50",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -6275,7 +6520,9 @@
         "median_duration_seconds": 4.536638,
         "last_seen_start": "2026-04-20T11:06:38.463Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "50"
     },
     {
       "query_stem": "51",
@@ -6317,12 +6564,12 @@
       },
       "observed_main": {
         "query_stem": "51",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
-        "max_results_count": 24366,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
+        "max_results_count": 24733,
         "median_duration_seconds": 4.766044,
         "last_seen_start": "2026-04-20T11:06:44.274Z"
       },
@@ -6336,7 +6583,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 77.568384,
         "last_seen_start": "2025-09-12T12:08:52.835Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "51"
     },
     {
       "query_stem": "52",
@@ -6379,16 +6628,18 @@
       },
       "observed_main": {
         "query_stem": "52",
-        "attempts": 17,
-        "run_count": 17,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 19,
+        "run_count": 19,
+        "successes": 2,
+        "success_rate": 0.10526315789473684,
+        "non_zero_results": 2,
+        "max_results_count": 2,
         "median_duration_seconds": 4.457074,
         "last_seen_start": "2026-04-20T11:06:50.036Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "52"
     },
     {
       "query_stem": "53",
@@ -6431,12 +6682,12 @@
       },
       "observed_main": {
         "query_stem": "53",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 2,
+        "success_rate": 0.1,
+        "non_zero_results": 2,
+        "max_results_count": 2,
         "median_duration_seconds": 4.4514335,
         "last_seen_start": "2026-04-20T11:06:55.875Z"
       },
@@ -6450,7 +6701,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 97.492298,
         "last_seen_start": "2025-09-11T09:14:55.682Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "53"
     },
     {
       "query_stem": "54",
@@ -6492,16 +6745,18 @@
       },
       "observed_main": {
         "query_stem": "54",
-        "attempts": 17,
-        "run_count": 17,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 19,
+        "run_count": 19,
+        "successes": 2,
+        "success_rate": 0.10526315789473684,
+        "non_zero_results": 2,
+        "max_results_count": 2,
         "median_duration_seconds": 4.242757,
         "last_seen_start": "2026-04-20T11:07:01.535Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "54"
     },
     {
       "query_stem": "6",
@@ -6544,11 +6799,11 @@
       },
       "observed_main": {
         "query_stem": "6",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 4,
-        "success_rate": 0.2222222222222222,
-        "non_zero_results": 3,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 6,
+        "success_rate": 0.3,
+        "non_zero_results": 5,
         "max_results_count": 1216,
         "median_duration_seconds": 4.578621,
         "last_seen_start": "2026-04-20T11:07:07.083Z"
@@ -6563,7 +6818,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 180351.295899,
         "last_seen_start": "2025-09-03T14:41:12.382Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "6"
     },
     {
       "query_stem": "60",
@@ -6606,16 +6863,18 @@
       },
       "observed_main": {
         "query_stem": "60",
-        "attempts": 17,
-        "run_count": 17,
-        "successes": 1,
-        "success_rate": 0.058823529411764705,
-        "non_zero_results": 1,
+        "attempts": 19,
+        "run_count": 19,
+        "successes": 3,
+        "success_rate": 0.15789473684210525,
+        "non_zero_results": 3,
         "max_results_count": 39,
         "median_duration_seconds": 4.147341,
         "last_seen_start": "2026-04-20T11:07:20.353Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": null,
+      "query_display_name": "60"
     },
     {
       "query_stem": "67_draft_human_metabolome",
@@ -6657,12 +6916,12 @@
       },
       "observed_main": {
         "query_stem": "67_draft_human_metabolome",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 2,
+        "success_rate": 0.1,
+        "non_zero_results": 2,
+        "max_results_count": 2,
         "median_duration_seconds": 4.528513,
         "last_seen_start": "2026-04-20T11:07:26.257Z"
       },
@@ -6676,7 +6935,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 78.785052,
         "last_seen_start": "2025-09-11T09:10:36.234Z"
-      }
+      },
+      "query_alias": "67-metabolome-draft",
+      "query_display_name": "67-metabolome-draft"
     },
     {
       "query_stem": "7",
@@ -6719,10 +6980,10 @@
       },
       "observed_main": {
         "query_stem": "7",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 7,
-        "success_rate": 0.3888888888888889,
+        "success_rate": 0.35,
         "non_zero_results": 0,
         "max_results_count": 0,
         "median_duration_seconds": 4.533576,
@@ -6738,7 +6999,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.500965,
         "last_seen_start": "2025-09-03T01:27:49.421Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "7"
     },
     {
       "query_stem": "70_enzymes_interacting_with_molecules_similar_to_dopamine",
@@ -6780,16 +7043,18 @@
       },
       "observed_main": {
         "query_stem": "70_enzymes_interacting_with_molecules_similar_to_dopamine",
-        "attempts": 17,
-        "run_count": 17,
-        "successes": 1,
-        "success_rate": 0.058823529411764705,
-        "non_zero_results": 1,
+        "attempts": 19,
+        "run_count": 19,
+        "successes": 3,
+        "success_rate": 0.15789473684210525,
+        "non_zero_results": 3,
         "max_results_count": 406,
         "median_duration_seconds": 4.120376,
         "last_seen_start": "2026-04-20T11:07:39.046Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": "70-dopamine-sim-enzymes",
+      "query_display_name": "70-dopamine-sim-enzymes"
     },
     {
       "query_stem": "71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease",
@@ -6831,8 +7096,8 @@
       },
       "observed_main": {
         "query_stem": "71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease",
-        "attempts": 17,
-        "run_count": 17,
+        "attempts": 19,
+        "run_count": 19,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -6840,7 +7105,9 @@
         "median_duration_seconds": 4.262,
         "last_seen_start": "2026-04-20T11:07:44.832Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": "71-dopamine-disease-variants",
+      "query_display_name": "71-dopamine-disease-variants"
     },
     {
       "query_stem": "90_uniprot_affected_by_metabolic_diseases_using_MeSH",
@@ -6882,8 +7149,8 @@
       },
       "observed_main": {
         "query_stem": "90_uniprot_affected_by_metabolic_diseases_using_MeSH",
-        "attempts": 1,
-        "run_count": 1,
+        "attempts": 3,
+        "run_count": 3,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -6891,7 +7158,9 @@
         "median_duration_seconds": 4.743668,
         "last_seen_start": "2026-04-20T11:07:50.501Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": "90-metabolic-disease-mesh",
+      "query_display_name": "90-metabolic-disease-mesh"
     },
     {
       "query_stem": "92_uniprot_bioregistry_iri_translation",
@@ -6933,10 +7202,10 @@
       },
       "observed_main": {
         "query_stem": "92_uniprot_bioregistry_iri_translation",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 7,
-        "success_rate": 0.3888888888888889,
+        "success_rate": 0.35,
         "non_zero_results": 1,
         "max_results_count": 194,
         "median_duration_seconds": 4.6050015,
@@ -6952,7 +7221,9 @@
         "max_results_count": 194,
         "median_duration_seconds": 4.809371,
         "last_seen_start": "2025-09-11T09:17:55.400Z"
-      }
+      },
+      "query_alias": "92-bioregistry-xref",
+      "query_display_name": "92-bioregistry-xref"
     },
     {
       "query_stem": "99_uniprot_identifiers_org_translation",
@@ -6994,8 +7265,8 @@
       },
       "observed_main": {
         "query_stem": "99_uniprot_identifiers_org_translation",
-        "attempts": 1,
-        "run_count": 1,
+        "attempts": 3,
+        "run_count": 3,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -7003,7 +7274,9 @@
         "median_duration_seconds": 4.775558,
         "last_seen_start": "2026-04-20T11:08:02.146Z"
       },
-      "observed_old_results": null
+      "observed_old_results": null,
+      "query_alias": "99-identifiers-xref",
+      "query_display_name": "99-identifiers-xref"
     },
     {
       "query_stem": "emi#examples011a",
@@ -7034,8 +7307,8 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples011a",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -7053,7 +7326,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.138572,
         "last_seen_start": "2025-09-08T12:26:35.443Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "emi#examples011a"
     },
     {
       "query_stem": "emi#examples011b",
@@ -7084,12 +7359,12 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples011b",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 1,
+        "success_rate": 0.05,
+        "non_zero_results": 1,
+        "max_results_count": 152,
         "median_duration_seconds": 4.2473105,
         "last_seen_start": "2026-04-20T11:08:13.666Z"
       },
@@ -7103,7 +7378,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.091684,
         "last_seen_start": "2025-09-08T12:27:45.962Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "emi#examples011b"
     },
     {
       "query_stem": "emi#examples012",
@@ -7134,10 +7411,10 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples012",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 1,
-        "success_rate": 0.05555555555555555,
+        "success_rate": 0.05,
         "non_zero_results": 0,
         "max_results_count": 0,
         "median_duration_seconds": 4.19101,
@@ -7153,7 +7430,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.15049,
         "last_seen_start": "2025-09-08T12:26:45.724Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "emi#examples012"
     },
     {
       "query_stem": "emi#examples013",
@@ -7184,11 +7463,11 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples013",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 10000,
         "median_duration_seconds": 4.185659,
         "last_seen_start": "2026-04-20T11:08:24.557Z"
@@ -7203,7 +7482,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.254538,
         "last_seen_start": "2025-09-08T12:27:29.715Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "emi#examples013"
     },
     {
       "query_stem": "emi#examples015",
@@ -7234,11 +7515,11 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples015",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 10000,
         "median_duration_seconds": 4.170119,
         "last_seen_start": "2026-04-20T11:08:30.016Z"
@@ -7253,7 +7534,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.140424,
         "last_seen_start": "2025-09-08T12:26:40.583Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "emi#examples015"
     },
     {
       "query_stem": "emi#examples018",
@@ -7284,11 +7567,11 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples018",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 1000,
         "median_duration_seconds": 4.2535025,
         "last_seen_start": "2026-04-20T11:08:35.505Z"
@@ -7303,7 +7586,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.161139,
         "last_seen_start": "2025-09-08T12:25:31.392Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "emi#examples018"
     },
     {
       "query_stem": "emi#examples019a",
@@ -7334,8 +7619,8 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples019a",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -7353,7 +7638,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.130354,
         "last_seen_start": "2025-09-08T12:26:30.312Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "emi#examples019a"
     },
     {
       "query_stem": "emi#examples019b",
@@ -7384,12 +7671,12 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples019b",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 2,
+        "success_rate": 0.1,
+        "non_zero_results": 2,
+        "max_results_count": 10000,
         "median_duration_seconds": 4.281581,
         "last_seen_start": "2026-04-20T11:08:46.365Z"
       },
@@ -7403,7 +7690,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.20217,
         "last_seen_start": "2025-09-08T12:25:36.555Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "emi#examples019b"
     },
     {
       "query_stem": "emi#examples021",
@@ -7434,8 +7723,8 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples021",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -7453,7 +7742,9 @@
         "max_results_count": 0,
         "median_duration_seconds": 4.115934,
         "last_seen_start": "2025-09-08T12:27:40.845Z"
-      }
+      },
+      "query_alias": null,
+      "query_display_name": "emi#examples021"
     }
   ],
   "summaries": [
@@ -7510,11 +7801,11 @@
       },
       "observed_main": {
         "query_stem": "001",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 10,
         "median_duration_seconds": 4.318523000000001,
         "last_seen_start": "2026-04-20T10:42:33.887Z"
@@ -7544,9 +7835,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "001"
     },
     {
       "query_stem": "002",
@@ -7601,8 +7895,8 @@
       },
       "observed_main": {
         "query_stem": "002",
-        "attempts": 17,
-        "run_count": 17,
+        "attempts": 19,
+        "run_count": 19,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -7625,9 +7919,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "002"
     },
     {
       "query_stem": "006",
@@ -7682,11 +7979,11 @@
       },
       "observed_main": {
         "query_stem": "006",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 5,
         "median_duration_seconds": 4.319240499999999,
         "last_seen_start": "2026-04-20T10:42:45.533Z"
@@ -7716,9 +8013,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "006"
     },
     {
       "query_stem": "007",
@@ -7773,11 +8073,11 @@
       },
       "observed_main": {
         "query_stem": "007",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 92,
         "median_duration_seconds": 4.235297,
         "last_seen_start": "2026-04-20T10:42:51.275Z"
@@ -7807,9 +8107,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "007"
     },
     {
       "query_stem": "009",
@@ -7864,11 +8167,11 @@
       },
       "observed_main": {
         "query_stem": "009",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 1,
         "median_duration_seconds": 4.284088,
         "last_seen_start": "2026-04-20T10:42:57.093Z"
@@ -7898,9 +8201,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "009"
     },
     {
       "query_stem": "016",
@@ -7956,11 +8262,11 @@
       },
       "observed_main": {
         "query_stem": "016",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 13,
         "median_duration_seconds": 4.489917,
         "last_seen_start": "2026-04-20T10:43:02.870Z"
@@ -7990,9 +8296,12 @@
           "Real world relevance or background of the query": "PAPER: The high relevance of this query is confirmed by the fact that was based on the scientific work published at https://doi.org/10.1093/database/baz106. Extracted from the paper \"The integration of the three sources promises to open the path for novel comparative studies across species, for example, through the analysis of orthologs (OMA) of human disease-causing genes (UniProt) and their expression patterns in model organisms (Bgee).\"",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "016"
     },
     {
       "query_stem": "017",
@@ -8047,11 +8356,11 @@
       },
       "observed_main": {
         "query_stem": "017",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 2,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 4,
+        "success_rate": 0.2,
+        "non_zero_results": 4,
         "max_results_count": 20,
         "median_duration_seconds": 4.5911965,
         "last_seen_start": "2026-04-20T10:43:12.573Z"
@@ -8081,9 +8390,12 @@
           "Real world relevance or background of the query": "PAPER: The high relevance of this query is confirmed by the fact that was based on the scientific work published at https://doi.org/10.1093/database/baz106.",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "017"
     },
     {
       "query_stem": "018",
@@ -8138,8 +8450,8 @@
       },
       "observed_main": {
         "query_stem": "018",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -8172,9 +8484,12 @@
           "Real world relevance or background of the query": "PAPER: The high relevance of this query is confirmed by the fact that was based on the scientific work published at https://doi.org/10.1093/database/baz106. Extracted from the paper: \"integrating orthology and gene expression data is relevant since we might want to predict gene expression conservation for orthologous genes\"",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "018"
     },
     {
       "query_stem": "019",
@@ -8263,9 +8578,12 @@
           "Real world relevance or background of the query": "PAPER: The high relevance of this query is confirmed by the fact that was based on the scientific work published at https://doi.org/10.1093/database/baz106. Extracted from the paper: \"integrating orthology and gene expression data is relevant since we might want to predict gene expression conservation for orthologous genes\"",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "019"
     },
     {
       "query_stem": "020",
@@ -8320,11 +8638,11 @@
       },
       "observed_main": {
         "query_stem": "020",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 297,
         "median_duration_seconds": 127.2581835,
         "last_seen_start": "2026-04-20T10:43:42.212Z"
@@ -8354,9 +8672,12 @@
           "Real world relevance or background of the query": "PAPER: The high relevance of this query is confirmed by the fact that was based on the scientific work published at https://doi.org/10.1093/database/baz106. Extracted from the paper: \"integrating orthology and gene expression data is relevant since we might want to predict gene expression conservation for orthologous genes\", \"The orthologs are normally thought to retain the same function in the course of evolution.\".",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "020"
     },
     {
       "query_stem": "027-biosodafrontend",
@@ -8411,13 +8732,13 @@
       },
       "observed_main": {
         "query_stem": "027-biosodafrontend",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
-        "max_results_count": 10,
-        "median_duration_seconds": 4.5716285,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
+        "max_results_count": 8,
+        "median_duration_seconds": 4.428047,
         "last_seen_start": "2026-04-20T10:43:50.091Z"
       },
       "observed_old_results": null,
@@ -8435,9 +8756,12 @@
           "Real world relevance or background of the query": "PAPER: Used in this paper https://pmc.ncbi.nlm.nih.gov/articles/PMC6836710/ and this talk https://www.sib.swiss/in-silico-talks/answering-biological-questions-with-federated-queries-across-databases",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "027-biosodafrontend"
     },
     {
       "query_stem": "028-biosodafrontend",
@@ -8500,13 +8824,13 @@
       },
       "observed_main": {
         "query_stem": "028-biosodafrontend",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
-        "max_results_count": 71,
-        "median_duration_seconds": 4.4242170000000005,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 0,
+        "success_rate": 0,
+        "non_zero_results": 0,
+        "max_results_count": 0,
+        "median_duration_seconds": 4.381655,
         "last_seen_start": "2026-04-20T10:43:57.322Z"
       },
       "observed_old_results": null,
@@ -8524,9 +8848,12 @@
           "Real world relevance or background of the query": "PAPER: Used in this paper https://pmc.ncbi.nlm.nih.gov/articles/PMC6836710/ and this talk https://www.sib.swiss/in-silico-talks/answering-biological-questions-with-federated-queries-across-databases",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "028-biosodafrontend"
     },
     {
       "query_stem": "109_uniprot_transporter_in_liver",
@@ -8589,12 +8916,12 @@
       },
       "observed_main": {
         "query_stem": "109_uniprot_transporter_in_liver",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 5,
-        "success_rate": 0.2777777777777778,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 7,
+        "success_rate": 0.35,
+        "non_zero_results": 2,
+        "max_results_count": 2,
         "median_duration_seconds": 4.5639544999999995,
         "last_seen_start": "2026-04-20T10:44:05.819Z"
       },
@@ -8613,9 +8940,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "109-transporter-liver"
         }
-      ]
+      ],
+      "query_alias": "109-transporter-liver",
+      "query_display_name": "109-transporter-liver"
     },
     {
       "query_stem": "11",
@@ -8670,11 +9000,11 @@
       },
       "observed_main": {
         "query_stem": "11",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 2,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 4,
+        "success_rate": 0.2,
+        "non_zero_results": 4,
         "max_results_count": 7,
         "median_duration_seconds": 4.403562,
         "last_seen_start": "2026-04-20T10:44:11.469Z"
@@ -8704,9 +9034,12 @@
           "Real world relevance or background of the query": "Enzyme classification to reaction classification",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "11"
     },
     {
       "query_stem": "116_biosodafrontend_rabit_mouse_orthologs",
@@ -8761,12 +9094,12 @@
       },
       "observed_main": {
         "query_stem": "116_biosodafrontend_rabit_mouse_orthologs",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
+        "max_results_count": 24,
         "median_duration_seconds": 4.509552,
         "last_seen_start": "2026-04-20T10:44:19.579Z"
       },
@@ -8795,9 +9128,12 @@
           "Real world relevance or background of the query": "PAPER: Used in this paper https://pmc.ncbi.nlm.nih.gov/articles/PMC6836710/ and this talk https://www.sib.swiss/in-silico-talks/answering-biological-questions-with-federated-queries-across-databases",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "116-rabbit-mouse-orthologs"
         }
-      ]
+      ],
+      "query_alias": "116-rabbit-mouse-orthologs",
+      "query_display_name": "116-rabbit-mouse-orthologs"
     },
     {
       "query_stem": "117_biosodafrontend_glioblastoma_orthologs_rat",
@@ -8853,13 +9189,13 @@
       },
       "observed_main": {
         "query_stem": "117_biosodafrontend_glioblastoma_orthologs_rat",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
-        "max_results_count": 24,
-        "median_duration_seconds": 4.5422615,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
+        "max_results_count": 10,
+        "median_duration_seconds": 4.5910225,
         "last_seen_start": "2026-04-20T10:44:25.398Z"
       },
       "observed_old_results": null,
@@ -8877,9 +9213,12 @@
           "Real world relevance or background of the query": "PAPER: Used in this paper https://pmc.ncbi.nlm.nih.gov/articles/PMC6836710/ and this talk https://www.sib.swiss/in-silico-talks/answering-biological-questions-with-federated-queries-across-databases",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "117-glioblastoma-rat"
         }
-      ]
+      ],
+      "query_alias": "117-glioblastoma-rat",
+      "query_display_name": "117-glioblastoma-rat"
     },
     {
       "query_stem": "118_biosodafrontend_rat_brain_human_cancer",
@@ -8943,12 +9282,12 @@
       },
       "observed_main": {
         "query_stem": "118_biosodafrontend_rat_brain_human_cancer",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
-        "max_results_count": 12,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
+        "max_results_count": 71,
         "median_duration_seconds": 4.597924,
         "last_seen_start": "2026-04-20T10:44:31.093Z"
       },
@@ -8967,9 +9306,12 @@
           "Real world relevance or background of the query": "PAPER: Used in this paper https://pmc.ncbi.nlm.nih.gov/articles/PMC6836710/ and this talk https://www.sib.swiss/in-silico-talks/answering-biological-questions-with-federated-queries-across-databases",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "118-rat-brain-cancer"
         }
-      ]
+      ],
+      "query_alias": "118-rat-brain-cancer",
+      "query_display_name": "118-rat-brain-cancer"
     },
     {
       "query_stem": "12",
@@ -9024,11 +9366,11 @@
       },
       "observed_main": {
         "query_stem": "12",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 5,
-        "success_rate": 0.2777777777777778,
-        "non_zero_results": 5,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 7,
+        "success_rate": 0.35,
+        "non_zero_results": 7,
         "max_results_count": 52700,
         "median_duration_seconds": 4.5324915,
         "last_seen_start": "2026-04-20T10:44:36.831Z"
@@ -9058,9 +9400,12 @@
           "Real world relevance or background of the query": "Reaction to enzyme",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "12"
     },
     {
       "query_stem": "13",
@@ -9115,10 +9460,10 @@
       },
       "observed_main": {
         "query_stem": "13",
-        "attempts": 17,
-        "run_count": 17,
+        "attempts": 19,
+        "run_count": 19,
         "successes": 5,
-        "success_rate": 0.29411764705882354,
+        "success_rate": 0.2631578947368421,
         "non_zero_results": 5,
         "max_results_count": 8584,
         "median_duration_seconds": 4.508979,
@@ -9149,9 +9494,12 @@
           "Real world relevance or background of the query": "Known enzymatic reactions in a specific species (e.g. find if bacteria X can break down drugs D)",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "13"
     },
     {
       "query_stem": "14",
@@ -9198,8 +9546,8 @@
       },
       "observed_main": {
         "query_stem": "14",
-        "attempts": 1,
-        "run_count": 1,
+        "attempts": 3,
+        "run_count": 3,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -9222,9 +9570,12 @@
           "Real world relevance or background of the query": "This query is relevant to increase the coverage of known othologous genes for a given bacteria species. OMA is not specific to microbes but MBGD is.",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "14"
     },
     {
       "query_stem": "15-rat-TP53-biosodafrontend",
@@ -9279,13 +9630,13 @@
       },
       "observed_main": {
         "query_stem": "15-rat-TP53-biosodafrontend",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 2,
-        "max_results_count": 8,
-        "median_duration_seconds": 4.3971215,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 4,
+        "success_rate": 0.2,
+        "non_zero_results": 4,
+        "max_results_count": 12,
+        "median_duration_seconds": 4.5926065000000005,
         "last_seen_start": "2026-04-20T10:45:17.620Z"
       },
       "observed_old_results": {
@@ -9313,9 +9664,12 @@
           "Real world relevance or background of the query": "PAPER: Used in this paper https://pmc.ncbi.nlm.nih.gov/articles/PMC6836710/ and this talk https://www.sib.swiss/in-silico-talks/answering-biological-questions-with-federated-queries-across-databases",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "15-rat-TP53"
         }
-      ]
+      ],
+      "query_alias": "15-rat-TP53",
+      "query_display_name": "15-rat-TP53"
     },
     {
       "query_stem": "16",
@@ -9379,11 +9733,11 @@
       },
       "observed_main": {
         "query_stem": "16",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 4,
-        "success_rate": 0.2222222222222222,
-        "non_zero_results": 3,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 6,
+        "success_rate": 0.3,
+        "non_zero_results": 5,
         "max_results_count": 608,
         "median_duration_seconds": 4.473113,
         "last_seen_start": "2026-04-20T10:45:26.006Z"
@@ -9403,9 +9757,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "16"
     },
     {
       "query_stem": "17",
@@ -9460,11 +9817,11 @@
       },
       "observed_main": {
         "query_stem": "17",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 3,
-        "success_rate": 0.16666666666666666,
-        "non_zero_results": 2,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 5,
+        "success_rate": 0.25,
+        "non_zero_results": 4,
         "max_results_count": 11,
         "median_duration_seconds": 4.4633945,
         "last_seen_start": "2026-04-20T10:45:51.186Z"
@@ -9484,9 +9841,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "17"
     },
     {
       "query_stem": "18",
@@ -9541,8 +9901,8 @@
       },
       "observed_main": {
         "query_stem": "18",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -9565,9 +9925,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "18"
     },
     {
       "query_stem": "18a",
@@ -9611,11 +9974,11 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "18a",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 2,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 4,
+        "success_rate": 0.2,
+        "non_zero_results": 4,
         "max_results_count": 141,
         "median_duration_seconds": 4.388713,
         "last_seen_start": "2026-04-20T10:46:25.877Z"
@@ -9635,9 +9998,12 @@
           "Real world relevance or background of the query": "Reaction on specific type of molecule",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "https://sparql.uniprot.org/.well-known/sparql-examples/60"
+          "Is this query similar to another query?": "https://sparql.uniprot.org/.well-known/sparql-examples/60",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "18a"
     },
     {
       "query_stem": "19",
@@ -9693,11 +10059,11 @@
       },
       "observed_main": {
         "query_stem": "19",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 17,
         "median_duration_seconds": 4.8021205,
         "last_seen_start": "2026-04-20T10:46:32.143Z"
@@ -9717,9 +10083,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "19"
     },
     {
       "query_stem": "19_draft_human_metabolome",
@@ -9774,11 +10143,11 @@
       },
       "observed_main": {
         "query_stem": "19_draft_human_metabolome",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 2,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 176288,
         "median_duration_seconds": 4.8561635,
         "last_seen_start": "2026-04-20T10:46:49.405Z"
@@ -9808,9 +10177,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "19-metabolome-draft"
         }
-      ]
+      ],
+      "query_alias": "19-metabolome-draft",
+      "query_display_name": "19-metabolome-draft"
     },
     {
       "query_stem": "20",
@@ -9857,10 +10229,10 @@
       },
       "observed_main": {
         "query_stem": "20",
-        "attempts": 1,
-        "run_count": 1,
+        "attempts": 3,
+        "run_count": 3,
         "successes": 1,
-        "success_rate": 1,
+        "success_rate": 0.3333333333333333,
         "non_zero_results": 0,
         "max_results_count": 0,
         "median_duration_seconds": 5.577733,
@@ -9881,9 +10253,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "20"
     },
     {
       "query_stem": "20_search_chemical_names_in_japanese",
@@ -9938,12 +10313,12 @@
       },
       "observed_main": {
         "query_stem": "20_search_chemical_names_in_japanese",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 1,
+        "max_results_count": 2,
         "median_duration_seconds": 51.401962,
         "last_seen_start": "2026-04-20T10:47:53.580Z"
       },
@@ -9972,9 +10347,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "20-japanese-chem-search"
         }
-      ]
+      ],
+      "query_alias": "20-japanese-chem-search",
+      "query_display_name": "20-japanese-chem-search"
     },
     {
       "query_stem": "26",
@@ -10030,8 +10408,8 @@
       },
       "observed_main": {
         "query_stem": "26",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -10064,9 +10442,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "https://sparql.swisslipids.org/.well-known/sparql-examples/27"
+          "Is this query similar to another query?": "https://sparql.swisslipids.org/.well-known/sparql-examples/27",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "26"
     },
     {
       "query_stem": "27",
@@ -10122,8 +10503,8 @@
       },
       "observed_main": {
         "query_stem": "27",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -10156,9 +10537,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "https://sparql.swisslipids.org/.well-known/sparql-examples/26"
+          "Is this query similar to another query?": "https://sparql.swisslipids.org/.well-known/sparql-examples/26",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "27"
     },
     {
       "query_stem": "29",
@@ -10213,12 +10597,12 @@
       },
       "observed_main": {
         "query_stem": "29",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 2,
+        "max_results_count": 51,
         "median_duration_seconds": 4.8003685,
         "last_seen_start": "2026-04-20T10:59:19.969Z"
       },
@@ -10247,9 +10631,12 @@
           "Real world relevance or background of the query": "TOY: Using online translation services for dynamic query and result translation",
           "Is this query a toy example?": "yes, as term is chosen for fun",
           "Are there any tricks to make the query executable?": "tends to break due to UTF-8 encoding issues on the wire between load balancers and backends",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "29"
     },
     {
       "query_stem": "3",
@@ -10304,12 +10691,12 @@
       },
       "observed_main": {
         "query_stem": "3",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 2,
-        "success_rate": 0.1111111111111111,
-        "non_zero_results": 2,
-        "max_results_count": 75,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 4,
+        "success_rate": 0.2,
+        "non_zero_results": 4,
+        "max_results_count": 76,
         "median_duration_seconds": 4.583069500000001,
         "last_seen_start": "2026-04-20T10:59:25.608Z"
       },
@@ -10338,9 +10725,12 @@
           "Real world relevance or background of the query": "TOY: it is not relevant compared to the others. It was written as a toy query.",
           "Is this query a toy example?": "yes",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "3"
     },
     {
       "query_stem": "34",
@@ -10396,8 +10786,8 @@
       },
       "observed_main": {
         "query_stem": "34",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -10430,9 +10820,12 @@
           "Real world relevance or background of the query": "Find fat's that humans can break down.",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "34"
     },
     {
       "query_stem": "36",
@@ -10487,12 +10880,12 @@
       },
       "observed_main": {
         "query_stem": "36",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 2,
+        "success_rate": 0.1,
+        "non_zero_results": 2,
+        "max_results_count": 2,
         "median_duration_seconds": 4.479134999999999,
         "last_seen_start": "2026-04-20T11:05:36.056Z"
       },
@@ -10521,9 +10914,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "36"
     },
     {
       "query_stem": "38",
@@ -10570,11 +10966,11 @@
       },
       "observed_main": {
         "query_stem": "38",
-        "attempts": 2,
-        "run_count": 2,
-        "successes": 1,
-        "success_rate": 0.5,
-        "non_zero_results": 1,
+        "attempts": 4,
+        "run_count": 4,
+        "successes": 3,
+        "success_rate": 0.75,
+        "non_zero_results": 3,
         "max_results_count": 2,
         "median_duration_seconds": 3.1896795,
         "last_seen_start": "2026-04-20T11:05:41.622Z"
@@ -10594,9 +10990,12 @@
           "Real world relevance or background of the query": "UniProt has protein information, but lacks good gene cooridnatees. Other resources can enrich UniProt with such key information.",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "38"
     },
     {
       "query_stem": "40",
@@ -10651,8 +11050,8 @@
       },
       "observed_main": {
         "query_stem": "40",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -10685,9 +11084,12 @@
           "Real world relevance or background of the query": "Find enzymes that break down drugs that are a category of lipids",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "40"
     },
     {
       "query_stem": "42",
@@ -10742,11 +11144,11 @@
       },
       "observed_main": {
         "query_stem": "42",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 7,
-        "success_rate": 0.3888888888888889,
-        "non_zero_results": 7,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 9,
+        "success_rate": 0.45,
+        "non_zero_results": 9,
         "max_results_count": 66,
         "median_duration_seconds": 4.60993,
         "last_seen_start": "2026-04-20T11:05:53.184Z"
@@ -10776,9 +11178,12 @@
           "Real world relevance or background of the query": "Patent's are key in Pharma funding desicions, asking EPO has key information that no one else has",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "42"
     },
     {
       "query_stem": "43",
@@ -10833,11 +11238,11 @@
       },
       "observed_main": {
         "query_stem": "43",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 7,
-        "success_rate": 0.3888888888888889,
-        "non_zero_results": 7,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 9,
+        "success_rate": 0.45,
+        "non_zero_results": 9,
         "max_results_count": 71,
         "median_duration_seconds": 4.802198499999999,
         "last_seen_start": "2026-04-20T11:05:58.929Z"
@@ -10867,9 +11272,12 @@
           "Real world relevance or background of the query": "Find drug targets, where patents have expired",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "https://sparql.uniprot.org/.well-known/sparql-examples/42"
+          "Is this query similar to another query?": "https://sparql.uniprot.org/.well-known/sparql-examples/42",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "43"
     },
     {
       "query_stem": "45",
@@ -10925,11 +11333,11 @@
       },
       "observed_main": {
         "query_stem": "45",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 26,
         "median_duration_seconds": 4.600816,
         "last_seen_start": "2026-04-20T11:06:04.746Z"
@@ -10959,9 +11367,12 @@
           "Real world relevance or background of the query": "See comment, but example query of finding key drug targets",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "45"
     },
     {
       "query_stem": "46",
@@ -11008,8 +11419,8 @@
       },
       "observed_main": {
         "query_stem": "46",
-        "attempts": 1,
-        "run_count": 1,
+        "attempts": 3,
+        "run_count": 3,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -11032,9 +11443,12 @@
           "Real world relevance or background of the query": "TOY: Link proteome to bioome and red-lists",
           "Is this query a toy example?": "yes, as the real interest is not duck images ;)",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "46"
     },
     {
       "query_stem": "48",
@@ -11089,10 +11503,10 @@
       },
       "observed_main": {
         "query_stem": "48",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 2,
-        "success_rate": 0.1111111111111111,
+        "success_rate": 0.1,
         "non_zero_results": 0,
         "max_results_count": 0,
         "median_duration_seconds": 4.561921,
@@ -11123,9 +11537,12 @@
           "Real world relevance or background of the query": "UniProt glycosylation information is incomplete, enriching these key PTM types is important. (e.g. COVID spike protein is highly glycosylated)",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "48"
     },
     {
       "query_stem": "49",
@@ -11181,12 +11598,12 @@
       },
       "observed_main": {
         "query_stem": "49",
-        "attempts": 2,
-        "run_count": 2,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 4,
+        "run_count": 4,
+        "successes": 2,
+        "success_rate": 0.5,
+        "non_zero_results": 2,
+        "max_results_count": 54105,
         "median_duration_seconds": 2.2675405,
         "last_seen_start": "2026-04-20T11:06:22.074Z"
       },
@@ -11205,9 +11622,12 @@
           "Real world relevance or background of the query": "Find tissue specific enzymes, and their genomic coordinates",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "49"
     },
     {
       "query_stem": "5",
@@ -11262,11 +11682,11 @@
       },
       "observed_main": {
         "query_stem": "5",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 5,
-        "success_rate": 0.2777777777777778,
-        "non_zero_results": 4,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 7,
+        "success_rate": 0.35,
+        "non_zero_results": 6,
         "max_results_count": 284,
         "median_duration_seconds": 418.848081,
         "last_seen_start": "2026-04-20T11:06:27.611Z"
@@ -11296,9 +11716,12 @@
           "Real world relevance or background of the query": "Find reactions that lead to such a lipid that are known to occur in biology, pathway elucidation. Functional resistance",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "5"
     },
     {
       "query_stem": "50",
@@ -11362,8 +11785,8 @@
       },
       "observed_main": {
         "query_stem": "50",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -11386,9 +11809,12 @@
           "Real world relevance or background of the query": "Find enzymes that are in specific tissues, again related to some diseases",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "50"
     },
     {
       "query_stem": "51",
@@ -11443,12 +11869,12 @@
       },
       "observed_main": {
         "query_stem": "51",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
-        "max_results_count": 24366,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
+        "max_results_count": 24733,
         "median_duration_seconds": 4.766044,
         "last_seen_start": "2026-04-20T11:06:44.274Z"
       },
@@ -11477,9 +11903,12 @@
           "Real world relevance or background of the query": "Drug targets, enzymatic activity",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "oder of query elements",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "51"
     },
     {
       "query_stem": "52",
@@ -11535,12 +11964,12 @@
       },
       "observed_main": {
         "query_stem": "52",
-        "attempts": 17,
-        "run_count": 17,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 19,
+        "run_count": 19,
+        "successes": 2,
+        "success_rate": 0.10526315789473684,
+        "non_zero_results": 2,
+        "max_results_count": 2,
         "median_duration_seconds": 4.457074,
         "last_seen_start": "2026-04-20T11:06:50.036Z"
       },
@@ -11559,9 +11988,12 @@
           "Real world relevance or background of the query": "Drug target search, with real experiments",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "yes, 51\" https://sparql.uniprot.org/.well-known/sparql-examples/uniprot_transporter_in_liver,\"Find human transporter proteins in reviewed UniProtKB, that are expressed in the liver (Uses Bgee and UBERON)."
+          "Is this query similar to another query?": "yes, 51\" https://sparql.uniprot.org/.well-known/sparql-examples/uniprot_transporter_in_liver,\"Find human transporter proteins in reviewed UniProtKB, that are expressed in the liver (Uses Bgee and UBERON).",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "52"
     },
     {
       "query_stem": "53",
@@ -11625,12 +12057,12 @@
       },
       "observed_main": {
         "query_stem": "53",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 2,
+        "success_rate": 0.1,
+        "non_zero_results": 2,
+        "max_results_count": 2,
         "median_duration_seconds": 4.4514335,
         "last_seen_start": "2026-04-20T11:06:55.875Z"
       },
@@ -11659,9 +12091,12 @@
           "Real world relevance or background of the query": "Expands query 40 to other species",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "yes, 40\" https://sparql.uniprot.org/.well-known/sparql-examples/36,\"Find the orthologous proteins for UniProtKB entry P05067 using the <a href=\"http://www.orthod.org\">OrthoDB database</a>"
+          "Is this query similar to another query?": "yes, 40\" https://sparql.uniprot.org/.well-known/sparql-examples/36,\"Find the orthologous proteins for UniProtKB entry P05067 using the <a href=\"http://www.orthod.org\">OrthoDB database</a>",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "53"
     },
     {
       "query_stem": "54",
@@ -11716,12 +12151,12 @@
       },
       "observed_main": {
         "query_stem": "54",
-        "attempts": 17,
-        "run_count": 17,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 19,
+        "run_count": 19,
+        "successes": 2,
+        "success_rate": 0.10526315789473684,
+        "non_zero_results": 2,
+        "max_results_count": 2,
         "median_duration_seconds": 4.242757,
         "last_seen_start": "2026-04-20T11:07:01.535Z"
       },
@@ -11740,9 +12175,12 @@
           "Real world relevance or background of the query": "Finding cognate ligands that are the difference between things binding in biological day to day, and 3D structure determination where the chemicals are similar but not identical",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "xsd:double, use avoids bug in virtuoso",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "54"
     },
     {
       "query_stem": "6",
@@ -11798,11 +12236,11 @@
       },
       "observed_main": {
         "query_stem": "6",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 4,
-        "success_rate": 0.2222222222222222,
-        "non_zero_results": 3,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 6,
+        "success_rate": 0.3,
+        "non_zero_results": 5,
         "max_results_count": 1216,
         "median_duration_seconds": 4.578621,
         "last_seen_start": "2026-04-20T11:07:07.083Z"
@@ -11832,9 +12270,12 @@
           "Real world relevance or background of the query": "Enrich lipid display with key information on how and what syntezises them",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "yes values clause",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "6"
     },
     {
       "query_stem": "60",
@@ -11890,11 +12331,11 @@
       },
       "observed_main": {
         "query_stem": "60",
-        "attempts": 17,
-        "run_count": 17,
-        "successes": 1,
-        "success_rate": 0.058823529411764705,
-        "non_zero_results": 1,
+        "attempts": 19,
+        "run_count": 19,
+        "successes": 3,
+        "success_rate": 0.15789473684210525,
+        "non_zero_results": 3,
         "max_results_count": 39,
         "median_duration_seconds": 4.147341,
         "last_seen_start": "2026-04-20T11:07:20.353Z"
@@ -11914,9 +12355,12 @@
           "Real world relevance or background of the query": "Key drug design query",
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "60"
     },
     {
       "query_stem": "67_draft_human_metabolome",
@@ -11971,12 +12415,12 @@
       },
       "observed_main": {
         "query_stem": "67_draft_human_metabolome",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 2,
+        "success_rate": 0.1,
+        "non_zero_results": 2,
+        "max_results_count": 2,
         "median_duration_seconds": 4.528513,
         "last_seen_start": "2026-04-20T11:07:26.257Z"
       },
@@ -12005,9 +12449,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "67-metabolome-draft"
         }
-      ]
+      ],
+      "query_alias": "67-metabolome-draft",
+      "query_display_name": "67-metabolome-draft"
     },
     {
       "query_stem": "7",
@@ -12063,10 +12510,10 @@
       },
       "observed_main": {
         "query_stem": "7",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 7,
-        "success_rate": 0.3888888888888889,
+        "success_rate": 0.35,
         "non_zero_results": 0,
         "max_results_count": 0,
         "median_duration_seconds": 4.533576,
@@ -12097,9 +12544,12 @@
           "Real world relevance or background of the query": "From masspec result to lipid identification in vivo",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "7"
     },
     {
       "query_stem": "70_enzymes_interacting_with_molecules_similar_to_dopamine",
@@ -12154,11 +12604,11 @@
       },
       "observed_main": {
         "query_stem": "70_enzymes_interacting_with_molecules_similar_to_dopamine",
-        "attempts": 17,
-        "run_count": 17,
-        "successes": 1,
-        "success_rate": 0.058823529411764705,
-        "non_zero_results": 1,
+        "attempts": 19,
+        "run_count": 19,
+        "successes": 3,
+        "success_rate": 0.15789473684210525,
+        "non_zero_results": 3,
         "max_results_count": 406,
         "median_duration_seconds": 4.120376,
         "last_seen_start": "2026-04-20T11:07:39.046Z"
@@ -12178,9 +12628,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "70-dopamine-sim-enzymes"
         }
-      ]
+      ],
+      "query_alias": "70-dopamine-sim-enzymes",
+      "query_display_name": "70-dopamine-sim-enzymes"
     },
     {
       "query_stem": "71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease",
@@ -12235,8 +12688,8 @@
       },
       "observed_main": {
         "query_stem": "71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease",
-        "attempts": 17,
-        "run_count": 17,
+        "attempts": 19,
+        "run_count": 19,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -12259,9 +12712,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "71-dopamine-disease-variants"
         }
-      ]
+      ],
+      "query_alias": "71-dopamine-disease-variants",
+      "query_display_name": "71-dopamine-disease-variants"
     },
     {
       "query_stem": "90_uniprot_affected_by_metabolic_diseases_using_MeSH",
@@ -12308,8 +12764,8 @@
       },
       "observed_main": {
         "query_stem": "90_uniprot_affected_by_metabolic_diseases_using_MeSH",
-        "attempts": 1,
-        "run_count": 1,
+        "attempts": 3,
+        "run_count": 3,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -12332,9 +12788,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "90-metabolic-disease-mesh"
         }
-      ]
+      ],
+      "query_alias": "90-metabolic-disease-mesh",
+      "query_display_name": "90-metabolic-disease-mesh"
     },
     {
       "query_stem": "92_uniprot_bioregistry_iri_translation",
@@ -12389,10 +12848,10 @@
       },
       "observed_main": {
         "query_stem": "92_uniprot_bioregistry_iri_translation",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 7,
-        "success_rate": 0.3888888888888889,
+        "success_rate": 0.35,
         "non_zero_results": 1,
         "max_results_count": 194,
         "median_duration_seconds": 4.6050015,
@@ -12423,9 +12882,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "92-bioregistry-xref"
         }
-      ]
+      ],
+      "query_alias": "92-bioregistry-xref",
+      "query_display_name": "92-bioregistry-xref"
     },
     {
       "query_stem": "99_uniprot_identifiers_org_translation",
@@ -12472,8 +12934,8 @@
       },
       "observed_main": {
         "query_stem": "99_uniprot_identifiers_org_translation",
-        "attempts": 1,
-        "run_count": 1,
+        "attempts": 3,
+        "run_count": 3,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -12496,9 +12958,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "99-identifiers-xref"
         }
-      ]
+      ],
+      "query_alias": "99-identifiers-xref",
+      "query_display_name": "99-identifiers-xref"
     },
     {
       "query_stem": "emi#examples011a",
@@ -12542,8 +13007,8 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples011a",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -12576,9 +13041,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "emi#examples011a"
     },
     {
       "query_stem": "emi#examples011b",
@@ -12622,12 +13090,12 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples011b",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 1,
+        "success_rate": 0.05,
+        "non_zero_results": 1,
+        "max_results_count": 152,
         "median_duration_seconds": 4.2473105,
         "last_seen_start": "2026-04-20T11:08:13.666Z"
       },
@@ -12656,9 +13124,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "emi#examples011b"
     },
     {
       "query_stem": "emi#examples012",
@@ -12702,10 +13173,10 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples012",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 1,
-        "success_rate": 0.05555555555555555,
+        "success_rate": 0.05,
         "non_zero_results": 0,
         "max_results_count": 0,
         "median_duration_seconds": 4.19101,
@@ -12736,9 +13207,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "emi#examples012"
     },
     {
       "query_stem": "emi#examples013",
@@ -12782,11 +13256,11 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples013",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 10000,
         "median_duration_seconds": 4.185659,
         "last_seen_start": "2026-04-20T11:08:24.557Z"
@@ -12816,9 +13290,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "emi#examples013"
     },
     {
       "query_stem": "emi#examples015",
@@ -12862,11 +13339,11 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples015",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 10000,
         "median_duration_seconds": 4.170119,
         "last_seen_start": "2026-04-20T11:08:30.016Z"
@@ -12896,9 +13373,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "emi#examples015"
     },
     {
       "query_stem": "emi#examples018",
@@ -12942,11 +13422,11 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples018",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 1,
-        "success_rate": 0.05555555555555555,
-        "non_zero_results": 1,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 3,
+        "success_rate": 0.15,
+        "non_zero_results": 3,
         "max_results_count": 1000,
         "median_duration_seconds": 4.2535025,
         "last_seen_start": "2026-04-20T11:08:35.505Z"
@@ -12976,9 +13456,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "emi#examples018"
     },
     {
       "query_stem": "emi#examples019a",
@@ -13022,8 +13505,8 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples019a",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -13056,9 +13539,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "emi#examples019a"
     },
     {
       "query_stem": "emi#examples019b",
@@ -13102,12 +13588,12 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples019b",
-        "attempts": 18,
-        "run_count": 18,
-        "successes": 0,
-        "success_rate": 0,
-        "non_zero_results": 0,
-        "max_results_count": 0,
+        "attempts": 20,
+        "run_count": 20,
+        "successes": 2,
+        "success_rate": 0.1,
+        "non_zero_results": 2,
+        "max_results_count": 10000,
         "median_duration_seconds": 4.281581,
         "last_seen_start": "2026-04-20T11:08:46.365Z"
       },
@@ -13136,9 +13622,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "emi#examples019b"
     },
     {
       "query_stem": "emi#examples021",
@@ -13182,8 +13671,8 @@
       "complexity_stats": null,
       "observed_main": {
         "query_stem": "emi#examples021",
-        "attempts": 18,
-        "run_count": 18,
+        "attempts": 20,
+        "run_count": 20,
         "successes": 0,
         "success_rate": 0,
         "non_zero_results": 0,
@@ -13216,9 +13705,12 @@
           "Real world relevance or background of the query": "-",
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
-          "Is this query similar to another query?": "-"
+          "Is this query similar to another query?": "-",
+          "Query alias": "-"
         }
-      ]
+      ],
+      "query_alias": null,
+      "query_display_name": "emi#examples021"
     }
   ]
 }

@@ -24,6 +24,16 @@ const experimentsRoot = path.join(repoRoot, "experiments");
 const queriesRoot = path.join(repoRoot, "queries");
 const docsDataDir = path.join(repoRoot, "docs", "data");
 const sibQueriesCsvPath = path.join(queriesRoot, "SIB_queries.csv");
+const manualServiceControlSourceCsvPrimary = path.join(experimentsRoot, "query_trouble-shooting.csv");
+const manualServiceControlSourceCsvMetadata = path.join(experimentsRoot, "comunica-troubleshooting.csv");
+const manualServiceControlEndpointRunDir = path.join(experimentsRoot, "service-control-31-03-25-endpoint");
+const manualServiceControlComunicaRunDir = path.join(experimentsRoot, "service-control-31-03-25-comunica");
+const nonRunExperimentDirs = new Set([
+  // Intermediate split artifacts from troubleshooting parsing.
+  "service-control-06-03-25",
+  // Source artifacts for manual control parsing (not a single runtime experiment).
+  "service-control-31-03-25",
+]);
 const promotedLegacyRuns = [
   // Keep this legacy run visible in the primary dashboard flow.
   // It contains default-service (SERVICE-enabled) experiment data.
@@ -32,22 +42,40 @@ const promotedLegacyRuns = [
 const forceServiceDescriptionRuns = new Set([
   // This run is a service-description control run.
   "experiments/service-control-20-4-26",
+  // Hand-curated positive controls (split into endpoint and Comunica views).
+  "experiments/service-control-31-03-25-endpoint",
+  "experiments/service-control-31-03-25-comunica",
   // Promoted legacy default-service run.
   "experiments/old-results/default-service-test-1",
 ]);
 const legacyDefaultServiceQueryAliasMap = new Map([
-  ["Q00000004", "027-biosodafrontend"],
-  ["Q00000005", "028-biosodafrontend"],
-  ["Q00000007", "15-rat-TP53-biosodafrontend"],
-  ["Q00000008", "116_biosodafrontend_rabit_mouse_orthologs"],
-  ["Q00000010", "117_biosodafrontend_glioblastoma_orthologs_rat"],
-  ["Q00000011", "118_biosodafrontend_rat_brain_human_cancer"],
+  ["Q00000004", "117_biosodafrontend_glioblastoma_orthologs_rat"],
+  ["Q00000005", "118_biosodafrontend_rat_brain_human_cancer"],
+  ["Q00000007", "027-biosodafrontend"],
+  ["Q00000008", "028-biosodafrontend"],
+  ["Q00000010", "116_biosodafrontend_rabit_mouse_orthologs"],
+  ["Q00000011", "15-rat-TP53-biosodafrontend"],
 ]);
 const runIdsWithKnown18Vs18aIssue = new Set([
   "experiments/EX1-17-9-25",
   "experiments/EX2-13-10-25",
   "experiments/EX3-16-10-25",
   "experiments/EX4-24-10-25",
+]);
+const queryStemAliasOverrides = new Map([
+  ["15-rat-TP53-biosodafrontend", "15-rat-TP53"],
+  ["19_draft_human_metabolome", "19-metabolome-draft"],
+  ["20_search_chemical_names_in_japanese", "20-japanese-chem-search"],
+  ["67_draft_human_metabolome", "67-metabolome-draft"],
+  ["70_enzymes_interacting_with_molecules_similar_to_dopamine", "70-dopamine-sim-enzymes"],
+  ["71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease", "71-dopamine-disease-variants"],
+  ["90_uniprot_affected_by_metabolic_diseases_using_MeSH", "90-metabolic-disease-mesh"],
+  ["92_uniprot_bioregistry_iri_translation", "92-bioregistry-xref"],
+  ["99_uniprot_identifiers_org_translation", "99-identifiers-xref"],
+  ["109_uniprot_transporter_in_liver", "109-transporter-liver"],
+  ["116_biosodafrontend_rabit_mouse_orthologs", "116-rabbit-mouse-orthologs"],
+  ["117_biosodafrontend_glioblastoma_orthologs_rat", "117-glioblastoma-rat"],
+  ["118_biosodafrontend_rat_brain_human_cancer", "118-rat-brain-cancer"],
 ]);
 
 function normalizeSourceUrl(url) {
@@ -98,15 +126,24 @@ const ERROR_PATTERNS = [
 ];
 
 const errorCategoryMatchers = [
+  { pattern: /no comunica results/i, category: "No Comunica Results" },
+  { pattern: /no results/i, category: "No Results" },
+  { pattern: /long time to run|takes a long time to run/i, category: "Long Runtime" },
+  { pattern: /continues to run after results/i, category: "Long Runtime" },
+  { pattern: /timeout/i, category: "Timeout" },
   { pattern: /fetch failed/i, category: "Fetch Failure" },
+  { pattern: /could not dereference/i, category: "Dereference Failure" },
+  { pattern: /invalid sparql endpoint response/i, category: "Invalid Endpoint Response" },
   { pattern: /client-side error/i, category: "Client-Side HTTP Error" },
   { pattern: /server-side error/i, category: "Server-Side Error" },
   { pattern: /heap limit|allocation failed/i, category: "Out of Memory" },
   { pattern: /unknown sparql results content type/i, category: "Content-Type Error" },
+  { pattern: /rate limit exceeded/i, category: "HTTP 429 / Rate Limited" },
+  { pattern: /order by/i, category: "Query Semantics / ORDER BY" },
+  { pattern: /query is broken|broken query/i, category: "Broken Query" },
   { pattern: /request failed/i, category: "Request Failed" },
-  { pattern: /timeout/i, category: "Timeout" },
-  { pattern: /forbidden|\b403\b/i, category: "HTTP 403 / Forbidden" },
-  { pattern: /\b404\b|not found/i, category: "HTTP 404 / Not Found" },
+  { pattern: /forbidden/i, category: "HTTP 403 / Forbidden" },
+  { pattern: /not found/i, category: "HTTP 404 / Not Found" },
 ];
 
 function stripAnsi(text) {
@@ -228,6 +265,411 @@ function parseDelimitedCsv(text, delimiter = ",") {
   }
 
   return rows;
+}
+
+const manualBiosodaQueryIdMap = new Map([
+  ["Q00000004", "117_biosodafrontend_glioblastoma_orthologs_rat"],
+  ["Q00000005", "118_biosodafrontend_rat_brain_human_cancer"],
+  ["Q00000007", "027-biosodafrontend"],
+  ["Q00000008", "028-biosodafrontend"],
+  ["Q00000010", "116_biosodafrontend_rabit_mouse_orthologs"],
+  ["Q00000011", "15-rat-TP53-biosodafrontend"],
+]);
+
+function splitLooseCsvLine(line) {
+  return line.split(",").map((value) => value.trim());
+}
+
+function normalizeManualControlQueryName(rawValue) {
+  if (!rawValue || typeof rawValue !== "string") {
+    return null;
+  }
+  let value = rawValue.trim();
+  if (!value) {
+    return null;
+  }
+
+  value = value.replace(/^\*+/, "").trim();
+  value = value.replace(/\.(?:rq|sparql)$/i, "");
+
+  // comunica-troubleshooting.csv records "*a.sparql" where the matching query
+  // in query_trouble-shooting.csv is "*18a.rq".
+  if (value.toLowerCase() === "a") {
+    value = "18a";
+  }
+
+  if (manualBiosodaQueryIdMap.has(value)) {
+    return manualBiosodaQueryIdMap.get(value);
+  }
+
+  // Ignore non-query note rows such as endpoint legend lines.
+  if (!/\d/.test(value)) {
+    return null;
+  }
+
+  return value;
+}
+
+function parseManualResultToken(rawValue) {
+  if (rawValue === null || rawValue === undefined) {
+    return {
+      hasValue: false,
+      positive: false,
+      numeric: null,
+      lowerBound: null,
+      zero: false,
+    };
+  }
+
+  const text = String(rawValue).trim();
+  if (!text || text === "-") {
+    return {
+      hasValue: false,
+      positive: false,
+      numeric: null,
+      lowerBound: null,
+      zero: false,
+    };
+  }
+
+  const gtMatch = text.match(/^>\s*(\d+)$/);
+  if (gtMatch) {
+    const base = Number(gtMatch[1]);
+    return {
+      hasValue: true,
+      positive: true,
+      numeric: null,
+      lowerBound: Number.isFinite(base) ? base + 1 : 2,
+      zero: false,
+    };
+  }
+
+  const numeric = Number(text);
+  if (Number.isFinite(numeric)) {
+    return {
+      hasValue: true,
+      positive: numeric > 0,
+      numeric,
+      lowerBound: null,
+      zero: numeric === 0,
+    };
+  }
+
+  return {
+    hasValue: true,
+    positive: false,
+    numeric: null,
+    lowerBound: null,
+    zero: false,
+  };
+}
+
+function parseManualSources(rawValue) {
+  if (!rawValue || typeof rawValue !== "string") {
+    return [];
+  }
+  return rawValue
+    .split(/[+,]/)
+    .map((value) => value.trim())
+    .filter((value) => value && value !== "-");
+}
+
+function asIsoForDay(dayText) {
+  const match = dayText.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!match) {
+    return null;
+  }
+  const [, dd, mm, yyyy] = match;
+  const date = new Date(`${yyyy}-${mm}-${dd}T00:00:00Z`);
+  return Number.isNaN(date.valueOf()) ? null : date.toISOString();
+}
+
+function parseManualControlCsv(sourcePath) {
+  const text = fs.readFileSync(sourcePath, "utf8");
+  const lines = text.split(/\r?\n/);
+
+  const firstNonEmpty = lines.find((line) => line.trim() !== "") || "";
+  const dateMatch = firstNonEmpty.match(/(\d{2}\/\d{2}\/\d{4})/);
+  const dateText = dateMatch ? dateMatch[1] : null;
+
+  const headerIndex = lines.findIndex((line) => line.trim().toLowerCase().startsWith("query-name,"));
+  if (headerIndex === -1) {
+    return { dateText, records: [] };
+  }
+
+  const rawHeader = splitLooseCsvLine(lines[headerIndex]);
+  const headers = [...rawHeader];
+  if (!headers.includes("problem?")) {
+    const maybeProblem = lines.slice(headerIndex + 1).find((line) => line.trim() !== "") || "";
+    if (maybeProblem.trim().toLowerCase() === "problem?") {
+      headers.push("problem?");
+    }
+  }
+  if (!headers.includes("changed-source-url")) {
+    headers.push("changed-source-url");
+  }
+
+  const records = [];
+  let currentSection = null;
+  let currentRecord = null;
+
+  for (let index = headerIndex + 1; index < lines.length; index += 1) {
+    const rawLine = lines[index] ?? "";
+    const trimmed = rawLine.trim();
+
+    if (!trimmed) {
+      currentRecord = null;
+      continue;
+    }
+    if (trimmed.toLowerCase() === "problem?") {
+      continue;
+    }
+    if (trimmed.toLowerCase().startsWith("query-name,")) {
+      continue;
+    }
+
+    if (/^\s+/.test(rawLine) && currentRecord) {
+      currentRecord.notes.push(trimmed);
+      continue;
+    }
+
+    if (trimmed.endsWith(":")) {
+      currentSection = trimmed.slice(0, -1).trim();
+      currentRecord = null;
+      continue;
+    }
+
+    if (!trimmed.includes(",")) {
+      continue;
+    }
+
+    const values = splitLooseCsvLine(trimmed);
+    while (values.length < headers.length) {
+      values.push("-");
+    }
+    if (values.length > headers.length) {
+      const keep = values.slice(0, headers.length - 1);
+      keep.push(values.slice(headers.length - 1).join(", ").trim());
+      values.length = 0;
+      values.push(...keep);
+    }
+
+    const row = {};
+    for (let colIndex = 0; colIndex < headers.length; colIndex += 1) {
+      row[headers[colIndex]] = values[colIndex] ?? "-";
+    }
+
+    const queryName = normalizeManualControlQueryName(row["query-name"]);
+    if (!queryName) {
+      continue;
+    }
+
+    const record = {
+      query_name: queryName,
+      section: currentSection,
+      sources: parseManualSources(row.sources || row["sib-location"] || ""),
+      comunica_result_raw: row["comunica-results"] || "-",
+      endpoint_result_raw: row["sparql-endpoint-results"] || "-",
+      problem_raw: row["problem?"] || "-",
+      changed_source_url_raw: row["changed-source-url"] || "-",
+      notes: [],
+      source_file: path.basename(sourcePath),
+    };
+
+    records.push(record);
+    currentRecord = record;
+  }
+
+  return { dateText, records };
+}
+
+function summarizeManualResultTokens(rawTokens) {
+  const tokens = rawTokens
+    .map((token) => String(token || "").trim())
+    .filter((token) => token !== "");
+  const parsed = tokens.map((token) => parseManualResultToken(token));
+
+  const numeric = parsed
+    .map((token) => token.numeric)
+    .filter((value) => value !== null && value !== undefined);
+  const lowerBounds = parsed
+    .map((token) => token.lowerBound)
+    .filter((value) => value !== null && value !== undefined);
+
+  let resultsCount = null;
+  if (numeric.length > 0) {
+    resultsCount = Math.max(...numeric);
+  } else if (lowerBounds.length > 0) {
+    // Keep lower-bound semantics from tokens such as ">1" without inventing exact counts.
+    resultsCount = Math.max(...lowerBounds);
+  } else if (parsed.some((token) => token.zero)) {
+    resultsCount = 0;
+  }
+
+  return {
+    tokens,
+    producedResults: parsed.some((token) => token.positive),
+    resultsCount,
+  };
+}
+
+function collectManualNotes(rawValues) {
+  const notes = [];
+  for (const value of rawValues) {
+    const text = String(value || "").trim();
+    if (!text || text === "-") {
+      continue;
+    }
+    notes.push(text);
+  }
+  return [...new Set(notes)];
+}
+
+function buildManualServiceControlSummaries() {
+  if (!fs.existsSync(manualServiceControlSourceCsvPrimary)) {
+    return [];
+  }
+
+  const primaryParsed = parseManualControlCsv(manualServiceControlSourceCsvPrimary);
+  const metadataParsed = fs.existsSync(manualServiceControlSourceCsvMetadata)
+    ? parseManualControlCsv(manualServiceControlSourceCsvMetadata)
+    : { dateText: null, records: [] };
+
+  if (!primaryParsed.records.length) {
+    return [];
+  }
+
+  const metadataByQuery = new Map();
+  for (const record of metadataParsed.records) {
+    if (!metadataByQuery.has(record.query_name)) {
+      metadataByQuery.set(record.query_name, {
+        sections: new Set(),
+        issues: new Set(),
+        notes: new Set(),
+        changes: new Set(),
+      });
+    }
+    const item = metadataByQuery.get(record.query_name);
+    if (record.section) {
+      item.sections.add(record.section);
+    }
+    const issue = String(record.problem_raw || "").trim();
+    if (issue && issue !== "-") {
+      item.issues.add(issue);
+    }
+    const change = String(record.changed_source_url_raw || "").trim();
+    if (change && change !== "-") {
+      item.changes.add(change);
+    }
+    record.notes.forEach((note) => {
+      const text = String(note || "").trim();
+      if (text) {
+        item.notes.add(text);
+      }
+    });
+  }
+
+  const byQuery = new Map();
+  for (const record of primaryParsed.records) {
+    if (!byQuery.has(record.query_name)) {
+      byQuery.set(record.query_name, {
+        query_name: record.query_name,
+        sources: new Set(),
+        sections: new Set(),
+        primary_comunica_tokens: [],
+        primary_endpoint_tokens: [],
+        primary_issues: new Set(),
+        primary_changes: new Set(),
+      });
+    }
+    const item = byQuery.get(record.query_name);
+    record.sources.forEach((source) => item.sources.add(source));
+    if (record.section) {
+      item.sections.add(record.section);
+    }
+    item.primary_comunica_tokens.push(record.comunica_result_raw);
+    item.primary_endpoint_tokens.push(record.endpoint_result_raw);
+
+    const issue = String(record.problem_raw || "").trim();
+    if (issue && issue !== "-") {
+      item.primary_issues.add(issue);
+    }
+    const change = String(record.changed_source_url_raw || "").trim();
+    if (change && change !== "-") {
+      item.primary_changes.add(change);
+    }
+  }
+
+  const runStart = asIsoForDay(primaryParsed.dateText || metadataParsed.dateText || "31/03/2025");
+
+  const makeEntries = (resultStream) => [...byQuery.values()]
+    .map((item) => {
+      const metadata = metadataByQuery.get(item.query_name);
+      const tokenSummary = summarizeManualResultTokens(
+        resultStream === "comunica"
+          ? item.primary_comunica_tokens
+          : item.primary_endpoint_tokens,
+      );
+
+      // Core run status comes from query_trouble-shooting.csv.
+      // Comunica troubleshooting content is attached as supplemental error metadata.
+      const mergedErrorNotes = collectManualNotes([
+        ...item.primary_issues,
+        ...item.primary_changes,
+        ...(metadata ? [...metadata.issues, ...metadata.changes, ...metadata.notes] : []),
+      ]);
+
+      const errorText = tokenSummary.producedResults
+        ? "None"
+        : (mergedErrorNotes.length > 0 ? mergedErrorNotes.join(" | ") : "Unknown Error");
+
+      return {
+        query_name: item.query_name,
+        sources: [...item.sources].sort().join(", ") || "None",
+        start: null,
+        end: null,
+        duration_seconds: null,
+        http_requests: null,
+        produced_results: tokenSummary.producedResults,
+        results_count: tokenSummary.resultsCount,
+        error: errorText,
+        control_result_stream: resultStream,
+        control_core_source_file: path.basename(manualServiceControlSourceCsvPrimary),
+        control_error_metadata_source_file: path.basename(manualServiceControlSourceCsvMetadata),
+        control_sections_primary: [...item.sections].sort(),
+        control_sections_metadata: metadata ? [...metadata.sections].sort() : [],
+        control_primary_comunica_results: summarizeManualResultTokens(item.primary_comunica_tokens).tokens,
+        control_primary_endpoint_results: summarizeManualResultTokens(item.primary_endpoint_tokens).tokens,
+        control_comunica_error_metadata: metadata
+          ? collectManualNotes([...metadata.issues, ...metadata.changes, ...metadata.notes])
+          : [],
+      };
+    })
+    .sort((a, b) => a.query_name.localeCompare(b.query_name));
+
+  const buildSummary = (resultStream) => ({
+    general_stats: {
+      run_start: runStart,
+      // Manual control sheets only record the day, not an end timestamp.
+      run_end: null,
+      run_duration_seconds: null,
+    },
+    entries: makeEntries(resultStream),
+  });
+
+  return [
+    { runDir: manualServiceControlEndpointRunDir, summary: buildSummary("endpoint") },
+    { runDir: manualServiceControlComunicaRunDir, summary: buildSummary("comunica") },
+  ];
+}
+
+function ensureManualServiceControlSummaries() {
+  const generated = buildManualServiceControlSummaries();
+  for (const item of generated) {
+    fs.mkdirSync(item.runDir, { recursive: true });
+    const summaryPath = path.join(item.runDir, "summary.json");
+    fs.writeFileSync(summaryPath, `${JSON.stringify(item.summary, null, 2)}\n`, "utf8");
+  }
 }
 
 function parseDelimitedLineSelected(line, delimiter, selectedIndices) {
@@ -821,6 +1263,30 @@ function parseSources(rawSources) {
   return [];
 }
 
+function extractHttpStatusCode(text) {
+  if (!text || typeof text !== "string") {
+    return null;
+  }
+
+  const patterns = [
+    /\bhttp status\s*(\d{3})\b/i,
+    /\berror\s*(\d{3})\b/i,
+    /\(HTTP status\s*(\d{3})\)/i,
+  ];
+
+  for (const pattern of patterns) {
+    const match = text.match(pattern);
+    if (match) {
+      const code = Number(match[1]);
+      if (Number.isFinite(code) && code >= 100 && code <= 599) {
+        return code;
+      }
+    }
+  }
+
+  return null;
+}
+
 function classifyError(errorValue, producedResults) {
   if (producedResults) {
     return "None";
@@ -834,14 +1300,43 @@ function classifyError(errorValue, producedResults) {
     return `Error Code ${errorValue}`;
   }
 
-  const text = String(errorValue);
+  const text = String(errorValue).trim();
+  const statusCode = extractHttpStatusCode(text);
+  if (statusCode !== null) {
+    if (statusCode === 400) {
+      return "HTTP 400 / Bad Request";
+    }
+    if (statusCode === 403) {
+      return "HTTP 403 / Forbidden";
+    }
+    if (statusCode === 404) {
+      return "HTTP 404 / Not Found";
+    }
+    if (statusCode === 406) {
+      return "HTTP 406 / Not Acceptable";
+    }
+    if (statusCode === 429) {
+      return "HTTP 429 / Rate Limited";
+    }
+    if (statusCode === 500) {
+      return "HTTP 500 / Server Error";
+    }
+    if (statusCode >= 500) {
+      return "HTTP 5xx Server Error";
+    }
+    if (statusCode >= 400) {
+      return "HTTP 4xx Client Error";
+    }
+    return `HTTP ${statusCode}`;
+  }
+
   for (const matcher of errorCategoryMatchers) {
     if (matcher.pattern.test(text)) {
       return matcher.category;
     }
   }
 
-  return "Other Error";
+  return text || "Other Error";
 }
 
 function detectServiceDescription(queryName) {
@@ -1123,6 +1618,49 @@ function disambiguateSibReferenceStem(referenceStem, row) {
   return referenceStem;
 }
 
+function normalizeSibAlias(value) {
+  if (value === null || value === undefined) {
+    return null;
+  }
+  const text = String(value).trim();
+  if (!text || text === "-") {
+    return null;
+  }
+  return text;
+}
+
+function buildQueryAliasMap(canonicalStems, parsedRows) {
+  const aliases = new Map();
+
+  // First pass: consume explicit aliases curated in SIB_queries.csv.
+  for (const row of parsedRows) {
+    const rawReferenceStem = extractQueryTailFromReference(row.Query || row.query || null);
+    const referenceStem = disambiguateSibReferenceStem(rawReferenceStem, row);
+    const mappedStem = mapSibReferenceToQueryStem(referenceStem, canonicalStems);
+    if (!mappedStem) {
+      continue;
+    }
+    const explicitAlias = normalizeSibAlias(row["Query alias"] || row.query_alias || null);
+    if (explicitAlias && !aliases.has(mappedStem)) {
+      aliases.set(mappedStem, explicitAlias);
+    }
+  }
+
+  // Second pass: use maintained overrides so long query names stay concise even
+  // if a row is not present in SIB_queries.csv.
+  for (const stem of canonicalStems) {
+    if (aliases.has(stem)) {
+      continue;
+    }
+    const override = queryStemAliasOverrides.get(stem) || null;
+    if (override) {
+      aliases.set(stem, override);
+    }
+  }
+
+  return aliases;
+}
+
 function parseSibQueryRows() {
   if (!fileExists(sibQueriesCsvPath)) {
     return { columns: [], rows: [] };
@@ -1148,6 +1686,7 @@ function parseSibQueryRows() {
 function attachSibQueryContext(summaries) {
   const canonicalStems = new Set(summaries.map((summary) => summary.query_stem));
   const parsed = parseSibQueryRows();
+  const queryAliases = buildQueryAliasMap(canonicalStems, parsed.rows);
   const rowsByStem = new Map();
   const unmatchedRows = [];
   let matchedRows = 0;
@@ -1180,6 +1719,9 @@ function attachSibQueryContext(summaries) {
 
   return {
     summaries: enriched,
+    query_aliases: Object.fromEntries(
+      [...queryAliases.entries()].sort((a, b) => a[0].localeCompare(b[0])),
+    ),
     sib_columns: parsed.columns,
     sib_query_row_count: parsed.rows.length,
     sib_matched_row_count: matchedRows,
@@ -1293,19 +1835,39 @@ function buildQueriesDataset(mainDataset, oldDataset) {
     .sort((a, b) => a.query_stem.localeCompare(b.query_stem));
 
   const sibContext = attachSibQueryContext(summaries);
+  const queryAliases = sibContext.query_aliases || {};
+
+  const summariesWithAliases = sibContext.summaries.map((summary) => {
+    const queryAlias = queryAliases[summary.query_stem] || null;
+    return {
+      ...summary,
+      query_alias: queryAlias,
+      query_display_name: queryAlias || summary.query_stem,
+    };
+  });
+
+  const variantsWithAliases = variants.map((variant) => {
+    const queryAlias = queryAliases[variant.query_stem] || null;
+    return {
+      ...variant,
+      query_alias: queryAlias,
+      query_display_name: queryAlias || variant.query_stem,
+    };
+  });
 
   return {
     generated_at: new Date().toISOString(),
-    query_file_count: variants.length,
-    query_summary_count: sibContext.summaries.length,
+    query_file_count: variantsWithAliases.length,
+    query_summary_count: summariesWithAliases.length,
     stat_json_entry_count: statMap.size,
+    query_aliases: queryAliases,
     sib_columns: sibContext.sib_columns,
     sib_query_row_count: sibContext.sib_query_row_count,
     sib_matched_row_count: sibContext.sib_matched_row_count,
     sib_unmatched_row_count: sibContext.sib_unmatched_row_count,
     sib_unmatched_rows: sibContext.sib_unmatched_rows,
-    variants,
-    summaries: sibContext.summaries,
+    variants: variantsWithAliases,
+    summaries: summariesWithAliases,
   };
 }
 
@@ -1624,7 +2186,7 @@ function toCsv(rows) {
 function getMainRunDirs() {
   const entries = fs.readdirSync(experimentsRoot, { withFileTypes: true });
   const defaultRunDirs = entries
-    .filter((entry) => entry.isDirectory() && entry.name !== "old-results")
+    .filter((entry) => entry.isDirectory() && entry.name !== "old-results" && !nonRunExperimentDirs.has(entry.name))
     .map((entry) => path.join(experimentsRoot, entry.name))
     .sort((a, b) => a.localeCompare(b));
 
@@ -1690,6 +2252,9 @@ function writeJson(filePath, data) {
 
 function main() {
   const writeMissingSummaries = process.argv.includes("--write-missing-summaries");
+
+  // Rebuild hand-curated positive-control runs from troubleshooting sheets.
+  ensureManualServiceControlSummaries();
 
   const mainRunDirs = getMainRunDirs();
   const oldRunDirs = getOldRunDirs();

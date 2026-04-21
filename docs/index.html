@@ -164,6 +164,7 @@
                       <th>Duration (s)</th>
                       <th>Outcome</th>
                       <th>Results</th>
+                      <th>HTTP Requests</th>
                       <th>Error</th>
                     </tr>
                   </thead>
@@ -185,7 +186,7 @@
               <div class="query-detail">
                 <h3>SIB Query Context</h3>
                 <div class="table-meta" id="querySibMeta">No SIB metadata loaded.</div>
-                <div class="table-wrap">
+                <div class="table-wrap" id="querySibTableWrap">
                   <table id="querySibTable">
                     <thead id="querySibTableHead"></thead>
                     <tbody id="querySibTableBody"></tbody>
@@ -245,7 +246,7 @@
                   </label>
                   <label>
                     Top queries
-                    <input id="httpTopN" type="number" min="1" max="200" step="1" value="20" />
+                    <input id="httpTopN" type="number" min="1" max="300" step="1" value="35" />
                   </label>
                   <label>
                     HTTP aggregate
@@ -316,6 +317,19 @@
           <li>Overview and Monthly sections are collapsible.</li>
         </ul>
       </section>
+    </div>
+
+    <div class="focus-modal hidden" id="focusModal" aria-hidden="true">
+      <div class="focus-modal-panel">
+        <div class="focus-modal-head">
+          <h2 id="focusModalTitle">Expanded View</h2>
+          <button type="button" class="focus-modal-close" id="focusModalClose" aria-label="Close fullscreen view">Close</button>
+        </div>
+        <div class="focus-modal-body">
+          <div class="focus-modal-hint">Press <kbd>Esc</kbd> or tap outside to exit.</div>
+          <div id="focusModalContent"></div>
+        </div>
+      </div>
     </div>
 
     <script type="module" src="./assets/app.js"></script>

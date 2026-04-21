@@ -1,0 +1,152 @@
+Data generated: 31/03/2025
+
+query-name,sources,comunica-results,sparql-endpoint-results
+    problem?
+
+Queries problems:
+001.sparql,dgbi+wikidata,-,10
+    Query operation processing failed: none of the configured actors were able to handle the operation type pattern
+    Error messages of failing actors:
+        Actor urn:comunica:default:query-operation/actors#source requires an operation with source annotation.
+
+3.sparql,OMA+uniprot,>1,76,-,-
+    Actor urn:comunica:default:query-operation/actors#source requires an operation with source annotation.
+
+5.sparql,SwissLipids,>1,267,-,-
+    Actor urn:comunica:default:query-operation/actors#source requires an operation with source annotation.
+
+6.sparql,SwissLipids,>1,26,comunica: ORDER BY??,-
+    Actor urn:comunica:default:query-operation/actors#source requires an operation with source annotation.
+
+006.sparql,dgbi,5,5,-,-
+    Actor urn:comunica:default:query-operation/actors#source requires an operation with source annotation.
+
+007.sparql,dgbi,>1,92,-,- (maybe could work...)
+    FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+
+009.sparql,dgbi,1,1,-,-
+    Actor urn:comunica:default:query-operation/actors#source requires an operation with source annotation.
+
+11.sparql,Rhea,7,7,-,-
+    fetch failed
+
+12.sparql,Rhea,12719,12719,-, added {} around inner SELECT
+    Seems to WORK but only gives 12? results
+
+16.sparql,SwissLipids,>1,26,comunica: ORDER BY??,-
+    fetch failed
+
+016.sparql,Bgee,13,13,comunica: Continues to run after results??,-
+    Could not dereference ' https://sparql.omabrowser.org/sparql/'
+
+017.sparql,Bgee,20,20,-,-
+    No Results.... (check physical query plan)
+
+020.sparql,Bgee,>1,297,-,-
+    Invalid SPARQL endpoint response from  https://sparql.omabrowser.org/sparql (HTTP status 406)
+
+29.sparql,uniprot,>1,51,-,-
+    fetch failed
+
+38.sparql,uniprot,2,2,-,-
+    Invalid SPARQL endpoint response from https://sparql.uniprot.org/sparql (HTTP status 400):
+
+42.sparql,uniprot,>1,66,-,-
+    Could not dereference ' https://data.epo.org/linked-data/query'
+
+43.sparql,uniprot,>1,71,-,-
+    Could not dereference ' https://data.epo.org/linked-data/query'
+
+45.sparql,uniprot,>1,26,-,-
+    Invalid SPARQL endpoint response from  https://query.wikidata.org/sparql (HTTP status 429):
+    Rate limit exceeded
+
+49.sparql,uniprot,>1,54105,-,-
+    FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+
+51.sparql,uniprot,>1,24733,-,-
+    FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+
+(did not test because will probably get stack-trace errors)
+*52.sparql,uniprot,>1,>1,-,-
+53.sparql,uniprot,>1,>1,-,-
+*54.sparql,uniprot,>1,>1,-,-
+*60.sparql,uniprot,>1,39,-,-
+67_draft_human_metabolome.sparql,uniprot,>1,>1,-,-
+*70_enzymes_interacting_with_molecules_similar_to_dopamine.sparql,uniprot,>1,406,-,-
+109_uniprot_transporter_in_liver.sparql,uniprot,>1,>1,-,-
+emi#examples011b.sparql,dgbi,0,152,-,-
+emi#examples013.sparql,dgbi,>1,10000,-,-
+emi#examples015.sparql,dgbi,>1,10000,-,-
+emi#examples018.sparql,dgbi,>1,1000,-,-
+emi#examples019b.sparql,dgbi,>1,10000,-,-
+*a.sparql,rhea,>1,137,-,-
+
+
+Both no results:
+7.sparql,SwissLipids,0,0,general: no results,-
+48.sparql,uniprot,0,0,general: error (sibSPARQLeditor) / no results (from uniprot),-
+50.sparql,uniprot,0,0,general: no results (from uniprot),-
+emi#examples012.sparql,dgbi,0,0,general: no results,-
+
+
+Endpoint results but no Comunica results:
+20_search_chemical_names_in_japanese.sparql,Rhea,0,2,comunica: no Comunica results,-
+
+
+Long runtime:
+19_draft_human_metabolome.sparql,Rhea,>1,(long time to run),-,-
+018.sparql,Bgee,-,-,general: (takes a long time to run...),-
+26.sparql,SwissLipids,-,-,general: (takes a long time to run...),-
+27.sparql,SwissLipids,-,-,general: (takes a long time to run...),-
+34.sparql,SwissLipids,-,-,general: (takes a long time to run...),-
+40.sparql,uniprot,-,-,general: (takes a long time to run...),-
+*71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease.sparql,uniprot,-,(long time to run),-,-
+emi#examples011a.sparql,dgbi,0,(long time to run),-,-
+emi#examples019a.sparql,dgbi,-,(long time to run),-,-
+emi#examples021.sparql,dgbi,-,(long time to run),-,-
+
+
+Endpoint error:
+*002.sparql,dgbi,-,-,general: error 400 (https://idsm.elixir-czech.cz/sparql/endpoint/wikidata),-
+13.sparql,Rhea,-,-,general: query is broken (error 400),-
+14.sparql,OMA,-,-,general: error 500 (http://sparql.nibb.ac.jp/sparql),-
+17.sparql,OrthoDB,-,-,general: error 500 (https://sparql.orthodb.org/sparql),-
+18.sparql,OrthoDB,-,-,general: error 500 (https://sparql.orthodb.org/sparql),-
+19.sparql,OrthoDB,-,-,general: error 500 (https://sparql.orthodb.org/sparql),-
+20.sparql,OrthoDB,-,-,general: error 500 (https://sparql.orthodb.org/sparql) + 400 (https://sparql.string-db.org/sparql/),-
+36.sparql,uniprot,-,-,general: error 500 (https://sparql.orthodb.org/sparql),-
+46.sparql,uniprot,-,-,general: error 404 (https://semantic.eea.europa.eu/sparql),-
+92_uniprot_bioregistry_iri_translation.sparql,uniprot,-,-,general: error (https://bioregistry.io/sparql),-
+99_uniprot_identifiers_org_translation.sparql,uniprot,-,-,general: error (https://sparql.api.identifiers.org/sparql),-
+90_uniprot_affected_by_metabolic_diseases_using_MeSH.sparql,uniprot,-,-,general: error 400 (https://id.nlm.nih.gov/mesh/sparql),-
+
+
+* With IDSM Federation (do not work without SERVICE clause):
+*70_enzymes_interacting_with_molecules_similar_to_dopamine.sparql,uniprot,>1,406,-,-
+*71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease.sparql,uniprot,-,(long time to run),-,-
+*52.sparql,uniprot,>1,>1,-,-
+*54.sparql,uniprot,>1,>1,-,-
+*60.sparql,uniprot,>1,39,-,-
+*002.sparql,dgbi,-,-,general: error 400 (https://idsm.elixir-czech.cz/sparql/endpoint/wikidata),-
+*a.sparql,rhea,>1,137,-,-
+
+
+endpoints: 
+dgbi(no-slash),rhea(no-slash),uniprot(no-slash),oma(@sparql/no-slash),swisslipids(beta./no-slash),bgee(no-slash)
+
+
+New Queries Notes:
+dgbi#002.ttl == biosodafrontend#Q00003715
+Bgee#019.ttl == biosodafrontend#Q00003711 == biosodafrontend#Q00000013
+Bgee#020.ttl == biosodafrontend#Q00003706 == biosodafrontend#Q00000014
+OMA#3.ttl == biosodafrontend#Q00000009
+Bgee#017.ttl == biosodafrontend#Q00000006
+Bgee#016.ttl == biosodafrontend#Q00003694
+
+116_biosodafrontend_rabit_mouse_orthologs == biosodafrontend#Q00000010
+15-rat-TP53-biosodafrontend == biosodafrontend#Q00000011
+027-biosodafrontend == biosodafrontend#Q00000007
+028-biosodafrontend == biosodafrontend#Q00000008
+117_biosodafrontend_glioblastoma_orthologs_rat == biosodafrontend#Q00000004
+118_biosodafrontend_rat_brain_human_cancer == biosodafrontend#Q00000005

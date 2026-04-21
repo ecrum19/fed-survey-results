@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-20T18:13:51.318Z",
+  "generated_at": "2026-04-21T09:19:52.239Z",
   "scope": "old-results",
   "run_count": 1,
   "query_record_count": 43,
@@ -94,7 +94,7 @@
       "produced_results": false,
       "results_count": 0,
       "error_raw": "Aborted",
-      "error_category": "Other Error",
+      "error_category": "Aborted",
       "has_service_description": false
     },
     {
@@ -143,7 +143,7 @@
       "produced_results": false,
       "results_count": 0,
       "error_raw": "Aborted",
-      "error_category": "Other Error",
+      "error_category": "Aborted",
       "has_service_description": false
     },
     {
@@ -167,7 +167,7 @@
       "produced_results": false,
       "results_count": 0,
       "error_raw": "Aborted",
-      "error_category": "Other Error",
+      "error_category": "Aborted",
       "has_service_description": false
     },
     {
@@ -240,7 +240,7 @@
       "produced_results": false,
       "results_count": 0,
       "error_raw": "Aborted",
-      "error_category": "Other Error",
+      "error_category": "Aborted",
       "has_service_description": false
     },
     {
@@ -288,7 +288,7 @@
       "produced_results": false,
       "results_count": 0,
       "error_raw": "Aborted",
-      "error_category": "Other Error",
+      "error_category": "Aborted",
       "has_service_description": false
     },
     {
@@ -337,7 +337,7 @@
       "produced_results": false,
       "results_count": 0,
       "error_raw": "Aborted",
-      "error_category": "Other Error",
+      "error_category": "Aborted",
       "has_service_description": false
     },
     {
@@ -361,7 +361,7 @@
       "produced_results": false,
       "results_count": 0,
       "error_raw": "Aborted",
-      "error_category": "Other Error",
+      "error_category": "Aborted",
       "has_service_description": false
     },
     {
@@ -386,7 +386,7 @@
       "produced_results": false,
       "results_count": 0,
       "error_raw": "Node.js v22.17.0",
-      "error_category": "Other Error",
+      "error_category": "Node.js v22.17.0",
       "has_service_description": false
     },
     {
@@ -411,7 +411,7 @@
       "produced_results": false,
       "results_count": 0,
       "error_raw": "terminated",
-      "error_category": "Other Error",
+      "error_category": "terminated",
       "has_service_description": false
     },
     {
@@ -749,7 +749,7 @@
       "produced_results": false,
       "results_count": 0,
       "error_raw": "Aborted",
-      "error_category": "Other Error",
+      "error_category": "Aborted",
       "has_service_description": false
     },
     {
@@ -798,7 +798,7 @@
       "produced_results": false,
       "results_count": 0,
       "error_raw": "terminated",
-      "error_category": "Other Error",
+      "error_category": "terminated",
       "has_service_description": false
     },
     {
@@ -870,7 +870,7 @@
       "produced_results": false,
       "results_count": 0,
       "error_raw": "terminated",
-      "error_category": "Other Error",
+      "error_category": "terminated",
       "has_service_description": false
     },
     {
@@ -990,7 +990,7 @@
       "produced_results": false,
       "results_count": 0,
       "error_raw": "Node.js v22.17.0",
-      "error_category": "Other Error",
+      "error_category": "Node.js v22.17.0",
       "has_service_description": false
     },
     {

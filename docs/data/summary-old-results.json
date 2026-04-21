@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-20T18:13:51.318Z",
+  "generated_at": "2026-04-21T09:19:52.239Z",
   "scope": "old-results",
   "run_count": 1,
   "query_count": 43,
@@ -13,8 +13,10 @@
   "latest_query_end": "2025-09-12T13:32:00.177Z",
   "error_counts": {
     "None": 5,
-    "Other Error": 13,
+    "Aborted": 8,
     "Fetch Failure": 10,
+    "Node.js v22.17.0": 2,
+    "terminated": 3,
     "Request Failed": 15
   }
 }
