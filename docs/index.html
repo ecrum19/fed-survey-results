@@ -17,8 +17,47 @@
         <p class="meta" id="dataMeta">Loading dataset metadata...</p>
       </header>
 
-      <section class="panel controls">
-        <h2>Scope &amp; Filters</h2>
+      <section class="panel quickstart-panel">
+        <h2>Start Here</h2>
+        <p class="quickstart-lead">
+          This site presents real, run-level outcomes from federated query experiments. Start with
+          <strong>Overview Charts</strong> and <strong>Monthly Views</strong> for global trends, then use
+          <strong>Data Explorer</strong> to inspect individual queries or experiments in detail.
+        </p>
+        <div class="quickstart-grid">
+          <article class="quickstart-step">
+            <h3>1. Read the big picture</h3>
+            <p>Check success rates, runtime distributions, and error composition across runs and months.</p>
+          </article>
+          <article class="quickstart-step">
+            <h3>2. Drill into specifics</h3>
+            <p>Switch explorer mode to compare per-query behavior or per-experiment behavior interactively.</p>
+          </article>
+          <article class="quickstart-step">
+            <h3>3. Use filters when needed</h3>
+            <p>Open the optional Scope &amp; Filters panel only when you want to subset or narrow the data.</p>
+          </article>
+        </div>
+      </section>
+
+      <details class="panel collapsible notes-panel" id="notesPanel">
+        <summary>Interesting Findings &amp; Outcome Notes (Verbatim)</summary>
+        <p class="notes-intro">
+          This section shows curated field notes exactly as documented in
+          <code>Experiment Outcomes (notes).txt</code>. It is presented as contextual narrative and troubleshooting evidence alongside the structured dashboard metrics.
+        </p>
+        <p class="notes-meta" id="notesMeta">Loading notes...</p>
+        <div class="notes-content" id="notesContent"></div>
+      </details>
+
+      <details class="panel collapsible controls-panel" id="filtersPanel">
+        <summary>Scope &amp; Filters (Optional)</summary>
+        <p class="controls-helper">
+          Use these filters to narrow the visible data. Defaults show the full main experiment scope.
+        </p>
+        <div class="controls-actions">
+          <button type="button" id="resetFilters">Reset Filters</button>
+        </div>
         <div class="controls-grid">
           <label class="toggle-row">
             <input type="checkbox" id="includeOldResults" />
@@ -84,7 +123,7 @@
             <input id="searchFilter" type="search" placeholder="e.g., 42_ns.rq" />
           </label>
         </div>
-      </section>
+      </details>
 
       <section class="kpi-grid" id="kpiGrid"></section>
 

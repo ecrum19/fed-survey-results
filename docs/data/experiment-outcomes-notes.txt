@@ -1,0 +1,418 @@
+==To start: (n=61) federated queries; with Tarcisio, added 6 new queries: total (n=67).
+
+
+After initial control run (on native endpoints WITH service clauses [04/03/2025]) –
+        5 queries returned no results 
+        12 queries returned errors
+        10 queries encountered time-outs
+
+
+        Total number of WORKING queries: (n=40)
+
+
+Updated controls [31/03/2025] – 
+        7 queries returned no results
+        7 queries returned errors
+        11 queries encountered time-outs
+
+
+ALL <https://sparql.omabrowser.org/sparql> queries are broken (HTTP status 500)
+
+
+        Total number of WORKING queries: (n=42)
+        Including NO RESULTS (n=49)
+        Including TIMEOUT (n=60)
+
+
+
+
+________________
+
+
+Initial Control Run Results [04/03/2024]:
+Query-name,sources,comunica-results,sparql-endpoint-results
+
+
+Broken Queries (n=12)
+*002.rq,dgbi,-,-,general: error 400 (https://idsm.elixir-czech.cz/sparql/endpoint/wikidata),-
+13.rq,Rhea,-,-,general: query is broken (error 400),-
+14.rq,OMA,-,-,general: error 500 (http://sparql.nibb.ac.jp/sparql),-
+17.rq,OrthoDB,-,-,general: error 500 (https://sparql.orthodb.org/sparql),-
+18.rq,OrthoDB,-,-,general: error 500 (https://sparql.orthodb.org/sparql),-
+19.rq,OrthoDB,-,-,general: error 500 (https://sparql.orthodb.org/sparql),-
+20.rq,OrthoDB,-,-,general: error 500 (https://sparql.orthodb.org/sparql) + 400 (https://sparql.string-db.org/sparql/),-
+36.rq,uniprot,-,-,general: error 500 (https://sparql.orthodb.org/sparql),-
+46.rq,uniprot,-,-,general: error 404 (https://semantic.eea.europa.eu/sparql),-
+92_uniprot_bioregistry_iri_translation.rq,uniprot,-,-,general: error (https://bioregistry.io/sparql),-
+99_uniprot_identifiers_org_translation.rq,uniprot,-,-,general: error (https://sparql.api.identifiers.org/sparql),-
+90_uniprot_affected_by_metabolic_diseases_using_MeSH.rq,uniprot,-,-,general: error 400 (https://id.nlm.nih.gov/mesh/sparql),-
+
+
+No Results queries (n=5)
+7.rq,SwissLipids,0,0,general: no results,-
+48.rq,uniprot,0,0,general: error (sibSPARQLeditor) / no results (from uniprot),-
+50.rq,uniprot,0,0,general: no results (from uniprot),-
+emi#examples012.rq,dgbi,0,0,general: no results,-
+Q00000008.rq,Bgee,0,0,-,- (no results)
+
+
+
+
+Timeout Queries (n=10):
+19_draft_human_metabolome.rq,Rhea,>1,(long time to run),-,-
+018.rq,Bgee,-,-,general: (takes a long time to run...),-
+26.rq,SwissLipids,-,-,general: (takes a long time to run...),-
+27.rq,SwissLipids,-,-,general: (takes a long time to run...),-
+34.rq,SwissLipids,-,-,general: (takes a long time to run...),-
+40.rq,uniprot,-,-,general: (takes a long time to run...),-
+71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease.rq,uniprot,-,(long time to run),-,-
+emi#examples011a.rq,dgbi,0,(long time to run),-,-
+emi#examples019a.rq,dgbi,-,(long time to run),-,-
+emi#examples021.rq,dgbi,-,(long time to run),-,-
+
+
+
+
+
+
+________________
+
+
+Updated Control Run Results [31/03/2024]:
+Query-name,sources,comunica-results,sparql-endpoint-results
+
+
+
+
+Broken Queries (n=7)
+002.rq,dgbi,-,-,general: error 400 (https://idsm.elixir-czech.cz/sparql/endpoint/wikidata),-
+13.rq,Rhea,-,-,general: query is broken (error 400),-
+14.rq,OMA,-,-,general: error 500 (http://sparql.nibb.ac.jp/sparql),-
+36.rq,uniprot,-,-,general: error 500 (https://sparql.orthodb.org/sparql),-
+46.rq,uniprot,-,-,general: error 404 (https://semantic.eea.europa.eu/sparql),-
+99_uniprot_identifiers_org_translation.rq,uniprot,-,-,general: error (https://sparql.api.identifiers.org/sparql),-
+90_uniprot_affected_by_metabolic_diseases_using_MeSH.rq,uniprot,-,-,general: error 400 (https://id.nlm.nih.gov/mesh/sparql),-
+
+
+No Results queries (n=7)
+7.rq,SwissLipids,0,0,general: no results,-
+48.rq,uniprot,0,0,general: error (sibSPARQLeditor) / no results (from uniprot),-
+50.rq,uniprot,0,0,general: no results (from uniprot),-
+emi#examples012.rq,dgbi,0,0,general: no results,-
+Q00000008.rq,Bgee,0,0,general: no results,-
+18.rq,OrthoDB,0,0,general: no results,-
+92_uniprot_bioregistry_iri_translation.rq,uniprot,0,0,general: no results,-
+
+
+Timeout Queries (n=11):
+19_draft_human_metabolome.rq,Rhea,>1,(long time to run),-,-
+018.rq,Bgee,-,-,general: (takes a long time to run...),-
+26.rq,SwissLipids,-,-,general: (takes a long time to run...),-
+27.rq,SwissLipids,-,-,general: (takes a long time to run...),-
+34.rq,SwissLipids,-,-,general: (takes a long time to run...),-
+40.rq,uniprot,-,-,general: (takes a long time to run...),-
+71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease.rq,uniprot,-,(long time to run),-,-
+emi#examples011a.rq,dgbi,-,(long time to run),-,-
+emi#examples019a.rq,dgbi,-,(long time to run),-,-
+emi#examples021.rq,dgbi,-,(long time to run),-,-
+20.rq,OrthoDB,-,-,general: (takes a long time to run...),-
+
+
+
+
+________________
+
+
+Problems encountered in establishing query catalogue:
+SPARQL Endpoint Errors:
+
+
+HTTP 404
+HTTP 400
+HTTP 429
+HTTP 500 (and other 5--s)
+
+
+
+
+
+
+Comunica Errors (and bugs):
+
+
+Source annotation bug (fixed)
+Issue determining source type SPARQL (fixed)
+Issue getting VoID description (https://sparql.uniprot.org/sparql)
+        [URL without trailing slash will not provide VoID]
+
+
+
+
+More COUNT query problems (UniProt):
+
+
+
+
+________________
+
+
+Reasons for choosing certain metric numbers:
+
+
+http-rate-limit: 
+The default correctionMultiplier of 0.1 seemed to strike a good balance between smoothing and not being too slow when I did some simulations with a Python script and tried it out with some queries that federate with Wikidata.
+But since WIkidata has a 'time budget' limit for queries, a rate limiter like that will not fix it, because it does not keep track of the 'budget' used.
+You could try reducing the failure multiplier to 1.0 and leaving the correction multiplier to 0.1 or 0.05. That way, the smoothing (low correction multiplier) would still be there, but a failed request would not make the request interval jump up (which was needed for endpoints with strict rate limits).
+
+
+
+
+VoID / COUNT / ASK:
+Three different approaches to gathering metadata for query planning and execution were tested. The default method used by Comunica is sending COUNT queries to sources.
+
+
+By modifying the ’useAskIfSupported’ option of prune-empty-source-operations within the actor-optimize-query-operation actor, ASK queries were used instead of COUNT queries.
+
+
+By utilizing the actor-rdf-metadata-extract-void actor, Comunica will first use VoID descriptions from sources (if available) then defaults to COUNT queries if the VoID cannot be found or does not offer useful estimations. 
+
+
+We chose not to also test the use of ASK queries with VoID because during testing (using query RHEA 13 w/o SERVICE clause) the number of HTTP requests during the query planning phase and execution phase were the same between COUNT + VoID and ASK + VoID setups.
+
+
+________________
+
+
+Interesting findings:
+
+
+Error With SERVICE, functional without SERVICE:
+A curious case where a query (Rhea 13) throws a “QueryEvaluationException” error when executed WITH a SERVICE clause, but executes properly and returns results when executed using Comunica with the SERVICE clause removed.
+
+
+Strange SERVICE behavior from some endpoints:
+When sending a query containing a SERVICE call to a Virtuoso endpoint, Virtuoso rewrites the query within the SERVICE clause before sending it to the source designated in the SERVICE clause. This becomes problematic in some instances. One particular case is when VALUES are included within the SERVICE clause. In this case, Virtuoso rewrites the triple patterns within the SERVICE clause to be FILTERs containing each value to be passed into the SERVICE clause.  
+
+
+Example:
+Original Query:
+SELECT * WHERE {
+  SERVICE <http://rdflib-endpoint/> {
+      SELECT ?o WHERE {
+        VALUES ?s { <http://subject1> <http://subject2> }
+        ?s ?p ?o .
+      }
+    }
+}
+
+
+Virtuoso “re-formed” query (received by SERVICE source):
+SELECT  ?o
+ WHERE {  ?s ?p ?o .
+     FILTER (isIRI (?s ))
+    FILTER (  (( ?s = <http://subject1>) || ( ?s = <http://subject2>)) ) }
+
+
+
+
+
+
+SPARQL Endpoint crashes mid-experiment:
+When executing a test of the benchmark on 07/04/2025, one of the SPARQL endpoints included in many of the queries (https://biosoda.unil.ch/emi/sparql) crashed and caused many of the tests to fail. The crashing of this endpoint occurs after the very first query I submit in my workflow. Specifically, during this first query (001), Comunica submits 1282 HTTP requests (897 of which are to the biosoda endpoint). Following these requests during the first query (which does not produce results and instead throws a timeout-related error), the biosoda endpoint throws the error: `Virtuoso 42000 Error SR452: Error in accessing temp file` for all further requests until the endpoint is rebooted by a maintainer.
+ 
+According to Tarcisio this seems to be a Virtuoso hardware bug that has been noticed in the past. The error is related to Virtuoso attempting a large number of processes in parallel. Due to this large parallel processing, the Virtuoso server is either A) running out of memory in the temp file referenced OR B) there is a bug in the implementation that limits the number of processes running in parallel that can access the temp file simultaneously. To address potential issue A, Tarcisio increased the maximum size of the temp file to 60GB of disc space from the previous 1GB. [Testing needs to be done to determine if this will fix the observed issue] 
+
+
+VoID description usage runs into errors when query contains inner filter
+Example is seen in the case of query 017 with the triple pattern FILTER (UCASE(?geneLabel) = UCASE('ins')). The resulting query plan likely (need to check to be sure) contains inaccurate cardinality estimates and therefore the execution of this query is unsuccessful due to a very large number of HTTP requests sent during the execution phase. 
+
+
+
+
+General Problem – Count queries for source selection on large endpoints
+A general issue with using Comunica for query planning and source selection is that, but default, Comunica send a large number of (sometimes computationally complex) COUNT queries that commonly result in timeout errors (both client and server side) and high computational costs on the SPARQL endpoints specified as sources. As a result of these COUNT queries, there are also a large number of HTTP requests sent during the query planning and execution phases. 
+
+
+
+
+________________
+
+
+Troubleshooting Run Results:
+
+
+First WITH SERVICE Run (26/02/2025) – 
+        Total time: ~48 mins
+        Total queries WITH results: n=5
+                Q11 [n=7]; Q12 [n=12854]; Q38 [n=2]; Q18a [n=137]
+
+
+First WITHOUT SERVICE Run (26/02/2025) –
+        TONS of parse errors / HTTP 400 / Fetch Failed (timeout)
+        Total queries WITH results: (n=0)
+
+
+No Service VoID Testing (CLI) (24/04/25):
+Query File           | Status     | HTTP Requests | Details                       
+----------------------------------------------------------------------------------------------------
+006_ns.rq            | error      | N/A        | //biosoda.unil.ch/emi/sparql (HTTP status 500)
+– Error due to “useAskIfSupported”: true
+- Comunica PR – https://github.com/comunica/comunica/pull/1549 
+
+
+007_ns.rq            | error      | N/A        | //biosoda.unil.ch/emi/sparql (HTTP status 500)
+009_ns.rq            | error      | N/A        | //biosoda.unil.ch/emi/sparql (HTTP status 500)
+016_ns.rq            | error      | N/A        | //www.bgee.org/sparql (HTTP status 400)
+017_ns.rq            | error      | N/A        | Metadata fetch failed                         
+018_ns.rq            | error      | N/A        | //www.bgee.org/sparql (HTTP status 400)
+019_ns.rq            | error      | N/A        | //www.bgee.org/sparql (HTTP status 400)
+020_ns.rq            | error      | N/A        | //www.bgee.org/sparql (HTTP status 400)
+109_uniprot_transpor | error      | N/A        | Metadata fetch failed                         
+11_ns.rq             | error      | N/A        | fetch failed                  
+12_ns.rq             | error      | N/A        | fetch failed                  
+13_ns.rq             | error      | N/A        | fetch failed                  
+16_ns.rq             | success    |        920 | N/A                           
+17_ns.rq             | error      | N/A        | Metadata fetch failed                       
+18_ns.rq             | error      | N/A        | //www.expasy.org/archives/nextprot (HTTP status 405)
+19_draft_human_metab | error      | N/A        | //sparql.rhea-db.org/sparql (HTTP status 400)
+19_ns.rq             | error      | N/A        | //sparql.rhea-db.org/sparql (HTTP status 400)
+20_search_chemical_n | error      | N/A        | //sparql.rhea-db.org/sparql (HTTP status 400)
+26_ns.rq             | error      | N/A        | //beta.sparql.swisslipids.org/sparql (HTTP status 400)
+27_ns.rq             | error      | N/A        | //sparql.rhea-db.org/sparql (HTTP status 400)
+29_ns.rq             | error      | N/A        | //data.allie.dbcls.jp/sparql (HTTP status 400)
+34_ns.rq             | error      | N/A        | //sparql.uniprot.org/sparql/ (HTTP status 400)
+36_ns.rq             | error      | N/A        | terminated                    
+38_ns.rq             | error      | N/A        | Metadata fetch failed                         
+40_ns.rq             | error      | N/A        | Metadata fetch failed                         
+42_ns.rq             | success    |         17 | N/A                           
+43_ns.rq             | success    |         42 | N/A                           
+45_ns.rq             | error      | N/A        | //sparql.uniprot.org/sparql/ (HTTP status 400)
+48_ns.rq             | error      | N/A        | //glyconnect.expasy.org/sparql (HTTP status 400)
+49_ns.rq             | error      | N/A        | fetch failed                  
+50_ns.rq             | error      | N/A        | //sparql.uniprot.org/sparql/ (HTTP status 400)
+51_ns.rq             | error      | N/A        | Metadata fetch failed                         
+53_ns.rq             | error      | N/A        | //sparql.rhea-db.org/sparql (HTTP status 400)
+5_ns.rq              | error      | N/A        | //beta.sparql.swisslipids.org/sparql (HTTP status 400)
+67_draft_human_metab | error      | N/A        | //sparql.uniprot.org/sparql/ (HTTP status 400)
+6_ns.rq              | error      | N/A        | Metadata fetch failed                         
+7_ns.rq              | error      | N/A        | //sparql.rhea-db.org/sparql (HTTP status 400)
+92_uniprot_bioregist | success    |          7 | N/A                           
+Q00000004_ns.rq      | error      | N/A        | //www.bgee.org/sparql/ (HTTP status 400)
+Q00000005_ns.rq      | error      | N/A        | //www.bgee.org/sparql/ (HTTP status 400)
+Q00000007_ns.rq      | error      | N/A        | Metadata fetch failed                         
+Q00000008_ns.rq      | error      | N/A        | Metadata fetch failed                         
+Q00000010_ns.rq      | error      | N/A        | //sparql.uniprot.org/sparql/ (HTTP status 400)
+Q00000011_ns.rq      | error      | N/A        | //sparql.omabrowser.org/sparql-sd/ (HTTP status 400)
+emi#examples011a_ns. | error      | N/A        | //qlever.cs.uni-freiburg.de/api/wikidata (HTTP status 404)
+emi#examples011b_ns. | success    |      81279 | N/A                           
+emi#examples012_ns.r | success    |         79 | N/A                           
+emi#examples013_ns.r | error      | N/A        | //biosoda.unil.ch/emi/sparql (HTTP status 500)
+emi#examples015_ns.r | error      | N/A        | //qlever.cs.uni-freiburg.de/api/wikidata (HTTP status 404)
+emi#examples018_ns.r | success    |         53 | N/A                           
+emi#examples019a_ns. | error      | N/A        | //biosoda.unil.ch/emi/sparql (HTTP status 500)
+emi#examples019b_ns. | error      | N/A        | //biosoda.unil.ch/emi/sparql (HTTP status 500)
+emi#examples021_ns.r | success    |         58 | N/A                           
+----------------------------------------------------------------------------------------------------
+Total queries: 53
+Queries with errors: 45
+Queries with results: 8
+
+
+
+
+No Service VoID Testing (CLI) (25/04/25):
+Query File                     | Status     | HTTP Requests   | Results    | Error Code                    
+-------------------------------------------------------------------------------------------------------
+3_ns.rq                        | error      | N/A             | N/A        | HTTP 504 Gateway Timeout      
+5_ns.rq                        | success    | 79807           | 267        | N/A                           
+006_ns.rq                      | error      | N/A             | N/A        | HTTP status 500               
+6_ns.rq                        | success    | 1709            | 1216       | N/A                           
+7_ns.rq                        | success    | 51              | 0          | N/A                           
+007_ns.rq                      | success    | 37648           | 0          | N/A                           
+11_ns.rq                       | error      | N/A             | N/A        | fetch failed                  
+12_ns.rq                       | success    | 34961           | 51416      | N/A                           
+13_ns.rq                       | error      | N/A             | N/A        | fetch failed                  
+16_ns.rq                       | success    | 881             | 608        | N/A                           
+016_ns.rq                      | error      | N/A             | N/A        | HTTP 504 Gateway Timeout      
+017_ns.rq                      | error      | N/A             | N/A        | Random UniProt error          
+17_ns.rq                       | error      | N/A             | N/A        | Random UniProt error          
+018_ns.rq                      | error      | N/A             | N/A        | JS stacktrace                 
+18_ns.rq                       | error      | N/A             | N/A        | HTTP status 405               
+19_ns.rq                       | error      | N/A             | N/A        | fetch failed                  
+19_draft_human_metabolome_ns.r | error      | N/A             | N/A        | Random UniProt error          
+20_search_chemical_names_in_ja | error      | N/A             | N/A        | Hangup                        
+020_ns.rq                      | error      | N/A             | N/A        | HTTP status 404               
+26_ns.rq                       | error      | N/A             | N/A        | terminated                    
+27_ns.rq                       | error      | N/A             | N/A        | JS stacktrace                 
+29_ns.rq                       | error      | N/A             | N/A        | fetch failed                  
+34_ns.rq                       | error      | N/A             | N/A        | fetch failed                  
+36_ns.rq                       | error      | N/A             | N/A        | JS stacktrace                 
+38_ns.rq                       | error      | N/A             | N/A        | HTTP status 400               
+40_ns.rq                       | error      | N/A             | N/A        | fetch failed                  
+42_ns.rq                       | success    | 17              | 66         | N/A                           
+43_ns.rq                       | success    | 42              | 71         | N/A                           
+45_ns.rq                       | error      | N/A             | N/A        | JS stacktrace                 
+48_ns.rq                       | success    | 22              | 0          | N/A                           
+49_ns.rq                       | error      | N/A             | N/A        | Random UniProt error          
+50_ns.rq                       | error      | N/A             | N/A        | fetch failed                  
+51_ns.rq                       | error      | N/A             | N/A        | JS stacktrace                 
+53_ns.rq                       | error      | N/A             | N/A        | Random UniProt error          
+67_draft_human_metabolome_ns.r | error      | N/A             | N/A        | fetch failed                  
+92_uniprot_bioregistry_iri_tra | success    | 7               | 0          | N/A                           
+109_uniprot_transporter_in_liv | error      | N/A             | N/A        | Random UniProt error          
+emi#examples019b_ns.rq         | error      | N/A             | N/A        | JS stacktrace                 
+emi#examples013_ns.rq          | error      | N/A             | N/A        | JS stacktrace                 
+emi#examples019a_ns.rq         | error      | N/A             | N/A        | fetch failed                  
+Q00000004_ns.rq                | error      | N/A             | N/A        | fetch failed                  
+Q00000010_ns.rq                | error      | N/A             | N/A        | HTTP 504 Gateway Timeout      
+Q00000005_ns.rq                | error      | N/A             | N/A        | JS stacktrace                 
+emi#examples018_ns.rq          | success    | 53              | 1000       | N/A                           
+emi#examples015_ns.rq          | error      | N/A             | N/A        | HTTP status 500               
+Q00000008_ns.rq                | error      | N/A             | N/A        | JS stacktrace                 
+emi#examples021_ns.rq          | success    | 58              | 383        | N/A                           
+Q00000011_ns.rq                | error      | N/A             | N/A        | HTTP 504 Gateway Timeout      
+emi#examples011a_ns.rq         | error      | N/A             | N/A        | fetch failed                  
+Q00000007_ns.rq                | error      | N/A             | N/A        | JS stacktrace                 
+emi#examples012_ns.rq          | success    | 79              | 0          | N/A                           
+emi#examples011b_ns.rq         | success    | 81279           | 97         | N/A                           
+-------------------------------------------------------------------------------------------------------
+Total queries: 52
+Queries with errors: 38
+Queries with no results: 5
+Queries with results: 9
+
+
+
+
+
+
+Troubleshooting Strange Behavior:
+* default-config-v4.1.0.json (Using VoID)
+* optimize-query-operation/actors#prune-empty-source-operations
+* "useAskIfSupported"
+* query-source-identify-hypermedia/actors#sparql
+* "cardinalityEstimateConstruction"
+* "cardinalityCountQueries"
+
+
+(rhea) 13_ns:
+* default-config-v4.1.0.json (Using VoID)
+* optimize-query-operation/actors#prune-empty-source-operations
+* "useAskIfSupported": true (false = much slower)
+* query-source-identify-hypermedia#sparql
+* "cardinalityEstimateConstruction": false (true = 0 results)
+* "cardinalityCountQueries": true/false
+
+
+
+
+
+
+
+
+
+
+
+
+Notes for Writing (22/08/2025)
+* Bgee DOES NOT accept POST (only accepts GET)

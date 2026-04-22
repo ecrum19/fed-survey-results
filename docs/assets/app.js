@@ -13,6 +13,7 @@ const state = {
   oldDataset: null,
   queriesDataset: null,
   summary: null,
+  notesText: null,
 
   includeOldResults: false,
   monthFocus: null,
@@ -26,6 +27,8 @@ const state = {
 
 const dom = {
   dataMeta: document.getElementById("dataMeta"),
+  notesMeta: document.getElementById("notesMeta"),
+  notesContent: document.getElementById("notesContent"),
 
   includeOldResults: document.getElementById("includeOldResults"),
   runFilter: document.getElementById("runFilter"),
@@ -37,6 +40,7 @@ const dom = {
   startDateFilter: document.getElementById("startDateFilter"),
   endDateFilter: document.getElementById("endDateFilter"),
   searchFilter: document.getElementById("searchFilter"),
+  resetFilters: document.getElementById("resetFilters"),
 
   kpiGrid: document.getElementById("kpiGrid"),
   runSuccessChart: document.getElementById("runSuccessChart"),
@@ -106,6 +110,14 @@ const focusView = {
 const EXPANDABLE_SURFACE_SELECTOR = ".chart-card, .table-wrap, .http-matrix-wrap, .http-chart-wrap";
 const INTERACTIVE_BLOCK_SELECTOR = "button, a, input, select, textarea, label, summary, [role='button']";
 const URL_MATCH_RE = /https?:\/\/[^\s<>"']+/gi;
+const LEGACY_QUERY_STEM_MAP = Object.freeze({
+  Q00000004: "117_biosodafrontend_glioblastoma_orthologs_rat",
+  Q00000005: "118_biosodafrontend_rat_brain_human_cancer",
+  Q00000007: "027-biosodafrontend",
+  Q00000008: "028-biosodafrontend",
+  Q00000010: "116_biosodafrontend_rabit_mouse_orthologs",
+  Q00000011: "15-rat-TP53-biosodafrontend",
+});
 
 function formatNumber(value, digits = 2) {
   if (value === null || value === undefined || Number.isNaN(value)) {
@@ -232,6 +244,336 @@ function formatSibCellValue(rawValue) {
   `;
 }
 
+function normalizeNotesText(rawText) {
+  if (!rawText) {
+    return "";
+  }
+  return String(rawText).replace(/^\uFEFF/, "").replace(/\r\n/g, "\n");
+}
+
+function parseCsvCells(line) {
+  const cells = [];
+  let current = "";
+  let inQuotes = false;
+
+  for (let index = 0; index < line.length; index += 1) {
+    const char = line[index];
+    if (char === '"') {
+      if (inQuotes && line[index + 1] === '"') {
+        current += '"';
+        index += 1;
+      } else {
+        inQuotes = !inQuotes;
+      }
+      continue;
+    }
+
+    if (char === "," && !inQuotes) {
+      cells.push(current.trim());
+      current = "";
+      continue;
+    }
+
+    current += char;
+  }
+
+  cells.push(current.trim());
+  return cells;
+}
+
+function parsePipeCells(line) {
+  const normalized = line
+    .trim()
+    .replace(/^\|/, "")
+    .replace(/\|$/, "");
+  return normalized.split("|").map((cell) => cell.trim());
+}
+
+function looksLikeCsvTableLine(trimmed) {
+  if (!trimmed || /^https?:\/\//i.test(trimmed)) {
+    return false;
+  }
+  const commaMatches = trimmed.match(/,/g) || [];
+  return commaMatches.length >= 2 && /^[^\s,]+,/.test(trimmed);
+}
+
+function looksLikePipeTableLine(trimmed) {
+  if (!trimmed) {
+    return false;
+  }
+  const pipeMatches = trimmed.match(/\|/g) || [];
+  return pipeMatches.length >= 2;
+}
+
+function normalizeNotesCell(value) {
+  const text = (value ?? "").trim().replace(/^\*+\s*/, "");
+  const withMappedLegacyIds = Object.entries(LEGACY_QUERY_STEM_MAP).reduce((current, [legacy, mapped]) => {
+    const withFileName = current.replace(new RegExp(`\\b${legacy}\\.rq\\b`, "g"), `${mapped}.rq`);
+    return withFileName.replace(new RegExp(`\\b(?:biosodafrontend#)?${legacy}\\b`, "g"), mapped);
+  }, text);
+  const normalized = withMappedLegacyIds.trim();
+  return normalized || "-";
+}
+
+function inferGeneratedHeaders(width, contextLabel = "", delimiter = ",") {
+  const context = String(contextLabel || "").toLowerCase();
+
+  if (delimiter === "|" && context.includes("no service void testing")) {
+    const fiveCol = ["Query File", "Status", "HTTP Requests", "Results", "Error Code"];
+    const fourCol = ["Query File", "Status", "HTTP Requests", "Details"];
+    return (width >= 5 ? fiveCol : fourCol).slice(0, width);
+  }
+
+  if (
+    context.includes("control run results")
+    || context.includes("broken queries")
+    || context.includes("no results queries")
+    || context.includes("timeout queries")
+  ) {
+    return ["Query Name", "Source", "Comunica Results", "Native Endpoint Results", "Details", "Notes"].slice(0, width);
+  }
+
+  if (width === 2) {
+    return ["Metric", "Value"];
+  }
+
+  if (width === 3) {
+    return ["Item", "Value", "Notes"];
+  }
+
+  return Array.from({ length: width }, (_, index) => `Field ${index + 1}`);
+}
+
+function alignHeaderToWidth(header, width) {
+  const next = [...header];
+  while (next.length < width) {
+    next.push(`Field ${next.length + 1}`);
+  }
+  return next.slice(0, width);
+}
+
+function looksLikeHeaderRow(cells) {
+  if (!cells.length) {
+    return false;
+  }
+  const normalized = cells.map((cell) => cell.toLowerCase().trim());
+  const joined = normalized.join(" ");
+  return /(query|status|source|result|error|http|details|name)/.test(joined);
+}
+
+function renderDelimitedTable(rawRows, delimiter, contextLabel = "") {
+  const parsedRows = rawRows
+    .map((row) => (delimiter === "," ? parseCsvCells(row) : parsePipeCells(row)))
+    .map((cells) => cells.map((cell) => normalizeNotesCell(cell)))
+    .filter((cells) => cells.length > 0);
+
+  if (!parsedRows.length) {
+    return "";
+  }
+
+  const width = parsedRows.reduce((maxWidth, row) => Math.max(maxWidth, row.length), 0);
+  const rows = parsedRows.map((row) => {
+    const padded = [...row];
+    while (padded.length < width) {
+      padded.push("-");
+    }
+    return padded;
+  });
+
+  let header = [];
+  let bodyRows = rows;
+  if (looksLikeHeaderRow(rows[0])) {
+    header = alignHeaderToWidth(rows[0], width);
+    bodyRows = rows.slice(1);
+  } else {
+    header = inferGeneratedHeaders(width, contextLabel, delimiter);
+    header = alignHeaderToWidth(header, width);
+  }
+
+  return `
+    <div class="notes-table-wrap">
+      <table class="notes-table">
+        <thead>
+          <tr>${header.map((cell) => `<th>${renderTextWithLinks(cell)}</th>`).join("")}</tr>
+        </thead>
+        <tbody>
+          ${bodyRows.map((row) => `<tr>${row.map((cell) => `<td>${renderTextWithLinks(cell)}</td>`).join("")}</tr>`).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function updateNotesContextLabel(currentLabel, nextText) {
+  const next = String(nextText || "").trim();
+  return next || currentLabel;
+}
+
+function mapLegacyStem(stem) {
+  if (!stem) {
+    return stem;
+  }
+  return LEGACY_QUERY_STEM_MAP[stem] || stem;
+}
+
+function normalizeNotesSectionTitle(line) {
+  return line
+    .replace(/^==\s*/, "")
+    .replace(/\s*=+\s*$/, "")
+    .trim();
+}
+
+function normalizeNotesSubtitle(line) {
+  return line.replace(/:\s*$/, "").trim();
+}
+
+function normalizeNotesParagraphContext(line) {
+  return line.replace(/\s*[–-]\s*$/, "").trim();
+}
+
+function normalizeQueryStem(rawName) {
+  if (!rawName || typeof rawName !== "string") {
+    return null;
+  }
+  let stem = rawName.trim();
+  stem = stem.replace(/\.rq$/i, "");
+  stem = stem.replace(/_ns$/i, "");
+  stem = stem.replace(/_ws$/i, "");
+  stem = mapLegacyStem(stem);
+  return stem || null;
+}
+
+function renderNotesAsHtml(rawText) {
+  const text = normalizeNotesText(rawText);
+  if (!text.trim()) {
+    return "";
+  }
+
+  const lines = text.split("\n");
+  const html = [];
+  let listItems = [];
+  let tableRows = [];
+  let tableDelimiter = null;
+  let tableContextLabel = "";
+  let currentContextLabel = "";
+
+  const flushList = () => {
+    if (!listItems.length) {
+      return;
+    }
+    html.push(`<ul class="notes-list">${listItems.join("")}</ul>`);
+    listItems = [];
+  };
+
+  // Flushes the currently collected delimited rows into a rendered HTML table.
+  const flushTable = () => {
+    if (!tableRows.length || !tableDelimiter) {
+      return;
+    }
+    html.push(renderDelimitedTable(tableRows, tableDelimiter, tableContextLabel));
+    tableRows = [];
+    tableDelimiter = null;
+    tableContextLabel = "";
+  };
+
+  const startTableIfNeeded = (delimiter) => {
+    flushList();
+    if (tableDelimiter && tableDelimiter !== delimiter) {
+      flushTable();
+    }
+    if (!tableDelimiter) {
+      tableDelimiter = delimiter;
+      tableContextLabel = currentContextLabel;
+    }
+  };
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+
+    if (!trimmed) {
+      flushList();
+      flushTable();
+      continue;
+    }
+
+    if (/^_{5,}$/.test(trimmed)) {
+      flushList();
+      flushTable();
+      html.push('<hr class="notes-divider" />');
+      continue;
+    }
+
+    if (looksLikeCsvTableLine(trimmed)) {
+      startTableIfNeeded(",");
+      tableRows.push(trimmed);
+      continue;
+    }
+
+    if (looksLikePipeTableLine(trimmed)) {
+      startTableIfNeeded("|");
+      tableRows.push(trimmed);
+      continue;
+    }
+
+    if (/^-{5,}$/.test(trimmed) && tableDelimiter) {
+      // Common markdown/table separator row, not user data.
+      continue;
+    }
+
+    const bulletMatch = trimmed.match(/^[-*]\s+(.*)$/);
+    if (bulletMatch) {
+      flushTable();
+      listItems.push(`<li>${renderTextWithLinks(bulletMatch[1])}</li>`);
+      continue;
+    }
+
+    flushList();
+    flushTable();
+
+    if (trimmed.startsWith("==")) {
+      const title = normalizeNotesSectionTitle(trimmed);
+      currentContextLabel = updateNotesContextLabel(currentContextLabel, title);
+      html.push(`<h3 class="notes-title">${renderTextWithLinks(title)}</h3>`);
+      continue;
+    }
+
+    if (trimmed.endsWith(":")) {
+      const subtitle = normalizeNotesSubtitle(trimmed);
+      currentContextLabel = updateNotesContextLabel(currentContextLabel, subtitle);
+      html.push(`<h4 class="notes-subtitle">${renderTextWithLinks(subtitle)}</h4>`);
+      continue;
+    }
+
+    currentContextLabel = updateNotesContextLabel(currentContextLabel, normalizeNotesParagraphContext(trimmed));
+    html.push(`<p class="notes-paragraph">${renderTextWithLinks(trimmed)}</p>`);
+  }
+
+  flushList();
+  flushTable();
+  return html.join("");
+}
+
+function renderNotesSection() {
+  if (!dom.notesMeta || !dom.notesContent) {
+    return;
+  }
+
+  const noteText = normalizeNotesText(state.notesText || "");
+  if (!noteText.trim()) {
+    dom.notesMeta.textContent = "No notes file was loaded.";
+    dom.notesContent.innerHTML = "";
+    return;
+  }
+
+  const nonEmptyLineCount = noteText
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0).length;
+
+  dom.notesMeta.textContent = `Source: Experiment Outcomes (notes).txt | Non-empty lines: ${nonEmptyLineCount}`;
+  dom.notesContent.innerHTML = renderNotesAsHtml(noteText);
+}
+
 function parseIso(value) {
   if (!value) {
     return null;
@@ -257,17 +599,6 @@ function mean(values) {
     return null;
   }
   return values.reduce((sum, value) => sum + value, 0) / values.length;
-}
-
-function normalizeQueryStem(rawName) {
-  if (!rawName || typeof rawName !== "string") {
-    return null;
-  }
-  let stem = rawName.trim();
-  stem = stem.replace(/\.rq$/i, "");
-  stem = stem.replace(/_ns$/i, "");
-  stem = stem.replace(/_ws$/i, "");
-  return stem || null;
 }
 
 function formatServiceMode(mode) {
@@ -453,6 +784,50 @@ function handleExpandableKeydown(event) {
   }
 }
 
+function syncExplorerListViewportHeights() {
+  // In stacked/mobile layout, let CSS and content determine natural heights.
+  if (window.matchMedia("(max-width: 980px)").matches) {
+    [dom.queryList, dom.experimentList].forEach((list) => {
+      if (!(list instanceof HTMLElement)) {
+        return;
+      }
+      list.style.height = "";
+      list.style.maxHeight = "";
+    });
+    return;
+  }
+
+  const viewportHeight = Math.floor(window.visualViewport?.height || window.innerHeight || 0);
+  if (!viewportHeight) {
+    return;
+  }
+
+  const bottomGutter = 14;
+  const minListHeight = 180;
+  const lists = [dom.queryList, dom.experimentList];
+
+  lists.forEach((list) => {
+    if (!(list instanceof HTMLElement)) {
+      return;
+    }
+
+    // Skip hidden list panes; keep their previous value as fallback.
+    if (list.offsetParent === null) {
+      return;
+    }
+
+    const top = list.getBoundingClientRect().top;
+    const available = Math.floor(viewportHeight - top - bottomGutter);
+    const height = Math.max(minListHeight, available);
+    list.style.height = `${height}px`;
+    list.style.maxHeight = `${height}px`;
+  });
+}
+
+function scheduleExplorerListHeightSync() {
+  window.requestAnimationFrame(syncExplorerListViewportHeights);
+}
+
 function variantRank(variantType) {
   if (variantType === "original") {
     return 0;
@@ -525,7 +900,7 @@ function monthLabel(monthKey) {
     return "Unknown";
   }
   const [year, month] = monthKey.split("-");
-  return `${year}-${month}`;
+  return `${month}-${year}`;
 }
 
 function getRecordMonthKey(record) {
@@ -1913,7 +2288,29 @@ function renderAll() {
   renderOverviewCharts(records);
   renderMonthlyViews(recordsBeforeMonthFocus);
   renderExplorerSection();
+  renderNotesSection();
   markExpandableSurfaces();
+  scheduleExplorerListHeightSync();
+}
+
+function resetScopeAndFilters() {
+  dom.includeOldResults.checked = false;
+  state.includeOldResults = false;
+
+  dom.runFilter.value = "";
+  dom.outcomeFilter.value = "all";
+  dom.errorFilter.value = "";
+  dom.serviceFilter.value = "all";
+  dom.minSourcesFilter.value = "";
+  dom.maxDurationFilter.value = "";
+  dom.startDateFilter.value = "";
+  dom.endDateFilter.value = "";
+  dom.searchFilter.value = "";
+  state.monthFocus = null;
+
+  updateRunOptions();
+  updateErrorOptions();
+  renderAll();
 }
 
 function bindEvents() {
@@ -1996,24 +2393,31 @@ function bindEvents() {
     });
   });
 
+  if (dom.resetFilters) {
+    dom.resetFilters.addEventListener("click", resetScopeAndFilters);
+  }
+
   dom.focusModalClose.addEventListener("click", closeFocusView);
   dom.focusModal.addEventListener("click", handleExpandableClick);
   document.addEventListener("click", handleExpandableClick);
   document.addEventListener("keydown", handleExpandableKeydown);
+  window.addEventListener("resize", scheduleExplorerListHeightSync);
 }
 
 async function loadData() {
-  const [mainDataset, oldDataset, summary, queriesDataset] = await Promise.all([
+  const [mainDataset, oldDataset, summary, queriesDataset, notesText] = await Promise.all([
     fetch("./data/main.json").then((response) => response.json()),
     fetch("./data/old-results.json").then((response) => response.json()),
     fetch("./data/summary.json").then((response) => response.json()),
     fetch("./data/queries.json").then((response) => response.json()),
+    fetch("./data/experiment-outcomes-notes.txt").then((response) => response.text()),
   ]);
 
   state.mainDataset = mainDataset;
   state.oldDataset = oldDataset;
   state.summary = summary;
   state.queriesDataset = queriesDataset;
+  state.notesText = notesText;
 
   dom.dataMeta.textContent = [
     `Main runs: ${summary.run_count}`,

@@ -48,6 +48,30 @@ const forceServiceDescriptionRuns = new Set([
   // Promoted legacy default-service run.
   "experiments/old-results/default-service-test-1",
 ]);
+const runDateOverrides = new Map([
+  // Ensure month-bucketing aligns with the March 2025 manual service-control period.
+  ["experiments/service-control-31-03-25", {
+    run_start: "2025-03-31T00:00:00.000Z",
+    run_end: null,
+    fill_missing_record_timestamps_from_run: true,
+  }],
+  ["experiments/service-control-31-03-25-endpoint", {
+    run_start: "2025-03-31T00:00:00.000Z",
+    run_end: null,
+    fill_missing_record_timestamps_from_run: true,
+  }],
+  ["experiments/service-control-31-03-25-comunica", {
+    run_start: "2025-03-31T00:00:00.000Z",
+    run_end: null,
+    fill_missing_record_timestamps_from_run: true,
+  }],
+  // Legacy default-service run was part of the same testing window for monthly display.
+  ["experiments/old-results/default-service-test-1", {
+    run_start: "2025-03-31T00:00:00.000Z",
+    run_end: null,
+    fill_missing_record_timestamps_from_run: true,
+  }],
+]);
 const legacyDefaultServiceQueryAliasMap = new Map([
   ["Q00000004", "117_biosodafrontend_glioblastoma_orthologs_rat"],
   ["Q00000005", "118_biosodafrontend_rat_brain_human_cancer"],
@@ -1237,6 +1261,32 @@ function sanitizeSummary(runLabel, summary) {
   return safeSummary;
 }
 
+function applyRunDateOverride(runPath, summary) {
+  const override = runDateOverrides.get(runPath);
+  if (!override) {
+    return { summary, override: null };
+  }
+
+  const next = {
+    ...summary,
+    general_stats: {
+      ...summary.general_stats,
+    },
+  };
+
+  if (Object.prototype.hasOwnProperty.call(override, "run_start")) {
+    next.general_stats.run_start = safeIso(override.run_start);
+  }
+  if (Object.prototype.hasOwnProperty.call(override, "run_end")) {
+    next.general_stats.run_end = safeIso(override.run_end);
+  }
+  if (Object.prototype.hasOwnProperty.call(override, "run_duration_seconds")) {
+    next.general_stats.run_duration_seconds = toNumber(override.run_duration_seconds);
+  }
+
+  return { summary: next, override };
+}
+
 function parseSources(rawSources) {
   if (Array.isArray(rawSources)) {
     return rawSources.filter((value) => typeof value === "string" && value.trim() !== "");
@@ -2031,7 +2081,8 @@ function buildDataset(scopeName, runDirs, writeMissingSummaries = false) {
       }
     }
 
-    const sanitized = sanitizeSummary(runLabel, summary);
+    const sanitizedInitial = sanitizeSummary(runLabel, summary);
+    const { summary: sanitized, override: appliedDateOverride } = applyRunDateOverride(runPath, sanitizedInitial);
 
     if (writeMissingSummaries && summarySource === "generated_from_logs") {
       const csvPath = path.join(runDir, "summary.csv");
@@ -2049,7 +2100,8 @@ function buildDataset(scopeName, runDirs, writeMissingSummaries = false) {
       // Force service-description classification for known service-enabled control runs.
       force_has_service_description: forceServiceDescriptionRuns.has(runPath),
       // Legacy query-times summaries only have run-level timestamps; propagate those to records.
-      fill_missing_record_timestamps_from_run: summarySource === "generated_from_query_times_csv",
+      fill_missing_record_timestamps_from_run: summarySource === "generated_from_query_times_csv"
+        || Boolean(appliedDateOverride?.fill_missing_record_timestamps_from_run),
     };
 
     const runRecords = normalizeRunSummary(runMeta, sanitized);

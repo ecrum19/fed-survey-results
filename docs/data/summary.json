@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-21T09:19:52.238Z",
+  "generated_at": "2026-04-21T12:45:41.745Z",
   "scope": "main",
   "run_count": 20,
   "query_count": 1214,
@@ -9,7 +9,7 @@
   "non_zero_result_queries": 152,
   "median_duration_seconds": 4.4974785,
   "known_http_requests_total": 17292804,
-  "earliest_query_start": "2025-09-17T13:38:56.925Z",
+  "earliest_query_start": "2025-03-31T00:00:00.000Z",
   "latest_query_end": "2026-04-20T11:08:56.132Z",
   "error_counts": {
     "None": 181,
