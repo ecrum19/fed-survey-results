@@ -110,6 +110,23 @@ const focusView = {
 const EXPANDABLE_SURFACE_SELECTOR = ".chart-card, .table-wrap, .http-matrix-wrap, .http-chart-wrap";
 const INTERACTIVE_BLOCK_SELECTOR = "button, a, input, select, textarea, label, summary, [role='button']";
 const URL_MATCH_RE = /https?:\/\/[^\s<>"']+/gi;
+const CHART_CAPTIONS = Object.freeze({
+  runSuccessChart: "Each bar shows the percentage of query attempts in a run that produced results. This is the clearest high-level reliability signal when comparing run configurations.",
+  errorCategoryChart: "Bars count failed query attempts by error category in the current scope. The distribution shows which failure modes dominate and where mitigation is most needed.",
+  runMedianChart: "Bars show median runtime per run in seconds. This helps compare typical execution cost between runs without over-weighting extreme outliers.",
+  monthSuccessChart: "Each bar is monthly success rate across records started in that month. It indicates whether robustness improved, declined, or stayed stable over testing periods.",
+  monthVolumeChart: "Bars show how many query records were executed per month. This gives workload context so monthly performance trends are interpreted against sample volume.",
+  queryDurationChart: "For the selected query, bars show runtime per experiment run in seconds. This reveals run-to-run execution variability for the same query logic.",
+  queryResultsChart: "For the selected query, bars show result count per run. This is useful for spotting consistency issues, empty-result behavior, or large output shifts across runs.",
+  selectedRunSuccessChart: "Each bar is success rate for one selected experiment. This allows direct side-by-side comparison of reliability among the chosen runs.",
+  selectedRunDurationChart: "Bars show median runtime (seconds) for each selected experiment. It summarizes typical cost per run for the current selection.",
+  selectedRunErrorChart: "Bars count failed queries by error category within selected experiments. This isolates which technical issues explain observed failures in the current comparison.",
+  httpRequestBarChart: "Grouped bars show per-query HTTP request load across selected experiments using the chosen aggregation. This highlights high-cost queries and cross-run request amplification.",
+  successOnlyResultsChart: "Bars total result counts from successful queries per experiment. It summarizes useful output volume while excluding failed attempts.",
+  successOnlyDurationChart: "Bars show median runtime of only successful queries by experiment. This reveals efficiency of successful executions independent of failure overhead.",
+  failureErrorChart: "Bars count error categories considering only failed queries. It focuses troubleshooting attention on the concrete reasons queries did not complete successfully.",
+  httpByRunChart: "Bars show median HTTP requests per selected experiment. This helps quantify network/API pressure and compare request efficiency across runs.",
+});
 const LEGACY_QUERY_STEM_MAP = Object.freeze({
   Q00000004: "117_biosodafrontend_glioblastoma_orthologs_rat",
   Q00000005: "118_biosodafrontend_rat_brain_human_cancer",
@@ -215,6 +232,66 @@ function renderTextWithLinks(text) {
 
   parts.push(escapeHtml(source.slice(cursor)));
   return parts.join("");
+}
+
+function ensureChartInfoCards() {
+  document.querySelectorAll(".chart[id]").forEach((chart) => {
+    if (!(chart instanceof HTMLElement)) {
+      return;
+    }
+
+    const captionText = CHART_CAPTIONS[chart.id];
+    if (!captionText) {
+      return;
+    }
+
+    let frame = chart.closest(".chart-frame");
+    if (!(frame instanceof HTMLElement)) {
+      frame = document.createElement("div");
+      frame.className = "chart-frame";
+      chart.parentNode.insertBefore(frame, chart);
+      frame.appendChild(chart);
+    }
+
+    let infoButton = frame.querySelector(".chart-info-btn");
+    if (!(infoButton instanceof HTMLButtonElement)) {
+      infoButton = document.createElement("button");
+      infoButton.type = "button";
+      infoButton.className = "chart-info-btn";
+      infoButton.textContent = "i";
+      infoButton.setAttribute("aria-label", "Show figure caption");
+      infoButton.setAttribute("data-chart-id", chart.id);
+      frame.appendChild(infoButton);
+    }
+
+    let caption = frame.querySelector(".chart-caption");
+    if (!(caption instanceof HTMLElement)) {
+      caption = document.createElement("div");
+      caption.className = "chart-caption hidden";
+      frame.appendChild(caption);
+    }
+
+    caption.innerHTML = `<strong>Figure caption:</strong> ${escapeHtml(captionText)}`;
+    caption.setAttribute("data-chart-id", chart.id);
+    const isExpanded = !caption.classList.contains("hidden");
+    infoButton.setAttribute("aria-expanded", String(isExpanded));
+    infoButton.setAttribute("title", isExpanded ? "Hide figure caption" : "Show figure caption");
+  });
+}
+
+function toggleChartCaption(button) {
+  if (!(button instanceof HTMLButtonElement)) {
+    return;
+  }
+  const frame = button.closest(".chart-frame");
+  const caption = frame?.querySelector(".chart-caption");
+  if (!(caption instanceof HTMLElement)) {
+    return;
+  }
+  const shouldOpen = caption.classList.contains("hidden");
+  caption.classList.toggle("hidden", !shouldOpen);
+  button.setAttribute("aria-expanded", String(shouldOpen));
+  button.setAttribute("title", shouldOpen ? "Hide figure caption" : "Show figure caption");
 }
 
 function formatSibCellValue(rawValue) {
@@ -614,6 +691,152 @@ function formatServiceMode(mode) {
   return "service mode unknown";
 }
 
+function formatServiceModeBadge(mode) {
+  if (mode === "with-service") {
+    return "WITH SERVICE";
+  }
+  if (mode === "no-service") {
+    return "NO-SERVICE";
+  }
+  if (mode === "mixed") {
+    return "MIXED";
+  }
+  return "UNKNOWN";
+}
+
+const CHART_COLORS = Object.freeze({
+  primary: "#0072B2",
+  secondary: "#56B4E9",
+  success: "#009E73",
+  warning: "#E69F00",
+  danger: "#D55E00",
+  neutral: "#8A94A6",
+});
+
+const SERVICE_MODE_COLOR = Object.freeze({
+  "with-service": CHART_COLORS.primary,
+  "no-service": CHART_COLORS.success,
+  mixed: CHART_COLORS.warning,
+  unknown: CHART_COLORS.neutral,
+});
+
+function normalizeServiceModeValue(mode) {
+  if (mode === "with-service" || mode === "no-service" || mode === "mixed") {
+    return mode;
+  }
+  return "unknown";
+}
+
+function parseRunLabelDate(runLabel) {
+  if (!runLabel || typeof runLabel !== "string") {
+    return null;
+  }
+
+  const matches = [...runLabel.matchAll(/(?:^|[^0-9])(\d{1,2})-(\d{1,2})-(\d{2,4})(?:[^0-9]|$)/g)];
+  if (!matches.length) {
+    return null;
+  }
+
+  // Use the last date-like token in the run label, which usually carries the run date.
+  const [, ddRaw, mmRaw, yyRaw] = matches[matches.length - 1];
+  const day = Number(ddRaw);
+  const month = Number(mmRaw);
+  let year = Number(yyRaw);
+  if (!Number.isFinite(day) || !Number.isFinite(month) || !Number.isFinite(year)) {
+    return null;
+  }
+  if (yyRaw.length === 2) {
+    year += 2000;
+  }
+  if (month < 1 || month > 12 || day < 1 || day > 31) {
+    return null;
+  }
+
+  return Date.UTC(year, month - 1, day);
+}
+
+function getRunChronologyTimestamp(run, runRecords = []) {
+  const candidates = [];
+  if (run?.run_start) {
+    const runStart = parseIso(run.run_start);
+    if (runStart) {
+      candidates.push(runStart.valueOf());
+    }
+  }
+  if (run?.run_end) {
+    const runEnd = parseIso(run.run_end);
+    if (runEnd) {
+      candidates.push(runEnd.valueOf());
+    }
+  }
+
+  runRecords.forEach((record) => {
+    const start = parseIso(record.start);
+    const end = parseIso(record.end);
+    if (start) {
+      candidates.push(start.valueOf());
+    }
+    if (end) {
+      candidates.push(end.valueOf());
+    }
+  });
+
+  const labelDate = parseRunLabelDate(run?.run_label || "");
+  if (labelDate !== null) {
+    candidates.push(labelDate);
+  }
+
+  return candidates.length ? Math.min(...candidates) : Number.POSITIVE_INFINITY;
+}
+
+function getRunModeFromRecords(runRecords) {
+  const modeSet = new Set(
+    runRecords
+      .map((record) => normalizeServiceModeValue(record.service_description_mode))
+      .filter((mode) => mode !== "unknown"),
+  );
+  if (!modeSet.size) {
+    return "unknown";
+  }
+  if (modeSet.size > 1) {
+    return "mixed";
+  }
+  return [...modeSet][0];
+}
+
+function getRunServiceMode(run, runRecords = []) {
+  const explicitMode = normalizeServiceModeValue(run?.service_description_mode);
+  if (explicitMode !== "unknown") {
+    return explicitMode;
+  }
+  return getRunModeFromRecords(runRecords);
+}
+
+function getRunModeColor(run, runRecords = []) {
+  const mode = getRunServiceMode(run, runRecords);
+  return SERVICE_MODE_COLOR[mode] || SERVICE_MODE_COLOR.unknown;
+}
+
+function sortRunsChronologically(runs, records = []) {
+  const recordsByRunId = new Map(runs.map((run) => [run.run_id, []]));
+  records.forEach((record) => {
+    if (recordsByRunId.has(record.run_id)) {
+      recordsByRunId.get(record.run_id).push(record);
+    }
+  });
+
+  return [...runs].sort((a, b) => {
+    const aRecords = recordsByRunId.get(a.run_id) || [];
+    const bRecords = recordsByRunId.get(b.run_id) || [];
+    const aTs = getRunChronologyTimestamp(a, aRecords);
+    const bTs = getRunChronologyTimestamp(b, bRecords);
+    if (aTs !== bTs) {
+      return aTs - bTs;
+    }
+    return String(a.run_label || a.run_id).localeCompare(String(b.run_label || b.run_id));
+  });
+}
+
 function getRunControlLabel(runId) {
   if (typeof runId !== "string") {
     return null;
@@ -703,6 +926,10 @@ function closeFocusView() {
   if (focusBeforeOpen && typeof focusBeforeOpen.focus === "function") {
     focusBeforeOpen.focus({ preventScroll: true });
   }
+
+  window.requestAnimationFrame(() => {
+    resizeAllCharts();
+  });
 }
 
 function openFocusView(node) {
@@ -726,6 +953,10 @@ function openFocusView(node) {
   dom.focusModal.classList.remove("hidden");
   dom.focusModal.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
+
+  window.requestAnimationFrame(() => {
+    resizeAllCharts();
+  });
 
   dom.focusModalClose.focus({ preventScroll: true });
 }
@@ -861,18 +1092,7 @@ function truncateLabel(text, maxLength = 22) {
   return `${text.slice(0, Math.max(1, maxLength - 2))}..`;
 }
 
-const HTTP_BAR_PALETTE = [
-  "#2d7dd2",
-  "#45b39d",
-  "#f39c12",
-  "#8e44ad",
-  "#e74c3c",
-  "#1abc9c",
-  "#6c5ce7",
-  "#16a085",
-  "#2980b9",
-  "#d35400",
-];
+const chartRegistry = new Map();
 
 function aggregateHttp(values, mode) {
   if (!values.length) {
@@ -907,338 +1127,303 @@ function getRecordMonthKey(record) {
   return getMonthKey(record.start) || getMonthKey(record.end);
 }
 
-function clearSvg(svg) {
-  while (svg.firstChild) {
-    svg.removeChild(svg.firstChild);
-  }
+function hasNumericValue(value) {
+  return value !== null && value !== undefined && !Number.isNaN(Number(value));
 }
 
-function appendSvgElement(svg, tagName, attrs) {
-  const element = document.createElementNS("http://www.w3.org/2000/svg", tagName);
-  for (const [key, value] of Object.entries(attrs)) {
-    element.setAttribute(key, String(value));
+function clearChartElement(chartEl) {
+  if (!(chartEl instanceof HTMLElement)) {
+    return;
   }
-  svg.appendChild(element);
-  return element;
+  const existingChart = chartRegistry.get(chartEl.id);
+  if (existingChart) {
+    existingChart.destroy();
+    chartRegistry.delete(chartEl.id);
+  }
+  chartEl.innerHTML = "";
+}
+
+function resizeAllCharts() {
+  chartRegistry.forEach((chart) => {
+    if (chart && typeof chart.resize === "function") {
+      chart.resize();
+    }
+  });
+}
+
+function buildChartCanvas(chartEl) {
+  const canvas = document.createElement("canvas");
+  canvas.className = "chart-canvas";
+  chartEl.appendChild(canvas);
+  return canvas;
+}
+
+function chartLabelLimit(labelCount) {
+  if (labelCount > 40) {
+    return 11;
+  }
+  if (labelCount > 20) {
+    return 14;
+  }
+  return 20;
+}
+
+function getChartJs() {
+  return window.Chart || null;
+}
+
+function chartBaseOptions(xLabel, yLabel, labelsFull) {
+  const tickLimit = chartLabelLimit(labelsFull.length);
+  const tickAngle = labelsFull.length > 10 ? 52 : labelsFull.length > 6 ? 32 : 0;
+
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: {
+      mode: "index",
+      intersect: false,
+      axis: "x",
+    },
+    animation: {
+      duration: 320,
+      easing: "easeOutQuart",
+    },
+    layout: {
+      padding: { top: 4, right: 8, bottom: 0, left: 0 },
+    },
+    plugins: {
+      legend: {
+        labels: {
+          boxWidth: 10,
+          boxHeight: 10,
+          color: "#264f70",
+          font: { size: 10 },
+        },
+      },
+      tooltip: {
+        enabled: true,
+        backgroundColor: "#f8fbff",
+        titleColor: "#1d2a37",
+        bodyColor: "#1d2a37",
+        borderColor: "#80b7df",
+        borderWidth: 1,
+        titleFont: { family: "Source Sans 3, Segoe UI, sans-serif", size: 12, weight: "700" },
+        bodyFont: { family: "Source Sans 3, Segoe UI, sans-serif", size: 12 },
+        padding: 10,
+        cornerRadius: 8,
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: xLabel,
+          color: "#345a79",
+          font: { size: 12, weight: "600" },
+        },
+        grid: { display: false },
+        ticks: {
+          color: "#4d6980",
+          maxRotation: tickAngle,
+          minRotation: tickAngle,
+          callback: (_, index) => truncateLabel(labelsFull[index], tickLimit),
+          autoSkip: false,
+        },
+      },
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: yLabel,
+          color: "#345a79",
+          font: { size: 12, weight: "600" },
+        },
+        ticks: {
+          color: "#4d6980",
+          callback: (value) => formatAxisNumber(Number(value)),
+        },
+        grid: {
+          color: "#e7eff7",
+          drawBorder: false,
+        },
+      },
+    },
+  };
+}
+
+function renderNoDataPlot(chartEl, message, xLabel, yLabel) {
+  void xLabel;
+  void yLabel;
+  if (!(chartEl instanceof HTMLElement)) {
+    return;
+  }
+  chartEl.innerHTML = `<div class="chart-empty">${escapeHtml(message)}</div>`;
 }
 
 function renderBarChart(svg, data, valueLabelFormatter, options = {}) {
-  clearSvg(svg);
-
-  const width = 640;
-  const height = 300;
-  const margin = { top: 16, right: 12, bottom: 106, left: 70 };
-  const innerWidth = width - margin.left - margin.right;
-  const innerHeight = height - margin.top - margin.bottom;
+  const chartEl = svg;
   const yLabel = options.yLabel || "Value";
   const xLabel = options.xLabel || "Category";
 
+  clearChartElement(chartEl);
+
   if (!data.length) {
-    appendSvgElement(svg, "text", {
-      x: width / 2,
-      y: height / 2,
-      "text-anchor": "middle",
-      fill: "#5a6b7d",
-      "font-size": 14,
-    }).textContent = "No data for current selection";
+    renderNoDataPlot(chartEl, "No data for current selection", xLabel, yLabel);
     return;
   }
 
-  const numericValues = data
-    .map((item) => item.value)
-    .filter((value) => value !== null && value !== undefined && !Number.isNaN(Number(value)))
-    .map((value) => Number(value));
+  const numericValues = data.map((item) => item.value).filter((value) => hasNumericValue(value)).map(Number);
 
   if (!numericValues.length) {
-    appendSvgElement(svg, "text", {
-      x: width / 2,
-      y: height / 2,
-      "text-anchor": "middle",
-      fill: "#5a6b7d",
-      "font-size": 14,
-    }).textContent = "No numeric values for current selection";
+    renderNoDataPlot(chartEl, "No numeric values for current selection", xLabel, yLabel);
     return;
   }
 
-  const maxValue = Math.max(...numericValues, 0);
-  const yMax = maxValue === 0 ? 1 : maxValue;
-
-  appendSvgElement(svg, "line", {
-    x1: margin.left,
-    y1: margin.top + innerHeight,
-    x2: margin.left + innerWidth,
-    y2: margin.top + innerHeight,
-    stroke: "#adc4db",
-  });
-
-  appendSvgElement(svg, "line", {
-    x1: margin.left,
-    y1: margin.top,
-    x2: margin.left,
-    y2: margin.top + innerHeight,
-    stroke: "#adc4db",
-  });
-
-  const tickCount = 4;
-  for (let i = 0; i <= tickCount; i += 1) {
-    const value = (yMax / tickCount) * i;
-    const y = margin.top + innerHeight - (value / yMax) * innerHeight;
-
-    appendSvgElement(svg, "line", {
-      x1: margin.left,
-      y1: y,
-      x2: margin.left + innerWidth,
-      y2: y,
-      stroke: "#edf3fa",
-    });
-
-    appendSvgElement(svg, "text", {
-      x: margin.left - 8,
-      y: y + 4,
-      "text-anchor": "end",
-      fill: "#5a6b7d",
-      "font-size": 11,
-    }).textContent = formatAxisNumber(value);
+  const ChartJs = getChartJs();
+  if (!ChartJs) {
+    chartEl.innerHTML = "<div class='chart-empty'>Interactive chart library not available.</div>";
+    return;
   }
 
-  appendSvgElement(svg, "text", {
-    x: margin.left + innerWidth / 2,
-    y: height - 10,
-    "text-anchor": "middle",
-    fill: "#4d6276",
-    "font-size": 11,
-    "font-weight": 600,
-  }).textContent = xLabel;
+  const canvas = buildChartCanvas(chartEl);
+  const xValues = data.map((item) => item.label);
+  const rawValues = data.map((item) => (hasNumericValue(item.value) ? Number(item.value) : 0));
+  const missingFlags = data.map((item) => !hasNumericValue(item.value));
+  const valueText = rawValues.map((value, index) => (missingFlags[index] ? "null" : valueLabelFormatter(value)));
+  const barColors = data.map((item, index) => (missingFlags[index] ? "#c8d3de" : (item.color || CHART_COLORS.primary)));
+  const serviceModes = data.map((item) => normalizeServiceModeValue(item.service_mode));
+  const hasServiceMetadata = data.some((item) => item.service_mode !== undefined && item.service_mode !== null);
+  const runIds = data.map((item) => item.run_id || null);
 
-  appendSvgElement(svg, "text", {
-    x: 14,
-    y: margin.top + innerHeight / 2,
-    transform: `rotate(-90 14 ${margin.top + innerHeight / 2})`,
-    "text-anchor": "middle",
-    fill: "#4d6276",
-    "font-size": 11,
-    "font-weight": 600,
-  }).textContent = yLabel;
+  const chartData = {
+    labels: xValues,
+    datasets: [{
+      label: yLabel,
+      data: rawValues,
+      backgroundColor: barColors,
+      borderColor: barColors.map((color) => `${color}`),
+      borderWidth: 1,
+      borderRadius: 4,
+      maxBarThickness: 38,
+      metaValueText: valueText,
+      metaMissingFlags: missingFlags,
+    }],
+  };
 
-  const gap = 8;
-  const barWidth = Math.max(8, (innerWidth - gap * (data.length - 1)) / data.length);
+  const chartOptions = chartBaseOptions(xLabel, yLabel, xValues);
+  chartOptions.plugins.legend.display = false;
+  chartOptions.plugins.tooltip.callbacks = {
+    title: (items) => {
+      const index = items[0]?.dataIndex ?? 0;
+      return `${xLabel}: ${xValues[index]}`;
+    },
+    label: (context) => `${yLabel}: ${valueText[context.dataIndex]}`,
+    afterLabel: (context) => {
+      const idx = context.dataIndex;
+      const lines = [];
+      if (runIds[idx]) {
+        lines.push(`Run ID: ${runIds[idx]}`);
+      }
+      if (hasServiceMetadata) {
+        lines.push(`Service mode: ${formatServiceModeBadge(serviceModes[idx])}`);
+      }
+      lines.push(`Missing value: ${missingFlags[idx] ? "Yes" : "No"}`);
+      return lines;
+    },
+  };
 
-  data.forEach((item, index) => {
-    const x = margin.left + index * (barWidth + gap);
-    const isNullValue = item.value === null || item.value === undefined || Number.isNaN(Number(item.value));
-
-    if (isNullValue) {
-      appendSvgElement(svg, "text", {
-        x: x + barWidth / 2,
-        y: margin.top + innerHeight - 4,
-        "text-anchor": "middle",
-        fill: "#8da1b5",
-        "font-size": 10,
-      }).textContent = "null";
-    } else {
-      const numericValue = Number(item.value);
-      const barHeight = (numericValue / yMax) * innerHeight;
-      const y = margin.top + innerHeight - barHeight;
-
-      appendSvgElement(svg, "rect", {
-        x,
-        y,
-        width: barWidth,
-        height: Math.max(0, barHeight),
-        fill: item.color || "#0f5fa8",
-        rx: 3,
-      });
-
-      appendSvgElement(svg, "text", {
-        x: x + barWidth / 2,
-        y: y - 4,
-        "text-anchor": "middle",
-        fill: "#1d2a37",
-        "font-size": 11,
-      }).textContent = Math.abs(numericValue) >= 10000
-        ? formatCompactNumber(numericValue, 1)
-        : valueLabelFormatter(numericValue);
-    }
-
-    const label = truncateLabel(item.label, 18);
-    appendSvgElement(svg, "text", {
-      x: x + barWidth / 2,
-      y: margin.top + innerHeight + 12,
-      transform: `rotate(35 ${x + barWidth / 2} ${margin.top + innerHeight + 12})`,
-      "text-anchor": "start",
-      fill: "#5a6b7d",
-      "font-size": 11,
-    }).textContent = label;
+  const instance = new ChartJs(canvas.getContext("2d"), {
+    type: "bar",
+    data: chartData,
+    options: chartOptions,
   });
+  chartRegistry.set(chartEl.id, instance);
 }
 
 function renderGroupedBarChart(svg, groups, series, options = {}) {
-  clearSvg(svg);
-
-  const width = 640;
-  const height = 300;
-  const labelStep = groups.length > 44 ? 5 : groups.length > 34 ? 4 : groups.length > 24 ? 3 : groups.length > 14 ? 2 : 1;
-  const margin = { top: 40, right: 16, bottom: labelStep === 1 ? 122 : 92, left: 70 };
-  const innerWidth = width - margin.left - margin.right;
-  const innerHeight = height - margin.top - margin.bottom;
+  const chartEl = svg;
   const yLabel = options.yLabel || "Value";
   const xLabel = options.xLabel || "Category";
 
+  clearChartElement(chartEl);
+
   if (!groups.length || !series.length) {
-    appendSvgElement(svg, "text", {
-      x: width / 2,
-      y: height / 2,
-      "text-anchor": "middle",
-      fill: "#5a6b7d",
-      "font-size": 14,
-    }).textContent = "No data for current selection";
+    renderNoDataPlot(chartEl, "No data for current selection", xLabel, yLabel);
     return;
   }
 
   const values = groups
     .flatMap((group) => series.map((run) => group.values.get(run.run_id)))
-    .filter((value) => value !== null && value !== undefined && !Number.isNaN(Number(value)))
+    .filter((value) => hasNumericValue(value))
     .map((value) => Number(value));
   if (!values.length) {
-    appendSvgElement(svg, "text", {
-      x: width / 2,
-      y: height / 2,
-      "text-anchor": "middle",
-      fill: "#5a6b7d",
-      "font-size": 14,
-    }).textContent = "No numeric values for current selection";
+    renderNoDataPlot(chartEl, "No numeric values for current selection", xLabel, yLabel);
     return;
   }
-  const maxValue = Math.max(...values, 0);
-  const yMax = maxValue === 0 ? 1 : maxValue;
 
-  appendSvgElement(svg, "line", {
-    x1: margin.left,
-    y1: margin.top + innerHeight,
-    x2: margin.left + innerWidth,
-    y2: margin.top + innerHeight,
-    stroke: "#adc4db",
-  });
-
-  appendSvgElement(svg, "line", {
-    x1: margin.left,
-    y1: margin.top,
-    x2: margin.left,
-    y2: margin.top + innerHeight,
-    stroke: "#adc4db",
-  });
-
-  const tickCount = 4;
-  for (let i = 0; i <= tickCount; i += 1) {
-    const value = (yMax / tickCount) * i;
-    const y = margin.top + innerHeight - (value / yMax) * innerHeight;
-    appendSvgElement(svg, "line", {
-      x1: margin.left,
-      y1: y,
-      x2: margin.left + innerWidth,
-      y2: y,
-      stroke: "#edf3fa",
-    });
-    appendSvgElement(svg, "text", {
-      x: margin.left - 8,
-      y: y + 4,
-      "text-anchor": "end",
-      fill: "#5a6b7d",
-      "font-size": 11,
-    }).textContent = formatAxisNumber(value);
+  const ChartJs = getChartJs();
+  if (!ChartJs) {
+    chartEl.innerHTML = "<div class='chart-empty'>Interactive chart library not available.</div>";
+    return;
   }
 
-  appendSvgElement(svg, "text", {
-    x: margin.left + innerWidth / 2,
-    y: height - 10,
-    "text-anchor": "middle",
-    fill: "#4d6276",
-    "font-size": 11,
-    "font-weight": 600,
-  }).textContent = xLabel;
-
-  appendSvgElement(svg, "text", {
-    x: 14,
-    y: margin.top + innerHeight / 2,
-    transform: `rotate(-90 14 ${margin.top + innerHeight / 2})`,
-    "text-anchor": "middle",
-    fill: "#4d6276",
-    "font-size": 11,
-    "font-weight": 600,
-  }).textContent = yLabel;
-
-  const seriesColors = new Map(series.map((run, index) => [run.run_id, HTTP_BAR_PALETTE[index % HTTP_BAR_PALETTE.length]]));
-  const groupWidth = innerWidth / groups.length;
-  const groupPadding = Math.min(8, Math.max(1, groupWidth * 0.08));
-  const innerGroupWidth = Math.max(4, groupWidth - groupPadding * 2);
-  const barGap = Math.min(2, Math.max(0.5, innerGroupWidth * 0.01));
-  const availableBarWidth = innerGroupWidth - (series.length - 1) * barGap;
-  const barWidth = Math.max(1, availableBarWidth / Math.max(1, series.length));
-
-  groups.forEach((group, groupIndex) => {
-    const groupStartX = margin.left + groupIndex * groupWidth + groupPadding;
-
-    series.forEach((run, runIndex) => {
+  const canvas = buildChartCanvas(chartEl);
+  const xValues = groups.map((group) => group.label);
+  const datasets = series.map((run) => {
+    const runLabel = getRunDisplayLabel(run.run_id, run.run_label);
+    const runMode = getRunServiceMode(run);
+    const yRaw = groups.map((group) => {
       const value = group.values.get(run.run_id);
-      if (value === null || value === undefined) {
-        return;
-      }
-
-      const barHeight = (value / yMax) * innerHeight;
-      const x = groupStartX + runIndex * (barWidth + barGap);
-      const y = margin.top + innerHeight - barHeight;
-      const fill = seriesColors.get(run.run_id) || "#0f5fa8";
-
-      const rect = appendSvgElement(svg, "rect", {
-        x,
-        y,
-        width: Math.max(1, barWidth),
-        height: Math.max(0, barHeight),
-        fill,
-        rx: 2,
-      });
-      const titleNode = document.createElementNS("http://www.w3.org/2000/svg", "title");
-      titleNode.textContent = `${group.label} · ${run.run_label}: ${formatNumber(value, 0)}`;
-      rect.appendChild(titleNode);
+      return hasNumericValue(value) ? Number(value) : 0;
     });
-
-    if (groupIndex % labelStep === 0) {
-      const labelX = margin.left + groupIndex * groupWidth + groupWidth / 2;
-      appendSvgElement(svg, "text", {
-        x: labelX,
-        y: margin.top + innerHeight + 10,
-        transform: `rotate(52 ${labelX} ${margin.top + innerHeight + 10})`,
-        "text-anchor": "start",
-        fill: "#5a6b7d",
-        "font-size": 10,
-      }).textContent = truncateLabel(group.label, 16);
-    }
+    const missingFlags = groups.map((group) => !hasNumericValue(group.values.get(run.run_id)));
+    const yDisplay = yRaw.map((value, rowIndex) => (missingFlags[rowIndex] ? "null" : formatNumber(value, 0)));
+    const baseColor = getRunModeColor(run);
+    return {
+      label: truncateLabel(runLabel, 30),
+      fullRunLabel: runLabel,
+      runId: run.run_id,
+      runMode,
+      data: yRaw,
+      metaValueText: yDisplay,
+      metaMissingFlags: missingFlags,
+      backgroundColor: yRaw.map((_, rowIndex) => (missingFlags[rowIndex] ? "#d4dde6" : baseColor)),
+      borderColor: yRaw.map((_, rowIndex) => (missingFlags[rowIndex] ? "#c4cfdb" : baseColor)),
+      borderWidth: 1,
+      borderRadius: 3,
+      maxBarThickness: 24,
+    };
   });
 
-  // Compact legend so users can map run colors quickly.
-  const legendY = 16;
-  series.forEach((run, index) => {
-    const x = margin.left + index * 108;
-    if (x > width - 90) {
-      return;
-    }
-    const fill = seriesColors.get(run.run_id) || "#0f5fa8";
-    appendSvgElement(svg, "rect", {
-      x,
-      y: legendY - 8,
-      width: 10,
-      height: 10,
-      fill,
-      rx: 1,
-    });
-    appendSvgElement(svg, "text", {
-      x: x + 14,
-      y: legendY,
-      fill: "#2d4a66",
-      "font-size": 10,
-    }).textContent = truncateLabel(run.run_label, 14);
-  });
+  const chartOptions = chartBaseOptions(xLabel, yLabel, xValues);
+  chartOptions.plugins.legend.display = true;
+  chartOptions.plugins.tooltip.callbacks = {
+    title: (items) => {
+      const index = items[0]?.dataIndex ?? 0;
+      return `${xLabel}: ${xValues[index]}`;
+    },
+    label: (context) => {
+      const dataset = datasets[context.datasetIndex];
+      const idx = context.dataIndex;
+      return `${dataset.fullRunLabel}: ${dataset.metaValueText[idx]}`;
+    },
+    afterLabel: (context) => {
+      const dataset = datasets[context.datasetIndex];
+      const idx = context.dataIndex;
+      const missingText = `Missing value: ${dataset.metaMissingFlags[idx] ? "Yes" : "No"}`;
+      return [`Run ID: ${dataset.runId}`, `Service mode: ${formatServiceModeBadge(dataset.runMode)}`, missingText];
+    },
+  };
 
+  const instance = new ChartJs(canvas.getContext("2d"), {
+    type: "bar",
+    data: {
+      labels: xValues,
+      datasets,
+    },
+    options: chartOptions,
+  });
+  chartRegistry.set(chartEl.id, instance);
 }
 
 function getActiveRuns() {
@@ -1425,13 +1610,18 @@ function renderOverviewKpis(records) {
 
 function renderOverviewCharts(records) {
   const runMap = new Map();
+  const runsById = new Map(getActiveRuns().map((run) => [run.run_id, run]));
   for (const record of records) {
     if (!runMap.has(record.run_id)) {
       runMap.set(record.run_id, {
-        label: record.run_label,
+        runId: record.run_id,
+        label: getRunDisplayLabel(record.run_id, record.run_label),
+        runLabel: record.run_label,
+        serviceMode: normalizeServiceModeValue(record.service_description_mode),
         total: 0,
         success: 0,
         durations: [],
+        records: [],
       });
     }
     const run = runMap.get(record.run_id);
@@ -1442,15 +1632,28 @@ function renderOverviewCharts(records) {
     if (record.duration_seconds !== null && record.duration_seconds !== undefined) {
       run.durations.push(record.duration_seconds);
     }
+    run.records.push(record);
   }
 
-  const successBars = [...runMap.values()]
+  const sortedRuns = [...runMap.values()].sort((a, b) => {
+    const runA = runsById.get(a.runId) || { run_id: a.runId, run_label: a.runLabel, service_description_mode: a.serviceMode };
+    const runB = runsById.get(b.runId) || { run_id: b.runId, run_label: b.runLabel, service_description_mode: b.serviceMode };
+    const tsA = getRunChronologyTimestamp(runA, a.records);
+    const tsB = getRunChronologyTimestamp(runB, b.records);
+    if (tsA !== tsB) {
+      return tsA - tsB;
+    }
+    return a.label.localeCompare(b.label);
+  });
+
+  const successBars = sortedRuns
     .map((run) => ({
       label: run.label,
+      run_id: run.runId,
+      service_mode: getRunServiceMode(runsById.get(run.runId) || { service_description_mode: run.serviceMode }, run.records),
       value: run.total ? (run.success / run.total) * 100 : 0,
-      color: "#0f5fa8",
-    }))
-    .sort((a, b) => b.value - a.value);
+      color: getRunModeColor(runsById.get(run.runId) || { service_description_mode: run.serviceMode }, run.records),
+    }));
 
   renderBarChart(dom.runSuccessChart, successBars, (value) => `${value.toFixed(1)}%`, { xLabel: "Experiment Run", yLabel: "Success Rate (%)" });
 
@@ -1460,19 +1663,20 @@ function renderOverviewCharts(records) {
     errorCounts.set(key, (errorCounts.get(key) || 0) + 1);
   }
   const errorBars = [...errorCounts.entries()]
-    .map(([label, value]) => ({ label, value, color: "#a03333" }))
+    .map(([label, value]) => ({ label, value, color: CHART_COLORS.danger }))
     .sort((a, b) => b.value - a.value)
     .slice(0, 12);
 
   renderBarChart(dom.errorCategoryChart, errorBars, (value) => formatNumber(value, 0), { xLabel: "Error Category", yLabel: "Failed Queries (count)" });
 
-  const medianBars = [...runMap.values()]
+  const medianBars = sortedRuns
     .map((run) => ({
       label: run.label,
+      run_id: run.runId,
+      service_mode: getRunServiceMode(runsById.get(run.runId) || { service_description_mode: run.serviceMode }, run.records),
       value: median(run.durations) ?? null,
-      color: "#1f7a4d",
-    }))
-    .sort((a, b) => b.value - a.value);
+      color: getRunModeColor(runsById.get(run.runId) || { service_description_mode: run.serviceMode }, run.records),
+    }));
 
   renderBarChart(dom.runMedianChart, medianBars, (value) => formatNumber(value, 1), { xLabel: "Experiment Run", yLabel: "Median Runtime (seconds)" });
 }
@@ -1540,12 +1744,12 @@ function renderMonthlyViews(recordsBeforeMonthFocus) {
   const successBars = monthly.map((month) => ({
     label: month.label,
     value: month.successRate * 100,
-    color: "#1f7a4d",
+    color: CHART_COLORS.secondary,
   }));
   const volumeBars = monthly.map((month) => ({
     label: month.label,
     value: month.total,
-    color: "#0f5fa8",
+    color: CHART_COLORS.primary,
   }));
 
   renderBarChart(dom.monthSuccessChart, successBars, (value) => `${value.toFixed(1)}%`, { xLabel: "Month", yLabel: "Success Rate (%)" });
@@ -1706,8 +1910,8 @@ function renderQueryDetail(records) {
     dom.querySibMeta.textContent = "No query selected.";
     dom.querySibTableHead.innerHTML = "";
     dom.querySibTableBody.innerHTML = "";
-    clearSvg(dom.queryDurationChart);
-    clearSvg(dom.queryResultsChart);
+    clearChartElement(dom.queryDurationChart);
+    clearChartElement(dom.queryResultsChart);
     return;
   }
 
@@ -1720,6 +1924,7 @@ function renderQueryDetail(records) {
   const queryRecords = records
     .filter((record) => normalizeQueryStem(record.query_name) === state.selectedQueryStem)
     .sort((a, b) => (parseIso(a.start)?.valueOf() || 0) - (parseIso(b.start)?.valueOf() || 0));
+  const runsById = new Map(getActiveRuns().map((run) => [run.run_id, run]));
 
   const succeeded = queryRecords.filter((record) => record.produced_results).length;
   const durations = queryRecords.map((record) => record.duration_seconds).filter((v) => v !== null && v !== undefined);
@@ -1752,13 +1957,17 @@ function renderQueryDetail(records) {
 
   const durationBars = queryRecords.map((record) => ({
     label: getRunDisplayLabel(record.run_id, record.run_label),
+    run_id: record.run_id,
+    service_mode: getRunServiceMode(runsById.get(record.run_id) || { service_description_mode: record.service_description_mode }, [record]),
     value: record.duration_seconds ?? null,
-    color: "#0f5fa8",
+    color: getRunModeColor(runsById.get(record.run_id) || { service_description_mode: record.service_description_mode }, [record]),
   }));
   const resultsBars = queryRecords.map((record) => ({
     label: getRunDisplayLabel(record.run_id, record.run_label),
+    run_id: record.run_id,
+    service_mode: getRunServiceMode(runsById.get(record.run_id) || { service_description_mode: record.service_description_mode }, [record]),
     value: record.results_count || 0,
-    color: "#1f7a4d",
+    color: getRunModeColor(runsById.get(record.run_id) || { service_description_mode: record.service_description_mode }, [record]),
   }));
 
   renderBarChart(dom.queryDurationChart, durationBars, (value) => formatNumber(value, 1), { xLabel: "Experiment Run", yLabel: "Runtime (seconds)" });
@@ -1925,8 +2134,10 @@ function renderExperimentCharts(selectedRuns, selectedRecords) {
     const successes = records.filter((record) => record.produced_results).length;
     return {
       label: getRunDisplayLabel(run.run_id, run.run_label),
+      run_id: run.run_id,
+      service_mode: getRunServiceMode(run, records),
       value: records.length ? (successes / records.length) * 100 : 0,
-      color: "#0f5fa8",
+      color: getRunModeColor(run, records),
     };
   });
 
@@ -1936,8 +2147,10 @@ function renderExperimentCharts(selectedRuns, selectedRecords) {
       .filter((value) => value !== null && value !== undefined);
     return {
       label: getRunDisplayLabel(run.run_id, run.run_label),
+      run_id: run.run_id,
+      service_mode: getRunServiceMode(run, runRecordMap.get(run.run_id) || []),
       value: median(durations) ?? null,
-      color: "#1f7a4d",
+      color: getRunModeColor(run, runRecordMap.get(run.run_id) || []),
     };
   });
 
@@ -1947,7 +2160,7 @@ function renderExperimentCharts(selectedRuns, selectedRecords) {
     errorMap.set(key, (errorMap.get(key) || 0) + 1);
   }
   const errorBars = [...errorMap.entries()]
-    .map(([label, value]) => ({ label, value, color: "#a03333" }))
+    .map(([label, value]) => ({ label, value, color: CHART_COLORS.danger }))
     .sort((a, b) => b.value - a.value)
     .slice(0, 12);
 
@@ -2159,8 +2372,10 @@ function renderOptionalInsights(selectedRuns, selectedRecords) {
     const totalResults = runSuccesses.reduce((sum, record) => sum + (record.results_count || 0), 0);
     return {
       label: getRunDisplayLabel(run.run_id, run.run_label),
+      run_id: run.run_id,
+      service_mode: getRunServiceMode(run, runSuccesses),
       value: totalResults,
-      color: "#1f7a4d",
+      color: getRunModeColor(run, runSuccesses),
     };
   });
 
@@ -2171,8 +2386,10 @@ function renderOptionalInsights(selectedRuns, selectedRecords) {
       .filter((value) => value !== null && value !== undefined);
     return {
       label: getRunDisplayLabel(run.run_id, run.run_label),
+      run_id: run.run_id,
+      service_mode: getRunServiceMode(run, successRecords.filter((record) => record.run_id === run.run_id)),
       value: median(runDurations) ?? null,
-      color: "#0f5fa8",
+      color: getRunModeColor(run, successRecords.filter((record) => record.run_id === run.run_id)),
     };
   });
 
@@ -2182,7 +2399,7 @@ function renderOptionalInsights(selectedRuns, selectedRecords) {
     failureErrorCounts.set(category, (failureErrorCounts.get(category) || 0) + 1);
   }
   const failureErrorBars = [...failureErrorCounts.entries()]
-    .map(([label, value]) => ({ label, value, color: "#a03333" }))
+    .map(([label, value]) => ({ label, value, color: CHART_COLORS.danger }))
     .sort((a, b) => b.value - a.value)
     .slice(0, 12);
 
@@ -2192,8 +2409,10 @@ function renderOptionalInsights(selectedRuns, selectedRecords) {
       .map((record) => record.http_requests);
     return {
       label: getRunDisplayLabel(run.run_id, run.run_label),
+      run_id: run.run_id,
+      service_mode: getRunServiceMode(run, knownHttpRecords.filter((record) => record.run_id === run.run_id)),
       value: median(runHttp) ?? null,
-      color: "#2a8a8d",
+      color: getRunModeColor(run, knownHttpRecords.filter((record) => record.run_id === run.run_id)),
     };
   });
 
@@ -2258,7 +2477,10 @@ function renderExplorerExperimentMode() {
   syncExperimentSelection(activeRuns);
   renderExperimentList(activeRuns);
 
-  const selectedRuns = activeRuns.filter((run) => state.selectedExperimentIds.has(run.run_id));
+  const selectedRuns = sortRunsChronologically(
+    activeRuns.filter((run) => state.selectedExperimentIds.has(run.run_id)),
+    getActiveRecords(),
+  );
   const selectedRunIds = new Set(selectedRuns.map((run) => run.run_id));
   const selectedRecords = getActiveRecords().filter((record) => selectedRunIds.has(record.run_id));
 
@@ -2289,6 +2511,7 @@ function renderAll() {
   renderMonthlyViews(recordsBeforeMonthFocus);
   renderExplorerSection();
   renderNotesSection();
+  ensureChartInfoCards();
   markExpandableSurfaces();
   scheduleExplorerListHeightSync();
 }
@@ -2397,11 +2620,24 @@ function bindEvents() {
     dom.resetFilters.addEventListener("click", resetScopeAndFilters);
   }
 
+  document.addEventListener("click", (event) => {
+    const infoButton = event.target.closest(".chart-info-btn");
+    if (!(infoButton instanceof HTMLButtonElement)) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    toggleChartCaption(infoButton);
+  });
+
   dom.focusModalClose.addEventListener("click", closeFocusView);
   dom.focusModal.addEventListener("click", handleExpandableClick);
   document.addEventListener("click", handleExpandableClick);
   document.addEventListener("keydown", handleExpandableKeydown);
-  window.addEventListener("resize", scheduleExplorerListHeightSync);
+  window.addEventListener("resize", () => {
+    scheduleExplorerListHeightSync();
+    resizeAllCharts();
+  });
 }
 
 async function loadData() {

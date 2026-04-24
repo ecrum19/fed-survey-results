@@ -129,33 +129,44 @@
 
       <details class="panel collapsible" id="overviewPanel" open>
         <summary>Overview Charts</summary>
+        <p class="section-intro">
+          These charts summarize the full filtered dataset to show overall reliability, dominant failure modes, and baseline runtime behavior across experiment runs.
+        </p>
+        <div class="service-mode-legend" aria-label="Run service-mode legend">
+          <span class="service-mode-legend-title">Run Color Key</span>
+          <span class="service-chip with-service"><span class="swatch"></span>With SERVICE descriptions</span>
+          <span class="service-chip no-service"><span class="swatch"></span>No-SERVICE descriptions</span>
+        </div>
         <div class="chart-grid">
           <div class="chart-card">
             <h3>Success rate by run</h3>
-            <svg id="runSuccessChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+            <div id="runSuccessChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
           <div class="chart-card">
             <h3>Error category counts</h3>
-            <svg id="errorCategoryChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+            <div id="errorCategoryChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
           <div class="chart-card">
             <h3>Median runtime by run (seconds)</h3>
-            <svg id="runMedianChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+            <div id="runMedianChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
         </div>
       </details>
 
       <details class="panel collapsible" id="monthlyPanel" open>
         <summary>Monthly Views</summary>
+        <p class="section-intro">
+          This section highlights temporal changes in outcomes and workload so you can compare how experiment behavior evolved across testing periods.
+        </p>
         <div class="month-pill-row" id="monthPills"></div>
         <div class="chart-grid">
           <div class="chart-card">
             <h3>Success rate by month</h3>
-            <svg id="monthSuccessChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+            <div id="monthSuccessChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
           <div class="chart-card">
             <h3>Query volume by month</h3>
-            <svg id="monthVolumeChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+            <div id="monthVolumeChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
         </div>
         <div class="monthly-run-grid" id="monthlyRunGrid"></div>
@@ -163,6 +174,9 @@
 
       <section class="panel explorer-panel">
         <h2>Data Explorer</h2>
+        <p class="section-intro">
+          Use this area to inspect individual queries or selected experiment groups, with linked tables and charts for detailed, evidence-level comparisons.
+        </p>
         <div class="explorer-mode-row">
           <button type="button" class="mode-btn active" id="modeByQuery">By Query</button>
           <button type="button" class="mode-btn" id="modeByExperiment">By Experiment</button>
@@ -185,11 +199,11 @@
               <div class="chart-grid">
                 <div class="chart-card">
                   <h3>Duration across runs</h3>
-                  <svg id="queryDurationChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                  <div id="queryDurationChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                 </div>
                 <div class="chart-card">
                   <h3>Result counts across runs</h3>
-                  <svg id="queryResultsChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                  <div id="queryResultsChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                 </div>
               </div>
 
@@ -256,15 +270,15 @@
               <div class="chart-grid">
                 <div class="chart-card">
                   <h3>Success rate by selected experiment</h3>
-                  <svg id="selectedRunSuccessChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                  <div id="selectedRunSuccessChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                 </div>
                 <div class="chart-card">
                   <h3>Median runtime by selected experiment</h3>
-                  <svg id="selectedRunDurationChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                  <div id="selectedRunDurationChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                 </div>
                 <div class="chart-card">
                   <h3>Error categories in selection</h3>
-                  <svg id="selectedRunErrorChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                  <div id="selectedRunErrorChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                 </div>
               </div>
 
@@ -300,7 +314,7 @@
                   <div class="http-matrix-wrap" id="httpRequestMatrix"></div>
                 </div>
                 <div class="http-chart-wrap hidden" id="httpBarContainer">
-                  <svg id="httpRequestBarChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                  <div id="httpRequestBarChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                 </div>
               </div>
 
@@ -310,19 +324,19 @@
                 <div class="chart-grid">
                   <div class="chart-card">
                     <h3>Successful query results by experiment</h3>
-                    <svg id="successOnlyResultsChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                    <div id="successOnlyResultsChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                   </div>
                   <div class="chart-card">
                     <h3>Median runtime of successful queries</h3>
-                    <svg id="successOnlyDurationChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                    <div id="successOnlyDurationChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                   </div>
                   <div class="chart-card">
                     <h3>Failure-only error categories</h3>
-                    <svg id="failureErrorChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                    <div id="failureErrorChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                   </div>
                   <div class="chart-card">
                     <h3>Median HTTP requests by experiment</h3>
-                    <svg id="httpByRunChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                    <div id="httpByRunChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                   </div>
                 </div>
               </details>
@@ -349,6 +363,9 @@
 
       <section class="panel note-panel">
         <h2>Notes</h2>
+        <p class="section-intro">
+          These notes record interpretation constraints and data handling choices so readers can understand assumptions behind the displayed results.
+        </p>
         <ul>
           <li>Only values present in source files are displayed; unknown values remain blank.</li>
           <li>Main summary metrics exclude <code>old-results</code> by default.</li>
@@ -371,6 +388,7 @@
       </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script type="module" src="./assets/app.js"></script>
   </body>
 </html>
