@@ -1,13 +1,21 @@
-import pandas as pd
-import numpy as np
+import os
+# Keep plotting fully headless and use writable cache paths in sandboxed envs.
+os.environ.setdefault("MPLBACKEND", "Agg")
+os.environ.setdefault("MPLCONFIGDIR", "/tmp/mplconfig")
+os.environ.setdefault("XDG_CACHE_HOME", "/tmp")
+os.makedirs(os.environ["MPLCONFIGDIR"], exist_ok=True)
+
 import matplotlib.pyplot as plt
 import json
 from collections import defaultdict
 import matplotlib as mpl
 from matplotlib.lines import Line2D
+import re
+import csv
 
 # Define the file path
 file_path = 'stat.json'
+sib_queries_path = 'SIB_queries.csv'
 
 def replace_dots_with_commas(file_path):
     # Open the file in read mode
@@ -30,12 +38,76 @@ def replace_dots_with_commas(file_path):
 with open(file_path, 'r') as f:
     stat = json.load(f)
 
+
+def normalize_query_stem(raw_name):
+    """Normalize query names the same way dashboard processing does."""
+    if raw_name is None:
+        return None
+    stem = str(raw_name).strip()
+    if not stem:
+        return None
+    stem = re.sub(r'\.rq$', '', stem, flags=re.IGNORECASE)
+    stem = re.sub(r'_ns$', '', stem, flags=re.IGNORECASE)
+    stem = re.sub(r'_ws$', '', stem, flags=re.IGNORECASE)
+    return stem or None
+
+
+def extract_query_tail(query_reference):
+    """
+    Convert a URL-like query reference to its tail component.
+    Examples:
+      .../92_uniprot_bioregistry_iri_translation -> 92_uniprot_bioregistry_iri_translation
+      ...#examples016 -> examples016
+    """
+    if query_reference is None:
+        return None
+    text = str(query_reference).strip()
+    if not text or text == '-':
+        return None
+    tail = text.split('/')[-1]
+    if '#' in tail:
+        tail = tail.split('#')[-1]
+    return tail.strip() or None
+
+
+def build_query_alias_map(csv_path):
+    """
+    Build {query_stem -> alias} using SIB_queries.csv.
+    Keeps only explicit aliases (not '-' / blank).
+    """
+    try:
+        handle = open(csv_path, 'r', encoding='utf-8', newline='')
+    except FileNotFoundError:
+        return {}
+
+    alias_map = {}
+    with handle:
+        reader = csv.DictReader(handle)
+        for row in reader:
+            query_ref = row.get('Query', '')
+            alias = str(row.get('Query alias', '')).strip()
+            if not alias or alias == '-':
+                continue
+            tail = extract_query_tail(query_ref)
+            stem = normalize_query_stem(tail)
+            if stem and stem not in alias_map:
+                alias_map[stem] = alias
+    return alias_map
+
+
+query_alias_map = build_query_alias_map(sib_queries_path)
+
 # Extract relevant fields for each query
 query_data = []
 for query, vals in stat['data'].items():
     if 'number_recursive_property_path' in vals and 'number_triple_patterns' in vals and 'number_federation_member' in vals:
+        query_tail = extract_query_tail(query)
+        query_stem = normalize_query_stem(query_tail)
+        alias = query_alias_map.get(query_stem) if query_stem else None
         query_data.append({
             'query': query,
+            'query_stem': query_stem,
+            'display_name': alias if alias else (query_stem if query_stem else query),
             'number_triple_patterns': vals['number_triple_patterns'],
             'number_recursive_property_path': vals['number_recursive_property_path'],
             'number_federation_member': vals['number_federation_member'],
@@ -134,6 +206,7 @@ bar_positions = []
 heights = []
 bar_colors = []
 query_labels = []
+bar_queries = []
 current_x = 0
 bar_width = 0.12  # Even skinnier bars
 bar_gap = 0.3    # Gap between groups
@@ -143,6 +216,7 @@ bar_positions = []
 heights = []
 bar_colors = []
 query_labels = []
+bar_queries = []
 current_x = side_gap  # Start with a small gap at the beginning
 
 for i, fed_member in enumerate(sorted_fed_members):
@@ -151,7 +225,8 @@ for i, fed_member in enumerate(sorted_fed_members):
         bar_positions.append(current_x)
         heights.append(q['number_triple_patterns'])
         bar_colors.append(fed_color_map[q['number_federation_member']])
-        query_labels.append(abbreviate_query_name(q['query']))
+        query_labels.append(q['display_name'])
+        bar_queries.append(q)
         current_x += bar_width  # Bars within group touch, but are even skinnier
     if i < len(sorted_fed_members) - 1:
         current_x += bar_gap  # Only add gap between groups, not after last group
@@ -168,12 +243,8 @@ bars = ax.bar(bar_positions, heights, color=bar_colors, width=bar_width, edgecol
 
 # Add symbols above bars for number_optional and number_union
 for idx, (bar, label) in enumerate(zip(bars, query_labels)):
-    # Find the query dict for this bar
-    q = None
-    for item in query_data:
-        if abbreviate_query_name(item['query']) == label:
-            q = item
-            break
+    # Bar index aligns with insertion order from grouped query list.
+    q = bar_queries[idx] if idx < len(bar_queries) else None
     # Calculate a very small offset for the symbols so they are almost touching the tops of the bars
     offset = max(0.01 * bar.get_height(), 0.1)
     # Add 'O' for number_optional >= 1
@@ -185,13 +256,10 @@ for idx, (bar, label) in enumerate(zip(bars, query_labels)):
 
 
 # Apply hatching pattern only for federation member == 3
-for bar, label in zip(bars, query_labels):
-    # Find the fed_member for this bar
+for idx, (bar, label) in enumerate(zip(bars, query_labels)):
     fed_member = None
-    for q in query_data:
-        if abbreviate_query_name(q['query']) == label:
-            fed_member = q['number_federation_member']
-            break
+    if idx < len(bar_queries):
+        fed_member = bar_queries[idx]['number_federation_member']
     if fed_member == 3:
         bar.set_hatch(hatch_pattern)
     else:

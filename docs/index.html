@@ -150,6 +150,18 @@
             <h3>Median runtime by run (seconds)</h3>
             <div id="runMedianChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
+          <div class="chart-card">
+            <h3>Queries without explicit errors by run</h3>
+            <div id="runNoErrorCountChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
+          </div>
+          <div class="chart-card">
+            <h3>Queries with result sets &gt; 0 by run</h3>
+            <div id="runPositiveResultCountChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
+          </div>
+          <div class="chart-card query-overview-card">
+            <h3>Result counts by query for each experiment run</h3>
+            <div id="queryResultsByRunOverviewChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
+          </div>
         </div>
       </details>
 
@@ -204,6 +216,11 @@
                 <div class="chart-card">
                   <h3>Result counts across runs</h3>
                   <div id="queryResultsChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
+                </div>
+                <div class="chart-card query-variability-card">
+                  <h3>Result variability over time</h3>
+                  <p class="variability-meta" id="queryResultVariabilityMeta">Select a query to inspect temporal result stability.</p>
+                  <div id="queryResultVariabilityChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                 </div>
               </div>
 

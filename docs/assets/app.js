@@ -46,6 +46,9 @@ const dom = {
   runSuccessChart: document.getElementById("runSuccessChart"),
   errorCategoryChart: document.getElementById("errorCategoryChart"),
   runMedianChart: document.getElementById("runMedianChart"),
+  runNoErrorCountChart: document.getElementById("runNoErrorCountChart"),
+  runPositiveResultCountChart: document.getElementById("runPositiveResultCountChart"),
+  queryResultsByRunOverviewChart: document.getElementById("queryResultsByRunOverviewChart"),
 
   monthPills: document.getElementById("monthPills"),
   monthSuccessChart: document.getElementById("monthSuccessChart"),
@@ -63,6 +66,8 @@ const dom = {
   querySelectedMeta: document.getElementById("querySelectedMeta"),
   queryDurationChart: document.getElementById("queryDurationChart"),
   queryResultsChart: document.getElementById("queryResultsChart"),
+  queryResultVariabilityMeta: document.getElementById("queryResultVariabilityMeta"),
+  queryResultVariabilityChart: document.getElementById("queryResultVariabilityChart"),
   queryRunTableMeta: document.getElementById("queryRunTableMeta"),
   queryRunsTableBody: document.getElementById("queryRunsTableBody"),
   queryTextDetail: document.getElementById("queryTextDetail"),
@@ -114,10 +119,14 @@ const CHART_CAPTIONS = Object.freeze({
   runSuccessChart: "Each bar shows the percentage of query attempts in a run that produced results. This is the clearest high-level reliability signal when comparing run configurations.",
   errorCategoryChart: "Bars count failed query attempts by error category in the current scope. The distribution shows which failure modes dominate and where mitigation is most needed.",
   runMedianChart: "Bars show median runtime per run in seconds. This helps compare typical execution cost between runs without over-weighting extreme outliers.",
+  runNoErrorCountChart: "Bars show the number of query attempts per run that completed without an explicit error marker. This captures technical robustness independent of result size.",
+  runPositiveResultCountChart: "Bars show the number of query attempts per run with non-empty result sets (>0). This highlights runs that produced useful, non-empty outputs.",
+  queryResultsByRunOverviewChart: "Grouped bars show per-query result counts for each experiment run. This enables direct comparison of query output stability and divergence across runs.",
   monthSuccessChart: "Each bar is monthly success rate across records started in that month. It indicates whether robustness improved, declined, or stayed stable over testing periods.",
   monthVolumeChart: "Bars show how many query records were executed per month. This gives workload context so monthly performance trends are interpreted against sample volume.",
   queryDurationChart: "For the selected query, bars show runtime per experiment run in seconds. This reveals run-to-run execution variability for the same query logic.",
   queryResultsChart: "For the selected query, bars show result count per run. This is useful for spotting consistency issues, empty-result behavior, or large output shifts across runs.",
+  queryResultVariabilityChart: "This timeline highlights result-count shifts for the selected query across chronological runs. Red bars indicate explicit changes between adjacent time points, making instability easy to spot.",
   selectedRunSuccessChart: "Each bar is success rate for one selected experiment. This allows direct side-by-side comparison of reliability among the chosen runs.",
   selectedRunDurationChart: "Bars show median runtime (seconds) for each selected experiment. It summarizes typical cost per run for the current selection.",
   selectedRunErrorChart: "Bars count failed queries by error category within selected experiments. This isolates which technical issues explain observed failures in the current comparison.",
@@ -835,6 +844,39 @@ function sortRunsChronologically(runs, records = []) {
     }
     return String(a.run_label || a.run_id).localeCompare(String(b.run_label || b.run_id));
   });
+}
+
+function hasExplicitError(record) {
+  const raw = record?.error_raw;
+  const category = record?.error_category;
+  const rawText = raw === null || raw === undefined ? "" : String(raw).trim().toLowerCase();
+  const categoryText = category === null || category === undefined ? "" : String(category).trim().toLowerCase();
+
+  const categoryNoErrorValues = new Set([
+    "",
+    "n/a",
+    "none",
+    "no results",
+    "no comunica results",
+  ]);
+
+  const rawNoErrorValues = new Set([
+    "",
+    "null",
+    "-",
+    "n/a",
+    "none",
+    "no results",
+    "no comunica results",
+    "- (no results)",
+    "general: no results",
+  ]);
+
+  // Non-error markers are common in this dataset (for example "None" or "No Results").
+  const rawLooksNonError = rawNoErrorValues.has(rawText);
+  const categoryLooksNonError = categoryNoErrorValues.has(categoryText);
+
+  return !(rawLooksNonError && categoryLooksNonError);
 }
 
 function getRunControlLabel(runId) {
@@ -1611,6 +1653,7 @@ function renderOverviewKpis(records) {
 function renderOverviewCharts(records) {
   const runMap = new Map();
   const runsById = new Map(getActiveRuns().map((run) => [run.run_id, run]));
+  const queryRunResultMap = new Map();
   for (const record of records) {
     if (!runMap.has(record.run_id)) {
       runMap.set(record.run_id, {
@@ -1620,6 +1663,8 @@ function renderOverviewCharts(records) {
         serviceMode: normalizeServiceModeValue(record.service_description_mode),
         total: 0,
         success: 0,
+        noErrorCount: 0,
+        positiveResultCount: 0,
         durations: [],
         records: [],
       });
@@ -1629,10 +1674,30 @@ function renderOverviewCharts(records) {
     if (record.produced_results) {
       run.success += 1;
     }
+    if (!hasExplicitError(record)) {
+      run.noErrorCount += 1;
+    }
+    if ((record.results_count || 0) > 0) {
+      run.positiveResultCount += 1;
+    }
     if (record.duration_seconds !== null && record.duration_seconds !== undefined) {
       run.durations.push(record.duration_seconds);
     }
     run.records.push(record);
+
+    const stem = normalizeQueryStem(record.query_name);
+    if (stem) {
+      const key = `${stem}::${record.run_id}`;
+      const existing = queryRunResultMap.get(key);
+      const resultValue = record.results_count === null || record.results_count === undefined
+        ? null
+        : Number(record.results_count);
+      if (existing === undefined || existing === null) {
+        queryRunResultMap.set(key, resultValue);
+      } else if (resultValue !== null && !Number.isNaN(resultValue)) {
+        queryRunResultMap.set(key, Math.max(existing, resultValue));
+      }
+    }
   }
 
   const sortedRuns = [...runMap.values()].sort((a, b) => {
@@ -1679,6 +1744,57 @@ function renderOverviewCharts(records) {
     }));
 
   renderBarChart(dom.runMedianChart, medianBars, (value) => formatNumber(value, 1), { xLabel: "Experiment Run", yLabel: "Median Runtime (seconds)" });
+
+  const noErrorBars = sortedRuns
+    .map((run) => ({
+      label: run.label,
+      run_id: run.runId,
+      service_mode: getRunServiceMode(runsById.get(run.runId) || { service_description_mode: run.serviceMode }, run.records),
+      value: run.noErrorCount,
+      color: getRunModeColor(runsById.get(run.runId) || { service_description_mode: run.serviceMode }, run.records),
+    }));
+
+  const positiveResultBars = sortedRuns
+    .map((run) => ({
+      label: run.label,
+      run_id: run.runId,
+      service_mode: getRunServiceMode(runsById.get(run.runId) || { service_description_mode: run.serviceMode }, run.records),
+      value: run.positiveResultCount,
+      color: getRunModeColor(runsById.get(run.runId) || { service_description_mode: run.serviceMode }, run.records),
+    }));
+
+  renderBarChart(dom.runNoErrorCountChart, noErrorBars, (value) => formatNumber(value, 0), { xLabel: "Experiment Run", yLabel: "Queries Without Explicit Errors (count)" });
+  renderBarChart(dom.runPositiveResultCountChart, positiveResultBars, (value) => formatNumber(value, 0), { xLabel: "Experiment Run", yLabel: "Queries With Result Set > 0 (count)" });
+
+  const queryStems = [...new Set(
+    records
+      .map((record) => normalizeQueryStem(record.query_name))
+      .filter(Boolean),
+  )].sort((a, b) => getQueryDisplayName(a).localeCompare(getQueryDisplayName(b)));
+
+  const overviewGroups = queryStems.map((stem) => {
+    const values = new Map();
+    sortedRuns.forEach((run) => {
+      const key = `${stem}::${run.runId}`;
+      const value = queryRunResultMap.has(key) ? queryRunResultMap.get(key) : null;
+      values.set(run.runId, value);
+    });
+    return {
+      label: getQueryDisplayName(stem),
+      values,
+    };
+  });
+
+  const runSeries = sortedRuns.map((run) => (runsById.get(run.runId) || {
+    run_id: run.runId,
+    run_label: run.runLabel,
+    service_description_mode: run.serviceMode,
+  }));
+
+  renderGroupedBarChart(dom.queryResultsByRunOverviewChart, overviewGroups, runSeries, {
+    xLabel: "Query",
+    yLabel: "Results (count)",
+  });
 }
 
 function getMonthlyStats(records) {
@@ -1908,10 +2024,12 @@ function renderQueryDetail(records) {
     dom.queryVariantSelect.innerHTML = "<option value=''>No variants</option>";
     dom.queryVariantSelect.disabled = true;
     dom.querySibMeta.textContent = "No query selected.";
+    dom.queryResultVariabilityMeta.textContent = "Select a query to inspect temporal result stability.";
     dom.querySibTableHead.innerHTML = "";
     dom.querySibTableBody.innerHTML = "";
     clearChartElement(dom.queryDurationChart);
     clearChartElement(dom.queryResultsChart);
+    clearChartElement(dom.queryResultVariabilityChart);
     return;
   }
 
@@ -1930,6 +2048,18 @@ function renderQueryDetail(records) {
   const durations = queryRecords.map((record) => record.duration_seconds).filter((v) => v !== null && v !== undefined);
   const resultsMax = Math.max(0, ...queryRecords.map((record) => record.results_count || 0));
   const displayName = getQueryDisplayName(state.selectedQueryStem);
+  const knownResultCounts = queryRecords
+    .map((record) => (record.results_count === null || record.results_count === undefined ? null : Number(record.results_count)))
+    .filter((value) => value !== null && !Number.isNaN(value));
+  const uniqueResultCounts = [...new Set(knownResultCounts)];
+  const hasResultVariability = uniqueResultCounts.length > 1;
+
+  const resultFrequency = new Map();
+  knownResultCounts.forEach((value) => {
+    resultFrequency.set(value, (resultFrequency.get(value) || 0) + 1);
+  });
+  const mostFrequentResult = [...resultFrequency.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0] - b[0])[0]?.[0] ?? null;
 
   dom.querySelectedTitle.textContent = `Query: ${displayName}`;
 
@@ -1952,6 +2082,7 @@ function renderQueryDetail(records) {
     .forEach((variantType) => {
       chips.push(`<span class="query-chip ${queryChipClass(variantType)}">${variantType}</span>`);
     });
+  chips.push(`<span class="stat-chip ${hasResultVariability ? "variability-alert" : "variability-stable"}">Result variability: ${hasResultVariability ? "Detected" : "Not detected"}</span>`);
 
   dom.querySelectedMeta.innerHTML = chips.join("");
 
@@ -1970,8 +2101,46 @@ function renderQueryDetail(records) {
     color: getRunModeColor(runsById.get(record.run_id) || { service_description_mode: record.service_description_mode }, [record]),
   }));
 
+  let previousKnownResult = null;
+  let changedTimePointCount = 0;
+  const variabilityBars = queryRecords.map((record) => {
+    const numericResult = record.results_count === null || record.results_count === undefined
+      ? null
+      : Number(record.results_count);
+    const isKnown = numericResult !== null && !Number.isNaN(numericResult);
+    const changedFromPrevious = isKnown && previousKnownResult !== null && numericResult !== previousKnownResult;
+    if (changedFromPrevious) {
+      changedTimePointCount += 1;
+    }
+    if (isKnown) {
+      previousKnownResult = numericResult;
+    }
+
+    let color = CHART_COLORS.secondary;
+    if (!isKnown) {
+      color = CHART_COLORS.neutral;
+    } else if (changedFromPrevious) {
+      color = CHART_COLORS.danger;
+    } else if (hasResultVariability && mostFrequentResult !== null && numericResult !== mostFrequentResult) {
+      color = CHART_COLORS.warning;
+    }
+
+    return {
+      label: getRunDisplayLabel(record.run_id, record.run_label),
+      run_id: record.run_id,
+      service_mode: getRunServiceMode(runsById.get(record.run_id) || { service_description_mode: record.service_description_mode }, [record]),
+      value: numericResult,
+      color,
+    };
+  });
+
   renderBarChart(dom.queryDurationChart, durationBars, (value) => formatNumber(value, 1), { xLabel: "Experiment Run", yLabel: "Runtime (seconds)" });
   renderBarChart(dom.queryResultsChart, resultsBars, (value) => formatNumber(value, 0), { xLabel: "Experiment Run", yLabel: "Results (count)" });
+  renderBarChart(dom.queryResultVariabilityChart, variabilityBars, (value) => formatNumber(value, 0), { xLabel: "Chronological Run", yLabel: "Results (count)" });
+
+  dom.queryResultVariabilityMeta.innerHTML = hasResultVariability
+    ? `<span class="variability-highlight critical">Critical finding: result counts vary across time for this query.</span> Unique result counts: ${uniqueResultCounts.map((value) => formatNumber(value, 0)).join(", ")} · Change points: ${changedTimePointCount}`
+    : `<span class="variability-highlight stable">Stable finding: result counts are consistent across observed runs.</span> Unique result count: ${uniqueResultCounts.length ? formatNumber(uniqueResultCounts[0], 0) : "null"}`;
 
   dom.queryRunTableMeta.textContent = `Showing ${queryRecords.length} run records for this query.`;
   dom.queryRunsTableBody.innerHTML = queryRecords.map((record) => {

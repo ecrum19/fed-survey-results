@@ -690,6 +690,55 @@ code {
   border-color: #f5c8c1;
 }
 
+.stat-chip.variability-alert {
+  background: #fdf0e8;
+  border-color: #f7cfb7;
+  color: var(--danger);
+}
+
+.stat-chip.variability-stable {
+  background: #def4ec;
+  border-color: #bfe7d8;
+  color: var(--success);
+}
+
+.query-variability-card {
+  grid-column: 1 / -1;
+}
+
+.query-overview-card {
+  grid-column: 1 / -1;
+}
+
+.variability-meta {
+  margin: 0.32rem 0 0.45rem;
+  color: var(--muted);
+  font-size: 0.83rem;
+  line-height: 1.35;
+}
+
+.variability-highlight {
+  display: inline-block;
+  margin-right: 0.26rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  padding: 0.08rem 0.44rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.variability-highlight.critical {
+  color: var(--danger);
+  background: #fdf0e8;
+  border-color: #f7cfb7;
+}
+
+.variability-highlight.stable {
+  color: var(--success);
+  background: #def4ec;
+  border-color: #bfe7d8;
+}
+
 .table-meta {
   color: var(--muted);
   font-size: 0.88rem;

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-21T12:45:41.775Z",
+  "generated_at": "2026-05-04T12:02:34.294Z",
   "query_file_count": 134,
   "query_summary_count": 67,
   "stat_json_entry_count": 58,
@@ -27,90 +27,13 @@
     "Is this query a toy example?",
     "Are there any tricks to make the query executable?",
     "Is this query similar to another query?",
+    "Known Problems",
     "Query alias"
   ],
-  "sib_query_row_count": 74,
+  "sib_query_row_count": 67,
   "sib_matched_row_count": 67,
-  "sib_unmatched_row_count": 7,
-  "sib_unmatched_rows": [
-    {
-      "Query": "-",
-      "Description": "-",
-      "Target endpoint": "-",
-      "Federated endpoints": "-",
-      "Real world relevance or background of the query": "-",
-      "Is this query a toy example?": "-",
-      "Are there any tricks to make the query executable?": "-",
-      "Is this query similar to another query?": "-",
-      "Query alias": "-"
-    },
-    {
-      "Query": "-",
-      "Description": "-",
-      "Target endpoint": "-",
-      "Federated endpoints": "-",
-      "Real world relevance or background of the query": "-",
-      "Is this query a toy example?": "-",
-      "Are there any tricks to make the query executable?": "-",
-      "Is this query similar to another query?": "-",
-      "Query alias": "-"
-    },
-    {
-      "Query": "-",
-      "Description": "-",
-      "Target endpoint": "-",
-      "Federated endpoints": "-",
-      "Real world relevance or background of the query": "-",
-      "Is this query a toy example?": "-",
-      "Are there any tricks to make the query executable?": "-",
-      "Is this query similar to another query?": "-",
-      "Query alias": "-"
-    },
-    {
-      "Query": "-",
-      "Description": "-",
-      "Target endpoint": "-",
-      "Federated endpoints": "-",
-      "Real world relevance or background of the query": "-",
-      "Is this query a toy example?": "-",
-      "Are there any tricks to make the query executable?": "-",
-      "Is this query similar to another query?": "-",
-      "Query alias": "-"
-    },
-    {
-      "Query": "-",
-      "Description": "-",
-      "Target endpoint": "-",
-      "Federated endpoints": "-",
-      "Real world relevance or background of the query": "-",
-      "Is this query a toy example?": "-",
-      "Are there any tricks to make the query executable?": "-",
-      "Is this query similar to another query?": "-",
-      "Query alias": "-"
-    },
-    {
-      "Query": "-",
-      "Description": "-",
-      "Target endpoint": "-",
-      "Federated endpoints": "-",
-      "Real world relevance or background of the query": "-",
-      "Is this query a toy example?": "-",
-      "Are there any tricks to make the query executable?": "-",
-      "Is this query similar to another query?": "-",
-      "Query alias": "-"
-    },
-    {
-      "Query": "-",
-      "Description": "-",
-      "Target endpoint": "-",
-      "Federated endpoints": "-",
-      "Real world relevance or background of the query": "-",
-      "Is this query a toy example?": "-",
-      "Are there any tricks to make the query executable?": "-",
-      "Is this query similar to another query?": "-",
-      "Query alias": "-"
-    }
-  ],
+  "sib_unmatched_row_count": 0,
+  "sib_unmatched_rows": [],
   "variants": [
     {
       "query_stem": "001",
@@ -7836,6 +7759,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -7920,6 +7844,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -8014,6 +7939,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -8108,6 +8034,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -8202,6 +8129,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -8297,6 +8225,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -8391,6 +8320,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -8485,6 +8415,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -8579,6 +8510,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -8673,6 +8605,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -8757,6 +8690,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -8849,6 +8783,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "yes",
           "Query alias": "-"
         }
       ],
@@ -8941,6 +8876,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "yes",
           "Query alias": "109-transporter-liver"
         }
       ],
@@ -9035,6 +8971,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -9129,6 +9066,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "116-rabbit-mouse-orthologs"
         }
       ],
@@ -9214,6 +9152,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "117-glioblastoma-rat"
         }
       ],
@@ -9307,6 +9246,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "yes",
           "Query alias": "118-rat-brain-cancer"
         }
       ],
@@ -9401,6 +9341,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -9495,6 +9436,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -9571,6 +9513,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -9665,6 +9608,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "15-rat-TP53"
         }
       ],
@@ -9758,6 +9702,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "yes",
           "Query alias": "-"
         }
       ],
@@ -9842,6 +9787,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -9926,6 +9872,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -9999,6 +9946,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "https://sparql.uniprot.org/.well-known/sparql-examples/60",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -10084,6 +10032,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -10178,6 +10127,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "19-metabolome-draft"
         }
       ],
@@ -10254,6 +10204,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -10348,6 +10299,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "20-japanese-chem-search"
         }
       ],
@@ -10443,6 +10395,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "https://sparql.swisslipids.org/.well-known/sparql-examples/27",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -10538,6 +10491,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "https://sparql.swisslipids.org/.well-known/sparql-examples/26",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -10632,6 +10586,7 @@
           "Is this query a toy example?": "yes, as term is chosen for fun",
           "Are there any tricks to make the query executable?": "tends to break due to UTF-8 encoding issues on the wire between load balancers and backends",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -10726,6 +10681,7 @@
           "Is this query a toy example?": "yes",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -10821,6 +10777,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -10915,6 +10872,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -10991,6 +10949,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -11085,6 +11044,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -11179,6 +11139,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -11273,6 +11234,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "https://sparql.uniprot.org/.well-known/sparql-examples/42",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -11368,6 +11330,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -11444,6 +11407,7 @@
           "Is this query a toy example?": "yes, as the real interest is not duck images ;)",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -11538,6 +11502,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -11623,6 +11588,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "yes",
           "Query alias": "-"
         }
       ],
@@ -11717,6 +11683,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -11810,6 +11777,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "yes",
           "Query alias": "-"
         }
       ],
@@ -11904,6 +11872,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "oder of query elements",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -11989,6 +11958,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "yes, 51\" https://sparql.uniprot.org/.well-known/sparql-examples/uniprot_transporter_in_liver,\"Find human transporter proteins in reviewed UniProtKB, that are expressed in the liver (Uses Bgee and UBERON).",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -12092,6 +12062,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "yes, 40\" https://sparql.uniprot.org/.well-known/sparql-examples/36,\"Find the orthologous proteins for UniProtKB entry P05067 using the <a href=\"http://www.orthod.org\">OrthoDB database</a>",
+          "Known Problems": "yes",
           "Query alias": "-"
         }
       ],
@@ -12176,6 +12147,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "xsd:double, use avoids bug in virtuoso",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -12271,6 +12243,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "yes values clause",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -12356,6 +12329,7 @@
           "Is this query a toy example?": "no",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -12450,6 +12424,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "67-metabolome-draft"
         }
       ],
@@ -12545,6 +12520,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -12629,6 +12605,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "70-dopamine-sim-enzymes"
         }
       ],
@@ -12713,6 +12690,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "71-dopamine-disease-variants"
         }
       ],
@@ -12789,6 +12767,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "90-metabolic-disease-mesh"
         }
       ],
@@ -12883,6 +12862,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "92-bioregistry-xref"
         }
       ],
@@ -12959,6 +12939,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "99-identifiers-xref"
         }
       ],
@@ -13042,6 +13023,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -13125,6 +13107,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -13208,6 +13191,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -13291,6 +13275,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -13374,6 +13359,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -13457,6 +13443,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -13540,6 +13527,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -13623,6 +13611,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
@@ -13706,6 +13695,7 @@
           "Is this query a toy example?": "-",
           "Are there any tricks to make the query executable?": "-",
           "Is this query similar to another query?": "-",
+          "Known Problems": "no",
           "Query alias": "-"
         }
       ],
