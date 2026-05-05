@@ -151,15 +151,11 @@
             <div id="runMedianChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
           <div class="chart-card">
-            <h3>Queries without explicit errors by run</h3>
-            <div id="runNoErrorCountChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
-          </div>
-          <div class="chart-card">
             <h3>Queries with result sets &gt; 0 by run</h3>
             <div id="runPositiveResultCountChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
           <div class="chart-card query-overview-card">
-            <h3>Result counts by query for each experiment run</h3>
+            <h3>Query outcome heatmap by experiment run</h3>
             <div id="queryResultsByRunOverviewChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
         </div>
@@ -217,6 +213,10 @@
                   <h3>Result counts across runs</h3>
                   <div id="queryResultsChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                 </div>
+                <div class="chart-card">
+                  <h3>HTTP requests vs outcome</h3>
+                  <div id="queryHttpOutcomeChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
+                </div>
                 <div class="chart-card query-variability-card">
                   <h3>Result variability over time</h3>
                   <p class="variability-meta" id="queryResultVariabilityMeta">Select a query to inspect temporal result stability.</p>
@@ -225,22 +225,25 @@
               </div>
 
               <div class="table-meta" id="queryRunTableMeta"></div>
-              <div class="table-wrap">
-                <table id="queryRunsTable">
-                  <thead>
-                    <tr>
-                      <th>Run</th>
-                      <th>Start</th>
-                      <th>Duration (s)</th>
-                      <th>Outcome</th>
-                      <th>Results</th>
-                      <th>HTTP Requests</th>
-                      <th>Error</th>
-                    </tr>
-                  </thead>
-                  <tbody id="queryRunsTableBody"></tbody>
-                </table>
-              </div>
+              <details class="table-collapsible">
+                <summary>Show Query Run Records Table</summary>
+                <div class="table-wrap">
+                  <table id="queryRunsTable">
+                    <thead>
+                      <tr>
+                        <th>Run</th>
+                        <th>Start</th>
+                        <th>Duration (s)</th>
+                        <th>Outcome</th>
+                        <th>Results</th>
+                        <th>HTTP Requests</th>
+                        <th>Error</th>
+                      </tr>
+                    </thead>
+                    <tbody id="queryRunsTableBody"></tbody>
+                  </table>
+                </div>
+              </details>
 
               <div class="query-detail">
                 <div class="query-text-head">
@@ -256,12 +259,15 @@
               <div class="query-detail">
                 <h3>SIB Query Context</h3>
                 <div class="table-meta" id="querySibMeta">No SIB metadata loaded.</div>
-                <div class="table-wrap" id="querySibTableWrap">
-                  <table id="querySibTable">
-                    <thead id="querySibTableHead"></thead>
-                    <tbody id="querySibTableBody"></tbody>
-                  </table>
-                </div>
+                <details class="table-collapsible">
+                  <summary>Show SIB Query Context Table</summary>
+                  <div class="table-wrap" id="querySibTableWrap">
+                    <table id="querySibTable">
+                      <thead id="querySibTableHead"></thead>
+                      <tbody id="querySibTableBody"></tbody>
+                    </table>
+                  </div>
+                </details>
               </div>
             </div>
           </div>
@@ -359,20 +365,23 @@
               </details>
 
               <div class="table-meta" id="experimentQueryTableMeta"></div>
-              <div class="table-wrap">
-                <table id="experimentQueryTable">
-                  <thead>
-                    <tr>
-                      <th>Query</th>
-                      <th>Attempts</th>
-                      <th>Success rate</th>
-                      <th>Median duration (s)</th>
-                      <th>Max results</th>
-                    </tr>
-                  </thead>
-                  <tbody id="experimentQueryTableBody"></tbody>
-                </table>
-              </div>
+              <details class="table-collapsible">
+                <summary>Show Query Summary Table (Selected Experiments)</summary>
+                <div class="table-wrap">
+                  <table id="experimentQueryTable">
+                    <thead>
+                      <tr>
+                        <th>Query</th>
+                        <th>Attempts</th>
+                        <th>Success rate</th>
+                        <th>Median duration (s)</th>
+                        <th>Max results</th>
+                      </tr>
+                    </thead>
+                    <tbody id="experimentQueryTableBody"></tbody>
+                  </table>
+                </div>
+              </details>
             </div>
           </div>
         </div>
@@ -387,6 +396,11 @@
           <li>Only values present in source files are displayed; unknown values remain blank.</li>
           <li>Main summary metrics exclude <code>old-results</code> by default.</li>
           <li><code>_ns</code> and <code>no-service</code> query identifiers are treated as "no service descriptions".</li>
+          <li>
+            Experiment-family display mapping: <code>EX1</code> -> <code>NOINDEX-ASK</code>,
+            <code>EX2</code> -> <code>NOINDEX-COUNT</code>, <code>EX3</code> -> <code>VOID-TRIPLE</code>,
+            <code>EX4</code> -> <code>VOID-BLOCK</code>, and matching <code>-NRL</code> variants.
+          </li>
           <li>Overview and Monthly sections are collapsible.</li>
         </ul>
       </section>

@@ -46,7 +46,6 @@ const dom = {
   runSuccessChart: document.getElementById("runSuccessChart"),
   errorCategoryChart: document.getElementById("errorCategoryChart"),
   runMedianChart: document.getElementById("runMedianChart"),
-  runNoErrorCountChart: document.getElementById("runNoErrorCountChart"),
   runPositiveResultCountChart: document.getElementById("runPositiveResultCountChart"),
   queryResultsByRunOverviewChart: document.getElementById("queryResultsByRunOverviewChart"),
 
@@ -66,6 +65,7 @@ const dom = {
   querySelectedMeta: document.getElementById("querySelectedMeta"),
   queryDurationChart: document.getElementById("queryDurationChart"),
   queryResultsChart: document.getElementById("queryResultsChart"),
+  queryHttpOutcomeChart: document.getElementById("queryHttpOutcomeChart"),
   queryResultVariabilityMeta: document.getElementById("queryResultVariabilityMeta"),
   queryResultVariabilityChart: document.getElementById("queryResultVariabilityChart"),
   queryRunTableMeta: document.getElementById("queryRunTableMeta"),
@@ -119,13 +119,13 @@ const CHART_CAPTIONS = Object.freeze({
   runSuccessChart: "Each bar shows the percentage of query attempts in a run that produced results. This is the clearest high-level reliability signal when comparing run configurations.",
   errorCategoryChart: "Bars count failed query attempts by error category in the current scope. The distribution shows which failure modes dominate and where mitigation is most needed.",
   runMedianChart: "Bars show median runtime per run in seconds. This helps compare typical execution cost between runs without over-weighting extreme outliers.",
-  runNoErrorCountChart: "Bars show the number of query attempts per run that completed without an explicit error marker. This captures technical robustness independent of result size.",
   runPositiveResultCountChart: "Bars show the number of query attempts per run with non-empty result sets (>0). This highlights runs that produced useful, non-empty outputs.",
-  queryResultsByRunOverviewChart: "Grouped bars show per-query result counts for each experiment run. This enables direct comparison of query output stability and divergence across runs.",
-  monthSuccessChart: "Each bar is monthly success rate across records started in that month. It indicates whether robustness improved, declined, or stayed stable over testing periods.",
-  monthVolumeChart: "Bars show how many query records were executed per month. This gives workload context so monthly performance trends are interpreted against sample volume.",
+  queryResultsByRunOverviewChart: "Heatmap cells show per-query outcomes by run with distinct states for >0 results, 0 results, explicit errors, and missing data. A ≠ marker flags queries whose raw result counts differ between runs, highlighting cross-run result instability.",
+  monthSuccessChart: "Each bar is success rate within one user-defined testing period. It indicates whether robustness improved, declined, or stayed stable across study phases.",
+  monthVolumeChart: "Bars show how many query records were executed in each user-defined testing period. This gives workload context for interpreting period-level outcome trends.",
   queryDurationChart: "For the selected query, bars show runtime per experiment run in seconds. This reveals run-to-run execution variability for the same query logic.",
   queryResultsChart: "For the selected query, bars show result count per run. This is useful for spotting consistency issues, empty-result behavior, or large output shifts across runs.",
+  queryHttpOutcomeChart: "Each point is one query attempt for the selected query. The x-axis is HTTP requests and the y-axis is outcome (success or failure), allowing direct inspection of request-load vs success correlation.",
   queryResultVariabilityChart: "This timeline highlights result-count shifts for the selected query across chronological runs. Red bars indicate explicit changes between adjacent time points, making instability easy to spot.",
   selectedRunSuccessChart: "Each bar is success rate for one selected experiment. This allows direct side-by-side comparison of reliability among the chosen runs.",
   selectedRunDurationChart: "Bars show median runtime (seconds) for each selected experiment. It summarizes typical cost per run for the current selection.",
@@ -143,6 +143,73 @@ const LEGACY_QUERY_STEM_MAP = Object.freeze({
   Q00000008: "028-biosodafrontend",
   Q00000010: "116_biosodafrontend_rabit_mouse_orthologs",
   Q00000011: "15-rat-TP53-biosodafrontend",
+});
+const EXPERIMENT_LABEL_REPLACEMENTS = Object.freeze([
+  ["EX1-NRL", "NOINDEX-ASK-NRL"],
+  ["EX2-NRL", "NOINDEX-COUNT-NRL"],
+  ["EX3-NRL", "VOID-TRIPLE-NRL"],
+  ["EX4-NRL", "VOID-BLOCK-NRL"],
+  ["EX1", "NOINDEX-ASK"],
+  ["EX2", "NOINDEX-COUNT"],
+  ["EX3", "VOID-TRIPLE"],
+  ["EX4", "VOID-BLOCK"],
+]);
+const CONTROL_RUN_DISPLAY_CONFIG = Object.freeze({
+  // Clear display names for WITH-SERVICE control runs used across charts, tables, and filters.
+  "experiments/old-results/default-service-test-1": {
+    displayLabel: "SERVICE-CONTROL-COMUNICA-2025-03-31",
+    tagLabel: "With-SERVICE control run",
+  },
+  "experiments/service-control-31-03-25-comunica": {
+    displayLabel: "SERVICE-CONTROL-COMUNICA-2025-03-25",
+    tagLabel: "With-SERVICE control run",
+  },
+  "experiments/service-control-31-03-25-endpoint": {
+    displayLabel: "SERVICE-CONTROL-MANUAL-ENDPOINT-2025-03-25",
+    tagLabel: "With-SERVICE control run",
+  },
+  "experiments/service-control-20-4-26": {
+    displayLabel: "SERVICE-CONTROL-COMUNICA-2026-04-26",
+    tagLabel: "With-SERVICE control run",
+  },
+});
+const TEMPORAL_GROUP_META = Object.freeze({
+  "spring-2025": { key: "spring-2025", label: "Spring 2025", order: 0 },
+  "fall-2025": { key: "fall-2025", label: "Fall 2025", order: 1 },
+  "winter-2026": { key: "winter-2026", label: "Winter 2026", order: 2 },
+  "spring-2026": { key: "spring-2026", label: "Spring 2026", order: 3 },
+});
+const TEMPORAL_GROUP_ORDER = Object.freeze([
+  "spring-2025",
+  "fall-2025",
+  "winter-2026",
+  "spring-2026",
+]);
+const RUN_TEMPORAL_GROUP_OVERRIDES = Object.freeze({
+  // Spring 2025 controls
+  "experiments/old-results/default-service-test-1": "spring-2025",
+  "experiments/service-control-31-03-25-comunica": "spring-2025",
+  "experiments/service-control-31-03-25-endpoint": "spring-2025",
+  // Fall 2025 campaign
+  "experiments/EX1-17-9-25": "fall-2025",
+  "experiments/EX2-13-10-25": "fall-2025",
+  "experiments/EX3-16-10-25": "fall-2025",
+  "experiments/EX4-24-10-25": "fall-2025",
+  // Winter 2026 campaign
+  "experiments/EX1-NRL-14-11-25": "winter-2026",
+  "experiments/EX1-17-11-25": "winter-2026",
+  "experiments/EX2-19-11-25": "winter-2026",
+  "experiments/EX3-24-11-25": "winter-2026",
+  "experiments/EX4-26-11-25": "winter-2026",
+  "experiments/EX2-NRL-01-12-25": "winter-2026",
+  "experiments/EX1-31-1-26": "winter-2026",
+  // Spring 2026 campaign
+  "experiments/EX1-17-4-26": "spring-2026",
+  "experiments/EX2-17-4-26": "spring-2026",
+  "experiments/EX3-17-4-26": "spring-2026",
+  "experiments/EX4-17-4-26": "spring-2026",
+  "experiments/EX1-NRL-17-4-26": "spring-2026",
+  "experiments/service-control-20-4-26": "spring-2026",
 });
 
 function formatNumber(value, digits = 2) {
@@ -397,7 +464,7 @@ function normalizeNotesCell(value) {
     const withFileName = current.replace(new RegExp(`\\b${legacy}\\.rq\\b`, "g"), `${mapped}.rq`);
     return withFileName.replace(new RegExp(`\\b(?:biosodafrontend#)?${legacy}\\b`, "g"), mapped);
   }, text);
-  const normalized = withMappedLegacyIds.trim();
+  const normalized = mapExperimentFamilyLabel(withMappedLegacyIds).trim();
   return normalized || "-";
 }
 
@@ -500,6 +567,15 @@ function mapLegacyStem(stem) {
     return stem;
   }
   return LEGACY_QUERY_STEM_MAP[stem] || stem;
+}
+
+function mapExperimentFamilyLabel(text) {
+  if (text === null || text === undefined) {
+    return "";
+  }
+  return EXPERIMENT_LABEL_REPLACEMENTS.reduce((mapped, [source, target]) => (
+    mapped.replace(new RegExp(`\\b${source}\\b`, "g"), target)
+  ), String(text));
 }
 
 function normalizeNotesSectionTitle(line) {
@@ -609,7 +685,7 @@ function renderNotesAsHtml(rawText) {
     const bulletMatch = trimmed.match(/^[-*]\s+(.*)$/);
     if (bulletMatch) {
       flushTable();
-      listItems.push(`<li>${renderTextWithLinks(bulletMatch[1])}</li>`);
+      listItems.push(`<li>${renderTextWithLinks(mapExperimentFamilyLabel(bulletMatch[1]))}</li>`);
       continue;
     }
 
@@ -619,19 +695,19 @@ function renderNotesAsHtml(rawText) {
     if (trimmed.startsWith("==")) {
       const title = normalizeNotesSectionTitle(trimmed);
       currentContextLabel = updateNotesContextLabel(currentContextLabel, title);
-      html.push(`<h3 class="notes-title">${renderTextWithLinks(title)}</h3>`);
+      html.push(`<h3 class="notes-title">${renderTextWithLinks(mapExperimentFamilyLabel(title))}</h3>`);
       continue;
     }
 
     if (trimmed.endsWith(":")) {
       const subtitle = normalizeNotesSubtitle(trimmed);
       currentContextLabel = updateNotesContextLabel(currentContextLabel, subtitle);
-      html.push(`<h4 class="notes-subtitle">${renderTextWithLinks(subtitle)}</h4>`);
+      html.push(`<h4 class="notes-subtitle">${renderTextWithLinks(mapExperimentFamilyLabel(subtitle))}</h4>`);
       continue;
     }
 
     currentContextLabel = updateNotesContextLabel(currentContextLabel, normalizeNotesParagraphContext(trimmed));
-    html.push(`<p class="notes-paragraph">${renderTextWithLinks(trimmed)}</p>`);
+    html.push(`<p class="notes-paragraph">${renderTextWithLinks(mapExperimentFamilyLabel(trimmed))}</p>`);
   }
 
   flushList();
@@ -883,18 +959,16 @@ function getRunControlLabel(runId) {
   if (typeof runId !== "string") {
     return null;
   }
-  if (runId === "experiments/service-control-31-03-25-endpoint") {
-    return "Positive control (manual) · Native endpoints";
-  }
-  if (runId === "experiments/service-control-31-03-25-comunica") {
-    return "Positive control (manual) · Comunica";
-  }
-  return null;
+  return CONTROL_RUN_DISPLAY_CONFIG[runId]?.tagLabel || null;
 }
 
 function getRunDisplayLabel(runId, runLabel) {
-  const controlLabel = getRunControlLabel(runId);
-  return controlLabel ? `${runLabel} · ${controlLabel}` : runLabel;
+  const controlDisplay = CONTROL_RUN_DISPLAY_CONFIG[runId]?.displayLabel;
+  if (controlDisplay) {
+    return controlDisplay;
+  }
+  const mappedRunLabel = mapExperimentFamilyLabel(runLabel || "");
+  return mappedRunLabel;
 }
 
 function renderRunControlTag(runId) {
@@ -1070,12 +1144,7 @@ function syncExplorerListViewportHeights() {
     return;
   }
 
-  const viewportHeight = Math.floor(window.visualViewport?.height || window.innerHeight || 0);
-  if (!viewportHeight) {
-    return;
-  }
-
-  const bottomGutter = 14;
+  const bottomGutter = 8;
   const minListHeight = 180;
   const lists = [dom.queryList, dom.experimentList];
 
@@ -1089,9 +1158,25 @@ function syncExplorerListViewportHeights() {
       return;
     }
 
-    const top = list.getBoundingClientRect().top;
-    const available = Math.floor(viewportHeight - top - bottomGutter);
-    const height = Math.max(minListHeight, available);
+    const grid = list.closest(".explorer-grid");
+    const detailPane = grid?.querySelector(".explorer-detail-pane");
+
+    let available = null;
+    if (detailPane) {
+      // Keep the list height synchronized with the detail pane height.
+      available = Math.floor(detailPane.getBoundingClientRect().height);
+    }
+
+    if (!Number.isFinite(available) || available <= 0) {
+      const listRect = list.getBoundingClientRect();
+      const viewportHeight = Math.floor(window.visualViewport?.height || window.innerHeight || 0);
+      if (!viewportHeight) {
+        return;
+      }
+      available = Math.floor(viewportHeight - listRect.top - 14);
+    }
+
+    const height = Math.max(minListHeight, Math.floor(available));
     list.style.height = `${height}px`;
     list.style.maxHeight = `${height}px`;
   });
@@ -1134,7 +1219,97 @@ function truncateLabel(text, maxLength = 22) {
   return `${text.slice(0, Math.max(1, maxLength - 2))}..`;
 }
 
+function normalizeYearToken(yearToken) {
+  if (!yearToken) {
+    return null;
+  }
+  const year = Number(yearToken);
+  if (!Number.isFinite(year)) {
+    return null;
+  }
+  if (String(yearToken).length === 2) {
+    return String(2000 + year);
+  }
+  return String(year);
+}
+
+function abbreviateRunLabelForAxis(label) {
+  if (!label) {
+    return "";
+  }
+  const source = String(label);
+
+  const mappedPatterns = [
+    { key: "NOINDEX-ASK", short: "NA" },
+    { key: "NOINDEX-COUNT", short: "NC" },
+    { key: "VOID-TRIPLE", short: "VT" },
+    { key: "VOID-BLOCK", short: "VB" },
+  ];
+  for (const pattern of mappedPatterns) {
+    const mappedMatch = source.match(new RegExp(`^${pattern.key}(-NRL)?-(\\d{1,2})-(\\d{1,2})-(\\d{2,4})$`));
+    if (mappedMatch) {
+      const nrlFlag = mappedMatch[1] ? "-N" : "";
+      const day = String(mappedMatch[2]).padStart(2, "0");
+      const month = String(mappedMatch[3]).padStart(2, "0");
+      const year = normalizeYearToken(mappedMatch[4]) || mappedMatch[4];
+      return `${pattern.short}${nrlFlag} ${year}-${month}-${day}`;
+    }
+  }
+
+  const controlComunica = source.match(/^SERVICE-CONTROL-COMUNICA-(\d{4})-(\d{2})-(\d{2})$/);
+  if (controlComunica) {
+    return `SC-C ${controlComunica[1]}-${controlComunica[2]}-${controlComunica[3]}`;
+  }
+  const controlEndpoint = source.match(/^SERVICE-CONTROL-MANUAL-ENDPOINT-(\d{4})-(\d{2})-(\d{2})$/);
+  if (controlEndpoint) {
+    return `SC-E ${controlEndpoint[1]}-${controlEndpoint[2]}-${controlEndpoint[3]}`;
+  }
+
+  return truncateLabel(source, 20);
+}
+
+function abbreviateQueryLabelForHeatmap(label) {
+  if (!label) {
+    return "";
+  }
+  const source = String(label).trim();
+  if (!source) {
+    return "";
+  }
+
+  const compactSource = source.replace(/^biosodafrontend#/i, "").trim();
+  const numericLead = compactSource.match(/^(\d+[a-z]?)/i);
+  if (numericLead) {
+    return numericLead[1].toUpperCase();
+  }
+
+  const underscored = compactSource.split("_").filter(Boolean);
+  if (underscored.length >= 2) {
+    return `${underscored[0].slice(0, 4)}.${underscored[1].slice(0, 4)}`.toUpperCase();
+  }
+  if (underscored.length === 1 && underscored[0].length > 0) {
+    return truncateLabel(underscored[0], 7).toUpperCase();
+  }
+
+  const hyphenated = compactSource.split("-").filter(Boolean);
+  if (hyphenated.length >= 2) {
+    return `${hyphenated[0].slice(0, 3)}.${hyphenated[1].slice(0, 3)}`.toUpperCase();
+  }
+
+  return truncateLabel(compactSource.replace(/\s+/g, ""), 7).toUpperCase();
+}
+
 const chartRegistry = new Map();
+
+function setChartCardTitle(chartEl, title) {
+  if (!(chartEl instanceof HTMLElement) || !title) {
+    return;
+  }
+  const heading = chartEl.closest(".chart-card")?.querySelector("h3");
+  if (heading) {
+    heading.textContent = title;
+  }
+}
 
 function aggregateHttp(values, mode) {
   if (!values.length) {
@@ -1167,6 +1342,49 @@ function monthLabel(monthKey) {
 
 function getRecordMonthKey(record) {
   return getMonthKey(record.start) || getMonthKey(record.end);
+}
+
+function inferTemporalGroupFromDate(date) {
+  if (!date) {
+    return null;
+  }
+  const year = date.getUTCFullYear();
+  const month = date.getUTCMonth() + 1;
+
+  if (year === 2025 && month >= 3 && month <= 5) {
+    return "spring-2025";
+  }
+  if (year === 2025 && month >= 9 && month <= 12) {
+    return "fall-2025";
+  }
+  if (year === 2026 && month >= 1 && month <= 2) {
+    return "winter-2026";
+  }
+  if (year === 2026 && month >= 3 && month <= 5) {
+    return "spring-2026";
+  }
+  return null;
+}
+
+function getRecordTemporalGroupKey(record) {
+  const runId = record?.run_id;
+  if (runId && RUN_TEMPORAL_GROUP_OVERRIDES[runId]) {
+    return RUN_TEMPORAL_GROUP_OVERRIDES[runId];
+  }
+  const start = parseIso(record?.start);
+  const end = parseIso(record?.end);
+  return inferTemporalGroupFromDate(start) || inferTemporalGroupFromDate(end) || "unassigned";
+}
+
+function temporalGroupLabel(groupKey) {
+  return TEMPORAL_GROUP_META[groupKey]?.label || "Unassigned";
+}
+
+function temporalGroupSortValue(groupKey) {
+  if (TEMPORAL_GROUP_META[groupKey]) {
+    return TEMPORAL_GROUP_META[groupKey].order;
+  }
+  return Number.MAX_SAFE_INTEGER;
 }
 
 function hasNumericValue(value) {
@@ -1216,7 +1434,10 @@ function getChartJs() {
 
 function chartBaseOptions(xLabel, yLabel, labelsFull) {
   const tickLimit = chartLabelLimit(labelsFull.length);
-  const tickAngle = labelsFull.length > 10 ? 52 : labelsFull.length > 6 ? 32 : 0;
+  const axisLabels = labelsFull.map((label) => abbreviateRunLabelForAxis(label));
+  const denseLabels = labelsFull.length > 12;
+  const tickAngle = 45;
+  const tickMax = labelsFull.length > 30 ? 12 : labelsFull.length > 16 ? 14 : 18;
 
   return {
     responsive: true,
@@ -1266,10 +1487,12 @@ function chartBaseOptions(xLabel, yLabel, labelsFull) {
         grid: { display: false },
         ticks: {
           color: "#4d6980",
+          font: { size: denseLabels ? 9 : 10 },
           maxRotation: tickAngle,
           minRotation: tickAngle,
-          callback: (_, index) => truncateLabel(labelsFull[index], tickLimit),
-          autoSkip: false,
+          callback: (_, index) => truncateLabel(axisLabels[index], tickLimit),
+          autoSkip: denseLabels,
+          maxTicksLimit: tickMax,
         },
       },
       y: {
@@ -1335,7 +1558,9 @@ function renderBarChart(svg, data, valueLabelFormatter, options = {}) {
   const barColors = data.map((item, index) => (missingFlags[index] ? "#c8d3de" : (item.color || CHART_COLORS.primary)));
   const serviceModes = data.map((item) => normalizeServiceModeValue(item.service_mode));
   const hasServiceMetadata = data.some((item) => item.service_mode !== undefined && item.service_mode !== null);
-  const runIds = data.map((item) => item.run_id || null);
+  const runIds = data.map((item) => (
+    item.run_id ? getRunDisplayLabel(item.run_id, item.run_label || item.run_id) : null
+  ));
 
   const chartData = {
     labels: xValues,
@@ -1411,7 +1636,13 @@ function renderGroupedBarChart(svg, groups, series, options = {}) {
 
   const canvas = buildChartCanvas(chartEl);
   const xValues = groups.map((group) => group.label);
-  const datasets = series.map((run) => {
+  const valueFormatter = typeof options.valueFormatter === "function"
+    ? options.valueFormatter
+    : (value) => formatNumber(value, 0);
+  const barColorResolver = typeof options.getBarColor === "function" ? options.getBarColor : null;
+  const tooltipLinesResolver = typeof options.getTooltipLines === "function" ? options.getTooltipLines : null;
+
+  const datasets = series.map((run, runIndex) => {
     const runLabel = getRunDisplayLabel(run.run_id, run.run_label);
     const runMode = getRunServiceMode(run);
     const yRaw = groups.map((group) => {
@@ -1419,18 +1650,41 @@ function renderGroupedBarChart(svg, groups, series, options = {}) {
       return hasNumericValue(value) ? Number(value) : 0;
     });
     const missingFlags = groups.map((group) => !hasNumericValue(group.values.get(run.run_id)));
-    const yDisplay = yRaw.map((value, rowIndex) => (missingFlags[rowIndex] ? "null" : formatNumber(value, 0)));
+    const yDisplay = yRaw.map((value, rowIndex) => (
+      missingFlags[rowIndex]
+        ? "null"
+        : valueFormatter(value, { group: groups[rowIndex], run, groupIndex: rowIndex, runIndex })
+    ));
     const baseColor = getRunModeColor(run);
+    const pointColors = yRaw.map((value, rowIndex) => {
+      if (missingFlags[rowIndex]) {
+        return "#d4dde6";
+      }
+      if (barColorResolver) {
+        const resolvedColor = barColorResolver({
+          group: groups[rowIndex],
+          run,
+          value,
+          missing: false,
+          groupIndex: rowIndex,
+          runIndex,
+        });
+        if (typeof resolvedColor === "string" && resolvedColor.trim()) {
+          return resolvedColor;
+        }
+      }
+      return baseColor;
+    });
     return {
       label: truncateLabel(runLabel, 30),
       fullRunLabel: runLabel,
-      runId: run.run_id,
+      runIdDisplay: getRunDisplayLabel(run.run_id, run.run_label || run.run_id),
       runMode,
       data: yRaw,
       metaValueText: yDisplay,
       metaMissingFlags: missingFlags,
-      backgroundColor: yRaw.map((_, rowIndex) => (missingFlags[rowIndex] ? "#d4dde6" : baseColor)),
-      borderColor: yRaw.map((_, rowIndex) => (missingFlags[rowIndex] ? "#c4cfdb" : baseColor)),
+      backgroundColor: pointColors,
+      borderColor: pointColors.map((color, rowIndex) => (missingFlags[rowIndex] ? "#c4cfdb" : color)),
       borderWidth: 1,
       borderRadius: 3,
       maxBarThickness: 24,
@@ -1438,7 +1692,7 @@ function renderGroupedBarChart(svg, groups, series, options = {}) {
   });
 
   const chartOptions = chartBaseOptions(xLabel, yLabel, xValues);
-  chartOptions.plugins.legend.display = true;
+  chartOptions.plugins.legend.display = options.legendDisplay === undefined ? true : Boolean(options.legendDisplay);
   chartOptions.plugins.tooltip.callbacks = {
     title: (items) => {
       const index = items[0]?.dataIndex ?? 0;
@@ -1453,7 +1707,21 @@ function renderGroupedBarChart(svg, groups, series, options = {}) {
       const dataset = datasets[context.datasetIndex];
       const idx = context.dataIndex;
       const missingText = `Missing value: ${dataset.metaMissingFlags[idx] ? "Yes" : "No"}`;
-      return [`Run ID: ${dataset.runId}`, `Service mode: ${formatServiceModeBadge(dataset.runMode)}`, missingText];
+      const lines = [`Run ID: ${dataset.runIdDisplay}`, `Service mode: ${formatServiceModeBadge(dataset.runMode)}`, missingText];
+      if (tooltipLinesResolver) {
+        const extraLines = tooltipLinesResolver({
+          group: groups[idx],
+          run: series[context.datasetIndex],
+          value: dataset.data[idx],
+          missing: dataset.metaMissingFlags[idx],
+          groupIndex: idx,
+          runIndex: context.datasetIndex,
+        });
+        if (Array.isArray(extraLines) && extraLines.length) {
+          lines.push(...extraLines.filter((line) => typeof line === "string" && line.trim()));
+        }
+      }
+      return lines;
     },
   };
 
@@ -1463,6 +1731,385 @@ function renderGroupedBarChart(svg, groups, series, options = {}) {
       labels: xValues,
       datasets,
     },
+    options: chartOptions,
+  });
+  chartRegistry.set(chartEl.id, instance);
+}
+
+function renderQueryOutcomeHeatmap(chartEl, groups, series) {
+  clearChartElement(chartEl);
+  const xLabel = "Query";
+  const yLabel = "Experiment Run";
+
+  if (!groups.length || !series.length) {
+    renderNoDataPlot(chartEl, "No data for current selection", xLabel, yLabel);
+    return;
+  }
+
+  const compactRunColSize = 64;
+  const compactHeaderSize = 44;
+  const queryColumnWidth = groups.length
+    ? `calc((100% - var(--heatmap-run-col-size)) / ${groups.length})`
+    : "auto";
+  const columnDefs = `
+    <col class="run-label-col">
+    ${groups.map(() => `<col class="query-heat-col" style="width:${queryColumnWidth};">`).join("")}
+  `;
+
+  const headerCells = groups.map((group) => {
+    const consistencyLabel = group.consistencyState === "same"
+      ? "Same raw result count across runs"
+      : group.consistencyState === "different"
+        ? "Different raw result counts across runs"
+        : "Insufficient data for cross-run comparison";
+    const headerTitle = [`Query: ${group.label}`, `Cross-run consistency: ${consistencyLabel}`].join("\n");
+    return `
+      <th scope="col" class="query-col-head" title="${escapeHtmlAttr(headerTitle)}">
+        <div class="query-col-head-text">
+          <span class="heatmap-label-compact">${escapeHtml(abbreviateQueryLabelForHeatmap(group.label))}</span>
+          <span class="heatmap-label-full">${escapeHtml(truncateLabel(group.label, 32))}</span>
+        </div>
+      </th>
+    `;
+  }).join("");
+
+  const bodyRows = series.map((run) => {
+    const runLabel = getRunDisplayLabel(run.run_id, run.run_label);
+    const cells = groups.map((group) => {
+      const value = group.values.get(run.run_id);
+      const rawCount = group.rawValues.get(run.run_id);
+      const cellMeta = group.cellMeta.get(run.run_id) || {
+        attempts: 0,
+        outcomeState: "missing",
+        outcomeLabel: "Missing",
+        hasError: false,
+        errorCategories: [],
+      };
+      const isMissing = !hasNumericValue(value);
+      const consistencyState = group.consistencyState;
+      const isDifferentAcrossRuns = consistencyState === "different" && !isMissing && !cellMeta.hasError;
+      const consistencyLabel = consistencyState === "same"
+        ? "Same raw result count across runs"
+        : consistencyState === "different"
+          ? "Different raw result counts across runs"
+          : "Insufficient data for cross-run comparison";
+      const cellTitle = [
+        `Query: ${group.label}`,
+        `Run: ${runLabel}`,
+        `Outcome: ${cellMeta.outcomeLabel}`,
+        `Raw result count: ${formatNullableNumber(rawCount, 0)}`,
+        `Attempts represented: ${formatNumber(cellMeta.attempts, 0)}`,
+        `Error categories: ${cellMeta.errorCategories.length ? cellMeta.errorCategories.join("; ") : "None"}`,
+        `Cross-run consistency: ${consistencyLabel}`,
+      ].join("\n");
+
+      const stateClass = cellMeta.outcomeState === "error"
+        ? "outcome-error"
+        : cellMeta.outcomeState === "zero"
+          ? "outcome-zero"
+          : cellMeta.outcomeState === "positive"
+            ? "outcome-positive"
+            : "outcome-missing";
+      const varianceIcon = isDifferentAcrossRuns ? "<span class=\"variance-icon\" aria-label=\"Raw result counts vary across runs\" title=\"Raw result counts vary across runs\">≠</span>" : "";
+      return `
+        <td
+          class="heat-cell ${stateClass}"
+          data-outcome="${escapeHtmlAttr(cellMeta.outcomeState)}"
+          data-tooltip-query="${escapeHtmlAttr(group.label)}"
+          data-tooltip-run="${escapeHtmlAttr(runLabel)}"
+          data-tooltip-outcome="${escapeHtmlAttr(cellMeta.outcomeLabel)}"
+          data-tooltip-results="${escapeHtmlAttr(formatNullableNumber(rawCount, 0))}"
+          data-tooltip-attempts="${escapeHtmlAttr(formatNumber(cellMeta.attempts, 0))}"
+          data-tooltip-errors="${escapeHtmlAttr(cellMeta.errorCategories.length ? cellMeta.errorCategories.join("; ") : "None")}"
+          data-tooltip-consistency="${escapeHtmlAttr(consistencyLabel)}"
+          aria-label="${escapeHtmlAttr(cellTitle)}"
+        >
+          ${varianceIcon}
+        </td>
+      `;
+    }).join("");
+
+    const runLabelShort = truncateLabel(abbreviateRunLabelForAxis(runLabel), 11);
+    return `
+      <tr>
+        <th scope="row" class="run-row-head" title="${escapeHtmlAttr(runLabel)}">
+          <span class="heatmap-label-compact">${escapeHtml(runLabelShort)}</span>
+          <span class="heatmap-label-full">${escapeHtml(truncateLabel(runLabel, 38))}</span>
+        </th>
+        ${cells}
+      </tr>
+    `;
+  }).join("");
+
+  chartEl.innerHTML = `
+    <div
+      class="outcome-heatmap-wrap"
+      style="--heatmap-run-col-size:${compactRunColSize}px; --heatmap-header-size:${compactHeaderSize}px;"
+      role="img"
+      aria-label="Heatmap of query outcomes by run"
+    >
+      <table class="outcome-heatmap-table">
+        <colgroup>${columnDefs}</colgroup>
+        <thead>
+          <tr>
+            <th scope="col" class="run-col-head">
+              <span class="heatmap-label-compact">Run \\ Query</span>
+              <span class="heatmap-label-full">${escapeHtml(yLabel)} \\ ${escapeHtml(xLabel)}</span>
+            </th>
+            ${headerCells}
+          </tr>
+        </thead>
+        <tbody>
+          ${bodyRows}
+        </tbody>
+      </table>
+    </div>
+    <div class="outcome-heatmap-tooltip hidden" role="tooltip"></div>
+    <div class="outcome-heatmap-legend" aria-label="Heatmap legend">
+      <span class="legend-item"><span class="legend-swatch swatch-positive"></span>Result count &gt; 0</span>
+      <span class="legend-item"><span class="legend-swatch swatch-zero"></span>Result count = 0</span>
+      <span class="legend-item"><span class="legend-swatch swatch-error"></span>Explicit error encountered</span>
+      <span class="legend-item"><span class="legend-swatch swatch-missing"></span>Missing</span>
+      <span class="legend-item"><span class="legend-badge">≠</span>Raw result count differs across runs for that query</span>
+    </div>
+  `;
+}
+
+function hideHeatmapTooltip() {
+  document.querySelectorAll(".outcome-heatmap-tooltip").forEach((tooltip) => {
+    tooltip.classList.add("hidden");
+    tooltip.removeAttribute("style");
+    tooltip.innerHTML = "";
+  });
+}
+
+function positionHeatmapTooltip(tooltip, event) {
+  const padding = 12;
+  const offset = 14;
+  const rect = tooltip.getBoundingClientRect();
+  let left = event.clientX + offset;
+  let top = event.clientY + offset;
+
+  if (left + rect.width + padding > window.innerWidth) {
+    left = Math.max(padding, event.clientX - rect.width - offset);
+  }
+  if (top + rect.height + padding > window.innerHeight) {
+    top = Math.max(padding, event.clientY - rect.height - offset);
+  }
+
+  tooltip.style.left = `${left}px`;
+  tooltip.style.top = `${top}px`;
+}
+
+function showHeatmapTooltip(cell, event) {
+  const wrap = cell.closest(".outcome-heatmap-wrap");
+  const tooltip = wrap?.parentElement?.querySelector(".outcome-heatmap-tooltip");
+  if (!(tooltip instanceof HTMLElement)) {
+    return;
+  }
+
+  tooltip.innerHTML = `
+    <div class="heatmap-tooltip-kicker">${escapeHtml(cell.dataset.tooltipOutcome || "Outcome")}</div>
+    <div class="heatmap-tooltip-title">${escapeHtml(cell.dataset.tooltipQuery || "Query")}</div>
+    <dl>
+      <div><dt>Run</dt><dd>${escapeHtml(cell.dataset.tooltipRun || "-")}</dd></div>
+      <div><dt>Results</dt><dd>${escapeHtml(cell.dataset.tooltipResults || "-")}</dd></div>
+      <div><dt>Attempts</dt><dd>${escapeHtml(cell.dataset.tooltipAttempts || "-")}</dd></div>
+      <div><dt>Errors</dt><dd>${escapeHtml(cell.dataset.tooltipErrors || "None")}</dd></div>
+      <div><dt>Consistency</dt><dd>${escapeHtml(cell.dataset.tooltipConsistency || "-")}</dd></div>
+    </dl>
+  `;
+  tooltip.classList.remove("hidden");
+  positionHeatmapTooltip(tooltip, event);
+}
+
+function handleHeatmapPointerMove(event) {
+  const cell = event.target.closest(".heat-cell");
+  if (!(cell instanceof HTMLElement)) {
+    hideHeatmapTooltip();
+    return;
+  }
+  showHeatmapTooltip(cell, event);
+}
+
+function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
+  const xLabel = "HTTP Requests (count)";
+  const yLabel = "Outcome (0 = failure, 1 = success)";
+  clearChartElement(chartEl);
+
+  if (!queryRecords.length) {
+    renderNoDataPlot(chartEl, "No records for selected query", xLabel, yLabel);
+    return;
+  }
+
+  const points = queryRecords
+    .map((record, index) => {
+      const httpValue = record.http_requests;
+      if (!hasNumericValue(httpValue)) {
+        return null;
+      }
+
+      const run = runsById.get(record.run_id) || { run_id: record.run_id, run_label: record.run_label };
+      const baseY = record.produced_results ? 1 : 0;
+      // Small deterministic jitter keeps overlapping attempts visible without changing interpretation.
+      const jitter = ((index % 11) - 5) * 0.015;
+      return {
+        x: Number(httpValue),
+        y: baseY + jitter,
+        runLabel: getRunDisplayLabel(run.run_id, run.run_label),
+        start: record.start,
+        duration: record.duration_seconds,
+        resultsCount: record.results_count,
+        producedResults: record.produced_results,
+        errorCategory: record.error_category || "N/A",
+      };
+    })
+    .filter(Boolean);
+
+  if (!points.length) {
+    renderNoDataPlot(chartEl, "No HTTP request data for selected query", xLabel, yLabel);
+    return;
+  }
+
+  const ChartJs = getChartJs();
+  if (!ChartJs) {
+    chartEl.innerHTML = "<div class='chart-empty'>Interactive chart library not available.</div>";
+    return;
+  }
+
+  const successPoints = points.filter((point) => point.producedResults);
+  const failurePoints = points.filter((point) => !point.producedResults);
+  const canvas = buildChartCanvas(chartEl);
+  const datasets = [
+    {
+      label: "Produced results",
+      data: successPoints,
+      parsing: false,
+      backgroundColor: CHART_COLORS.success,
+      borderColor: CHART_COLORS.success,
+      borderWidth: 1,
+      pointRadius: 5,
+      pointHoverRadius: 7,
+    },
+    {
+      label: "Failed / no results",
+      data: failurePoints,
+      parsing: false,
+      backgroundColor: CHART_COLORS.danger,
+      borderColor: CHART_COLORS.danger,
+      borderWidth: 1,
+      pointRadius: 5,
+      pointHoverRadius: 7,
+    },
+  ];
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: 320,
+      easing: "easeOutQuart",
+    },
+    plugins: {
+      legend: {
+        display: true,
+        labels: {
+          boxWidth: 10,
+          boxHeight: 10,
+          color: "#264f70",
+          font: { size: 10 },
+        },
+      },
+      tooltip: {
+        enabled: true,
+        backgroundColor: "#f8fbff",
+        titleColor: "#1d2a37",
+        bodyColor: "#1d2a37",
+        borderColor: "#80b7df",
+        borderWidth: 1,
+        titleFont: { family: "Source Sans 3, Segoe UI, sans-serif", size: 12, weight: "700" },
+        bodyFont: { family: "Source Sans 3, Segoe UI, sans-serif", size: 12 },
+        padding: 10,
+        cornerRadius: 8,
+        callbacks: {
+          title: (items) => {
+            const point = items[0]?.raw;
+            return point?.runLabel ? `Run: ${point.runLabel}` : "Run";
+          },
+          label: (context) => {
+            const point = context.raw;
+            const outcomeLabel = point.producedResults ? "Produced results" : "Failed / no results";
+            return [
+              `Outcome: ${outcomeLabel}`,
+              `HTTP requests: ${formatNumber(point.x, 0)}`,
+              `Results count: ${formatNullableNumber(point.resultsCount, 0)}`,
+              `Duration: ${formatNullableNumber(point.duration, 2)} s`,
+            ];
+          },
+          afterLabel: (context) => {
+            const point = context.raw;
+            return [
+              `Start: ${formatDateTime(point.start)}`,
+              `Error: ${point.errorCategory}`,
+            ];
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        type: "linear",
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: xLabel,
+          color: "#345a79",
+          font: { size: 12, weight: "600" },
+        },
+        ticks: {
+          color: "#4d6980",
+          maxRotation: 45,
+          minRotation: 45,
+          callback: (value) => formatAxisNumber(Number(value)),
+        },
+        grid: {
+          color: "#e7eff7",
+          drawBorder: false,
+        },
+      },
+      y: {
+        min: -0.15,
+        max: 1.15,
+        title: {
+          display: true,
+          text: yLabel,
+          color: "#345a79",
+          font: { size: 12, weight: "600" },
+        },
+        ticks: {
+          color: "#4d6980",
+          stepSize: 1,
+          callback: (value) => {
+            if (Number(value) === 1) {
+              return "Success";
+            }
+            if (Number(value) === 0) {
+              return "Failure";
+            }
+            return "";
+          },
+        },
+        grid: {
+          color: "#e7eff7",
+          drawBorder: false,
+        },
+      },
+    },
+  };
+
+  const instance = new ChartJs(canvas.getContext("2d"), {
+    type: "scatter",
+    data: { datasets },
     options: chartOptions,
   });
   chartRegistry.set(chartEl.id, instance);
@@ -1618,7 +2265,7 @@ function filterOverviewRecords({ applyMonthFocus = true } = {}) {
     }
 
     if (applyMonthFocus && state.monthFocus) {
-      return getRecordMonthKey(record) === state.monthFocus;
+      return getRecordTemporalGroupKey(record) === state.monthFocus;
     }
 
     return true;
@@ -1653,7 +2300,8 @@ function renderOverviewKpis(records) {
 function renderOverviewCharts(records) {
   const runMap = new Map();
   const runsById = new Map(getActiveRuns().map((run) => [run.run_id, run]));
-  const queryRunResultMap = new Map();
+  const queryRunSummaryMap = new Map();
+  const activePeriodLabel = state.monthFocus ? temporalGroupLabel(state.monthFocus) : null;
   for (const record of records) {
     if (!runMap.has(record.run_id)) {
       runMap.set(record.run_id, {
@@ -1665,6 +2313,7 @@ function renderOverviewCharts(records) {
         success: 0,
         noErrorCount: 0,
         positiveResultCount: 0,
+        totalResultsCount: 0,
         durations: [],
         records: [],
       });
@@ -1680,6 +2329,7 @@ function renderOverviewCharts(records) {
     if ((record.results_count || 0) > 0) {
       run.positiveResultCount += 1;
     }
+    run.totalResultsCount += Number(record.results_count || 0);
     if (record.duration_seconds !== null && record.duration_seconds !== undefined) {
       run.durations.push(record.duration_seconds);
     }
@@ -1688,14 +2338,29 @@ function renderOverviewCharts(records) {
     const stem = normalizeQueryStem(record.query_name);
     if (stem) {
       const key = `${stem}::${record.run_id}`;
-      const existing = queryRunResultMap.get(key);
-      const resultValue = record.results_count === null || record.results_count === undefined
-        ? null
-        : Number(record.results_count);
-      if (existing === undefined || existing === null) {
-        queryRunResultMap.set(key, resultValue);
-      } else if (resultValue !== null && !Number.isNaN(resultValue)) {
-        queryRunResultMap.set(key, Math.max(existing, resultValue));
+      if (!queryRunSummaryMap.has(key)) {
+        queryRunSummaryMap.set(key, {
+          attempts: 0,
+          hasError: false,
+          errorCategories: new Set(),
+          hasNumericResult: false,
+          maxResults: null,
+        });
+      }
+      const summary = queryRunSummaryMap.get(key);
+      summary.attempts += 1;
+      if (hasExplicitError(record)) {
+        summary.hasError = true;
+        if (record.error_category) {
+          summary.errorCategories.add(record.error_category);
+        }
+      }
+      if (hasNumericValue(record.results_count)) {
+        const numericCount = Number(record.results_count);
+        summary.hasNumericResult = true;
+        if (summary.maxResults === null || numericCount > summary.maxResults) {
+          summary.maxResults = numericCount;
+        }
       }
     }
   }
@@ -1719,8 +2384,22 @@ function renderOverviewCharts(records) {
       value: run.total ? (run.success / run.total) * 100 : 0,
       color: getRunModeColor(runsById.get(run.runId) || { service_description_mode: run.serviceMode }, run.records),
     }));
+  const totalResultsBars = sortedRuns
+    .map((run) => ({
+      label: run.label,
+      run_id: run.runId,
+      service_mode: getRunServiceMode(runsById.get(run.runId) || { service_description_mode: run.serviceMode }, run.records),
+      value: run.totalResultsCount,
+      color: getRunModeColor(runsById.get(run.runId) || { service_description_mode: run.serviceMode }, run.records),
+    }));
 
-  renderBarChart(dom.runSuccessChart, successBars, (value) => `${value.toFixed(1)}%`, { xLabel: "Experiment Run", yLabel: "Success Rate (%)" });
+  if (activePeriodLabel) {
+    setChartCardTitle(dom.runSuccessChart, `Results obtained by run (${activePeriodLabel})`);
+    renderBarChart(dom.runSuccessChart, totalResultsBars, (value) => formatNumber(value, 0), { xLabel: "Experiment Run", yLabel: "Results Obtained (count)" });
+  } else {
+    setChartCardTitle(dom.runSuccessChart, "Success rate by run");
+    renderBarChart(dom.runSuccessChart, successBars, (value) => `${value.toFixed(1)}%`, { xLabel: "Experiment Run", yLabel: "Success Rate (%)" });
+  }
 
   const errorCounts = new Map();
   for (const record of records) {
@@ -1732,6 +2411,11 @@ function renderOverviewCharts(records) {
     .sort((a, b) => b.value - a.value)
     .slice(0, 12);
 
+  if (activePeriodLabel) {
+    setChartCardTitle(dom.errorCategoryChart, `Error categories (${activePeriodLabel})`);
+  } else {
+    setChartCardTitle(dom.errorCategoryChart, "Error category counts");
+  }
   renderBarChart(dom.errorCategoryChart, errorBars, (value) => formatNumber(value, 0), { xLabel: "Error Category", yLabel: "Failed Queries (count)" });
 
   const medianBars = sortedRuns
@@ -1743,16 +2427,12 @@ function renderOverviewCharts(records) {
       color: getRunModeColor(runsById.get(run.runId) || { service_description_mode: run.serviceMode }, run.records),
     }));
 
+  if (activePeriodLabel) {
+    setChartCardTitle(dom.runMedianChart, `Query runtime by run (${activePeriodLabel})`);
+  } else {
+    setChartCardTitle(dom.runMedianChart, "Median runtime by run (seconds)");
+  }
   renderBarChart(dom.runMedianChart, medianBars, (value) => formatNumber(value, 1), { xLabel: "Experiment Run", yLabel: "Median Runtime (seconds)" });
-
-  const noErrorBars = sortedRuns
-    .map((run) => ({
-      label: run.label,
-      run_id: run.runId,
-      service_mode: getRunServiceMode(runsById.get(run.runId) || { service_description_mode: run.serviceMode }, run.records),
-      value: run.noErrorCount,
-      color: getRunModeColor(runsById.get(run.runId) || { service_description_mode: run.serviceMode }, run.records),
-    }));
 
   const positiveResultBars = sortedRuns
     .map((run) => ({
@@ -1763,7 +2443,6 @@ function renderOverviewCharts(records) {
       color: getRunModeColor(runsById.get(run.runId) || { service_description_mode: run.serviceMode }, run.records),
     }));
 
-  renderBarChart(dom.runNoErrorCountChart, noErrorBars, (value) => formatNumber(value, 0), { xLabel: "Experiment Run", yLabel: "Queries Without Explicit Errors (count)" });
   renderBarChart(dom.runPositiveResultCountChart, positiveResultBars, (value) => formatNumber(value, 0), { xLabel: "Experiment Run", yLabel: "Queries With Result Set > 0 (count)" });
 
   const queryStems = [...new Set(
@@ -1774,14 +2453,56 @@ function renderOverviewCharts(records) {
 
   const overviewGroups = queryStems.map((stem) => {
     const values = new Map();
+    const rawValues = new Map();
+    const cellMeta = new Map();
     sortedRuns.forEach((run) => {
       const key = `${stem}::${run.runId}`;
-      const value = queryRunResultMap.has(key) ? queryRunResultMap.get(key) : null;
-      values.set(run.runId, value);
+      const summary = queryRunSummaryMap.get(key) || null;
+      const rawValue = summary && summary.hasNumericResult ? summary.maxResults : null;
+      rawValues.set(run.runId, rawValue);
+
+      let outcomeState = "missing";
+      let outcomeLabel = "Missing";
+      if (summary) {
+        if (summary.hasError) {
+          outcomeState = "error";
+          outcomeLabel = "Explicit error encountered";
+        } else if (summary.hasNumericResult) {
+          if (rawValue === 0) {
+            outcomeState = "zero";
+            outcomeLabel = "Result count = 0";
+          } else if (rawValue > 0) {
+            outcomeState = "positive";
+            outcomeLabel = "Result count > 0";
+          }
+        }
+      }
+
+      cellMeta.set(run.runId, {
+        attempts: summary?.attempts || 0,
+        outcomeState,
+        outcomeLabel,
+        hasError: Boolean(summary?.hasError),
+        errorCategories: summary ? [...summary.errorCategories] : [],
+      });
+      values.set(run.runId, outcomeState === "missing" ? null : 1);
     });
+
+    const numericRawValues = [...rawValues.values()]
+      .filter((value) => hasNumericValue(value))
+      .map((value) => Number(value));
+    let consistencyState = "insufficient";
+    if (numericRawValues.length >= 2) {
+      const firstValue = numericRawValues[0];
+      consistencyState = numericRawValues.every((value) => value === firstValue) ? "same" : "different";
+    }
+
     return {
       label: getQueryDisplayName(stem),
       values,
+      rawValues,
+      cellMeta,
+      consistencyState,
     };
   });
 
@@ -1791,21 +2512,28 @@ function renderOverviewCharts(records) {
     service_description_mode: run.serviceMode,
   }));
 
-  renderGroupedBarChart(dom.queryResultsByRunOverviewChart, overviewGroups, runSeries, {
-    xLabel: "Query",
-    yLabel: "Results (count)",
-  });
+  setChartCardTitle(dom.queryResultsByRunOverviewChart, "Query outcome heatmap by experiment run");
+  renderQueryOutcomeHeatmap(dom.queryResultsByRunOverviewChart, overviewGroups, runSeries);
 }
 
 function getMonthlyStats(records) {
-  const map = new Map();
+  const map = new Map(
+    TEMPORAL_GROUP_ORDER.map((groupKey) => [groupKey, {
+      monthKey: groupKey,
+      label: temporalGroupLabel(groupKey),
+      total: 0,
+      success: 0,
+      durations: [],
+      runIds: new Set(),
+    }]),
+  );
 
   for (const record of records) {
-    const monthKey = getRecordMonthKey(record) || "Unknown";
+    const monthKey = getRecordTemporalGroupKey(record);
     if (!map.has(monthKey)) {
       map.set(monthKey, {
         monthKey,
-        label: monthLabel(monthKey),
+        label: temporalGroupLabel(monthKey),
         total: 0,
         success: 0,
         durations: [],
@@ -1829,7 +2557,13 @@ function getMonthlyStats(records) {
       successRate: month.total ? month.success / month.total : 0,
       medianDuration: median(month.durations),
     }))
-    .sort((a, b) => a.monthKey.localeCompare(b.monthKey));
+    .sort((a, b) => {
+      const orderDiff = temporalGroupSortValue(a.monthKey) - temporalGroupSortValue(b.monthKey);
+      if (orderDiff !== 0) {
+        return orderDiff;
+      }
+      return a.label.localeCompare(b.label);
+    });
 }
 
 function renderMonthlyViews(recordsBeforeMonthFocus) {
@@ -1840,7 +2574,7 @@ function renderMonthlyViews(recordsBeforeMonthFocus) {
   }
 
   const pills = [
-    `<button type="button" class="month-pill ${state.monthFocus === null ? "active" : ""}" data-month="all">All months</button>`,
+    `<button type="button" class="month-pill ${state.monthFocus === null ? "active" : ""}" data-month="all">All periods</button>`,
     ...monthly.map((month) => `
       <button type="button" class="month-pill ${state.monthFocus === month.monthKey ? "active" : ""}" data-month="${month.monthKey}">
         ${month.label} · ${month.total} q · ${formatPercent(month.successRate)}
@@ -1857,28 +2591,89 @@ function renderMonthlyViews(recordsBeforeMonthFocus) {
     });
   });
 
-  const successBars = monthly.map((month) => ({
-    label: month.label,
-    value: month.successRate * 100,
-    color: CHART_COLORS.secondary,
-  }));
-  const volumeBars = monthly.map((month) => ({
-    label: month.label,
-    value: month.total,
-    color: CHART_COLORS.primary,
-  }));
-
-  renderBarChart(dom.monthSuccessChart, successBars, (value) => `${value.toFixed(1)}%`, { xLabel: "Month", yLabel: "Success Rate (%)" });
-  renderBarChart(dom.monthVolumeChart, volumeBars, (value) => formatNumber(value, 0), { xLabel: "Month", yLabel: "Query Records (count)" });
-
-  const runsById = new Map(getActiveRuns().map((run) => [run.run_id, run]));
-
   const visibleMonths = state.monthFocus
     ? monthly.filter((month) => month.monthKey === state.monthFocus)
     : monthly;
+  const runsById = new Map(getActiveRuns().map((run) => [run.run_id, run]));
+
+  if (state.monthFocus && visibleMonths.length === 1) {
+    const focusMonth = visibleMonths[0];
+    const periodRecords = recordsBeforeMonthFocus.filter((record) => getRecordTemporalGroupKey(record) === state.monthFocus);
+    const activeRuns = sortRunsChronologically(
+      [...focusMonth.runIds]
+        .map((runId) => runsById.get(runId))
+        .filter(Boolean),
+      periodRecords,
+    );
+
+    const runRecordMap = new Map(activeRuns.map((run) => [run.run_id, []]));
+    periodRecords.forEach((record) => {
+      if (runRecordMap.has(record.run_id)) {
+        runRecordMap.get(record.run_id).push(record);
+      }
+    });
+
+    const periodRunSuccessBars = activeRuns.map((run) => {
+      const runRecords = runRecordMap.get(run.run_id) || [];
+      const successes = runRecords.filter((record) => record.produced_results).length;
+      return {
+        label: getRunDisplayLabel(run.run_id, run.run_label),
+        run_id: run.run_id,
+        service_mode: getRunServiceMode(run, runRecords),
+        value: runRecords.length ? (successes / runRecords.length) * 100 : 0,
+        color: getRunModeColor(run, runRecords),
+      };
+    });
+
+    const errorCounts = new Map();
+    periodRecords.forEach((record) => {
+      if (!hasExplicitError(record)) {
+        return;
+      }
+      const category = record.error_category || "Unknown Error";
+      errorCounts.set(category, (errorCounts.get(category) || 0) + 1);
+    });
+
+    const periodErrorBars = [...errorCounts.entries()]
+      .map(([label, value]) => ({ label, value, color: CHART_COLORS.danger }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 12);
+
+    setChartCardTitle(dom.monthSuccessChart, `Experiment success rates (${focusMonth.label})`);
+    renderBarChart(dom.monthSuccessChart, periodRunSuccessBars, (value) => `${value.toFixed(1)}%`, {
+      xLabel: "Experiment Run",
+      yLabel: "Success Rate (%)",
+    });
+
+    setChartCardTitle(
+      dom.monthVolumeChart,
+      `Error categories observed (${focusMonth.label}) · ${errorCounts.size} category${errorCounts.size === 1 ? "" : "ies"}`,
+    );
+    renderBarChart(dom.monthVolumeChart, periodErrorBars, (value) => formatNumber(value, 0), {
+      xLabel: "Error Category",
+      yLabel: "Failed Queries (count)",
+    });
+  } else {
+    const successBars = visibleMonths.map((month) => ({
+      label: month.label,
+      value: month.successRate * 100,
+      color: CHART_COLORS.secondary,
+    }));
+    const volumeBars = visibleMonths.map((month) => ({
+      label: month.label,
+      value: month.total,
+      color: CHART_COLORS.primary,
+    }));
+
+    setChartCardTitle(dom.monthSuccessChart, "Success rate by period");
+    renderBarChart(dom.monthSuccessChart, successBars, (value) => `${value.toFixed(1)}%`, { xLabel: "Testing Period", yLabel: "Success Rate (%)" });
+
+    setChartCardTitle(dom.monthVolumeChart, "Query volume by period");
+    renderBarChart(dom.monthVolumeChart, volumeBars, (value) => formatNumber(value, 0), { xLabel: "Testing Period", yLabel: "Query Records (count)" });
+  }
 
   if (!visibleMonths.length) {
-    dom.monthlyRunGrid.innerHTML = "<article class='month-card'><h4>No monthly data</h4></article>";
+    dom.monthlyRunGrid.innerHTML = "<article class='month-card'><h4>No period data</h4></article>";
     return;
   }
 
@@ -2029,6 +2824,7 @@ function renderQueryDetail(records) {
     dom.querySibTableBody.innerHTML = "";
     clearChartElement(dom.queryDurationChart);
     clearChartElement(dom.queryResultsChart);
+    clearChartElement(dom.queryHttpOutcomeChart);
     clearChartElement(dom.queryResultVariabilityChart);
     return;
   }
@@ -2136,6 +2932,7 @@ function renderQueryDetail(records) {
 
   renderBarChart(dom.queryDurationChart, durationBars, (value) => formatNumber(value, 1), { xLabel: "Experiment Run", yLabel: "Runtime (seconds)" });
   renderBarChart(dom.queryResultsChart, resultsBars, (value) => formatNumber(value, 0), { xLabel: "Experiment Run", yLabel: "Results (count)" });
+  renderHttpOutcomeScatterChart(dom.queryHttpOutcomeChart, queryRecords, runsById);
   renderBarChart(dom.queryResultVariabilityChart, variabilityBars, (value) => formatNumber(value, 0), { xLabel: "Chronological Run", yLabel: "Results (count)" });
 
   dom.queryResultVariabilityMeta.innerHTML = hasResultVariability
@@ -2148,11 +2945,15 @@ function renderQueryDetail(records) {
     const badgeText = record.produced_results ? "Produced" : "No results";
 
     const runDisplayLabel = getRunDisplayLabel(record.run_id, record.run_label);
+    const runAbbrevLabel = abbreviateRunLabelForAxis(runDisplayLabel);
     const runControlTag = renderRunControlTag(record.run_id);
     return `
       <tr>
         <td data-label="Run">
-          <code class="truncate-scroll" title="${escapeHtmlAttr(runDisplayLabel)}">${escapeHtml(record.run_label)}</code>
+          <span class="run-label-cell" tabindex="0" aria-label="${escapeHtmlAttr(`Full experiment name: ${runDisplayLabel}`)}">
+            <code class="truncate-scroll" title="${escapeHtmlAttr(runDisplayLabel)}">${escapeHtml(runAbbrevLabel)}</code>
+            <span class="run-label-tooltip" role="tooltip">${escapeHtml(runDisplayLabel)}</span>
+          </span>
           ${runControlTag}
         </td>
         <td data-label="Start">${formatDateTime(record.start)}</td>
@@ -2259,7 +3060,9 @@ function renderExperimentList(activeRuns) {
     return `
       <label class="experiment-item">
         <input type="checkbox" data-run-id="${escapeHtmlAttr(run.run_id)}" ${checked} />
-        <div class="item-title"><code class="truncate-scroll" title="${escapeHtmlAttr(runDisplayLabel)}">${escapeHtml(run.run_label)}</code></div>
+        <div class="item-title item-title-experiment">
+          <code class="experiment-run-name" title="${escapeHtmlAttr(runDisplayLabel)}">${escapeHtml(runDisplayLabel)}</code>
+        </div>
         <div class="item-meta">${formatDateTime(run.run_start)} · ${run.query_count} queries · ${formatPercent(run.success_rate)} success · ${modeLabel} ${runControlTag}</div>
       </label>
     `;
@@ -2416,8 +3219,8 @@ function renderHttpMatrixTable(selectedRuns, httpData) {
       <tr>
         <th class="query-col">Query</th>
         ${selectedRuns.map((run) => `
-          <th title="${escapeHtmlAttr(run.run_id)}">
-            <span class="truncate-text" title="${escapeHtmlAttr(run.run_label)}">${escapeHtml(truncateLabel(run.run_label, 16))}</span>
+          <th title="${escapeHtmlAttr(getRunDisplayLabel(run.run_id, run.run_label || run.run_id))}">
+            <span class="truncate-text" title="${escapeHtmlAttr(getRunDisplayLabel(run.run_id, run.run_label))}">${escapeHtml(truncateLabel(getRunDisplayLabel(run.run_id, run.run_label), 16))}</span>
           </th>
         `).join("")}
       </tr>
@@ -2644,7 +3447,8 @@ function renderExperimentQueryTable(selectedRecords) {
 function renderExplorerExperimentMode() {
   const activeRuns = getActiveRuns();
   syncExperimentSelection(activeRuns);
-  renderExperimentList(activeRuns);
+  const activeRunsChronological = sortRunsChronologically(activeRuns, getActiveRecords());
+  renderExperimentList(activeRunsChronological);
 
   const selectedRuns = sortRunsChronologically(
     activeRuns.filter((run) => state.selectedExperimentIds.has(run.run_id)),
@@ -2672,7 +3476,7 @@ function renderExplorerSection() {
 function renderAll() {
   const recordsBeforeMonthFocus = filterOverviewRecords({ applyMonthFocus: false });
   const records = state.monthFocus
-    ? recordsBeforeMonthFocus.filter((record) => getRecordMonthKey(record) === state.monthFocus)
+    ? recordsBeforeMonthFocus.filter((record) => getRecordTemporalGroupKey(record) === state.monthFocus)
     : recordsBeforeMonthFocus;
 
   renderOverviewKpis(records);
@@ -2803,7 +3607,11 @@ function bindEvents() {
   dom.focusModal.addEventListener("click", handleExpandableClick);
   document.addEventListener("click", handleExpandableClick);
   document.addEventListener("keydown", handleExpandableKeydown);
+  document.addEventListener("pointermove", handleHeatmapPointerMove);
+  document.addEventListener("pointerleave", hideHeatmapTooltip);
+  document.addEventListener("scroll", hideHeatmapTooltip, true);
   window.addEventListener("resize", () => {
+    hideHeatmapTooltip();
     scheduleExplorerListHeightSync();
     resizeAllCharts();
   });

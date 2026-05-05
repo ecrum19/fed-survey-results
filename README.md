@@ -63,3 +63,12 @@ The site entrypoint is `docs/index.html`.
 - The dashboard does not fabricate missing values.
 - Unknown or unavailable values are shown as `N/A`.
 - Main summary metrics exclude `old-results` by design; users can opt in via UI toggle.
+- Experiment family labels are remapped in webpage display for readability:
+  - `EX1` -> `NOINDEX-ASK`
+  - `EX2` -> `NOINDEX-COUNT`
+  - `EX3` -> `VOID-TRIPLE`
+  - `EX4` -> `VOID-BLOCK`
+  - `EX1-NRL` -> `NOINDEX-ASK-NRL`
+  - `EX2-NRL` -> `NOINDEX-COUNT-NRL`
+  - `EX3-NRL` -> `VOID-TRIPLE-NRL`
+  - `EX4-NRL` -> `VOID-BLOCK-NRL`
