@@ -47,6 +47,14 @@ npm run build:data:no-write
 
 - Regenerates dashboard datasets without writing missing summaries back into `experiments/`.
 
+```bash
+npm run export:paper-figures
+```
+
+- Exports publication-ready PNG figures to `iswc_2026_paper/figures/`:
+  - `query_outcome_heatmap.png`
+  - `queries_with_results_gt0_by_run.png`
+
 ## GitHub Pages setup (simple)
 
 Use GitHub Pages built directly from the repository:
@@ -62,7 +70,9 @@ The site entrypoint is `docs/index.html`.
 
 - The dashboard does not fabricate missing values.
 - Unknown or unavailable values are shown as `N/A`.
+- Dashboard favicon is defined in [`docs/assets/favicon.svg`](./docs/assets/favicon.svg) and linked from [`docs/index.html`](./docs/index.html).
 - Main summary metrics exclude `old-results` by design; users can opt in via UI toggle.
+- Dashboard state is encoded into URL query params (filters, selected view, selected query/experiments, period focus), so shared links reopen the same data display.
 - Experiment family labels are remapped in webpage display for readability:
   - `EX1` -> `NOINDEX-ASK`
   - `EX2` -> `NOINDEX-COUNT`

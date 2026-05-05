@@ -25,6 +25,8 @@ const state = {
   experimentSelectionInitialized: false,
 };
 
+let isApplyingUrlState = false;
+
 const dom = {
   dataMeta: document.getElementById("dataMeta"),
   notesMeta: document.getElementById("notesMeta"),
@@ -120,7 +122,7 @@ const CHART_CAPTIONS = Object.freeze({
   errorCategoryChart: "Bars count failed query attempts by error category in the current scope. The distribution shows which failure modes dominate and where mitigation is most needed.",
   runMedianChart: "Bars show median runtime per run in seconds. This helps compare typical execution cost between runs without over-weighting extreme outliers.",
   runPositiveResultCountChart: "Bars show the number of query attempts per run with non-empty result sets (>0). This highlights runs that produced useful, non-empty outputs.",
-  queryResultsByRunOverviewChart: "Heatmap cells show per-query outcomes by run with distinct states for >0 results, 0 results, explicit errors, and missing data. A ≠ marker flags queries whose raw result counts differ between runs, highlighting cross-run result instability.",
+  queryResultsByRunOverviewChart: "Heatmap cells show per-query outcomes by run with distinct states for >0 results, 0 results, explicit errors, and missing data. A ≠ marker flags queries whose non-error raw result counts differ between runs, highlighting cross-run result instability.",
   monthSuccessChart: "Each bar is success rate within one user-defined testing period. It indicates whether robustness improved, declined, or stayed stable across study phases.",
   monthVolumeChart: "Bars show how many query records were executed in each user-defined testing period. This gives workload context for interpreting period-level outcome trends.",
   queryDurationChart: "For the selected query, bars show runtime per experiment run in seconds. This reveals run-to-run execution variability for the same query logic.",
@@ -1758,10 +1760,10 @@ function renderQueryOutcomeHeatmap(chartEl, groups, series) {
 
   const headerCells = groups.map((group) => {
     const consistencyLabel = group.consistencyState === "same"
-      ? "Same raw result count across runs"
+      ? "Same non-error raw result count across runs"
       : group.consistencyState === "different"
-        ? "Different raw result counts across runs"
-        : "Insufficient data for cross-run comparison";
+        ? "Different non-error raw result counts across runs"
+        : "Insufficient non-error data for cross-run comparison";
     const headerTitle = [`Query: ${group.label}`, `Cross-run consistency: ${consistencyLabel}`].join("\n");
     return `
       <th scope="col" class="query-col-head" title="${escapeHtmlAttr(headerTitle)}">
@@ -1789,10 +1791,10 @@ function renderQueryOutcomeHeatmap(chartEl, groups, series) {
       const consistencyState = group.consistencyState;
       const isDifferentAcrossRuns = consistencyState === "different" && !isMissing && !cellMeta.hasError;
       const consistencyLabel = consistencyState === "same"
-        ? "Same raw result count across runs"
+        ? "Same non-error raw result count across runs"
         : consistencyState === "different"
-          ? "Different raw result counts across runs"
-          : "Insufficient data for cross-run comparison";
+          ? "Different non-error raw result counts across runs"
+          : "Insufficient non-error data for cross-run comparison";
       const cellTitle = [
         `Query: ${group.label}`,
         `Run: ${runLabel}`,
@@ -1810,7 +1812,7 @@ function renderQueryOutcomeHeatmap(chartEl, groups, series) {
           : cellMeta.outcomeState === "positive"
             ? "outcome-positive"
             : "outcome-missing";
-      const varianceIcon = isDifferentAcrossRuns ? "<span class=\"variance-icon\" aria-label=\"Raw result counts vary across runs\" title=\"Raw result counts vary across runs\">≠</span>" : "";
+      const varianceIcon = isDifferentAcrossRuns ? "<span class=\"variance-icon\" aria-label=\"Non-error raw result counts vary across runs\" title=\"Non-error raw result counts vary across runs\">≠</span>" : "";
       return `
         <td
           class="heat-cell ${stateClass}"
@@ -1870,7 +1872,7 @@ function renderQueryOutcomeHeatmap(chartEl, groups, series) {
       <span class="legend-item"><span class="legend-swatch swatch-zero"></span>Result count = 0</span>
       <span class="legend-item"><span class="legend-swatch swatch-error"></span>Explicit error encountered</span>
       <span class="legend-item"><span class="legend-swatch swatch-missing"></span>Missing</span>
-      <span class="legend-item"><span class="legend-badge">≠</span>Raw result count differs across runs for that query</span>
+      <span class="legend-item"><span class="legend-badge">≠</span>Non-error raw result count differs across runs for that query</span>
     </div>
   `;
 }
@@ -2154,6 +2156,150 @@ function getQueryDisplayName(stem) {
   return getQueryAlias(stem) || stem;
 }
 
+function parseCsvParam(value) {
+  if (!value) {
+    return [];
+  }
+  return String(value)
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function setSelectValueIfPresent(selectEl, value) {
+  if (!(selectEl instanceof HTMLSelectElement) || value === null || value === undefined || value === "") {
+    return;
+  }
+  const exists = [...selectEl.options].some((option) => option.value === value);
+  if (exists) {
+    selectEl.value = value;
+  }
+}
+
+function parseUrlDashboardState() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    includeOldResults: params.get("old") === "1",
+    monthFocus: params.get("period") || null,
+    explorerMode: params.get("mode") === "experiment" ? "experiment" : "query",
+    runFilter: params.get("run") || "",
+    outcomeFilter: params.get("outcome") || "all",
+    errorFilter: params.get("error") || "",
+    serviceFilter: params.get("service") || "all",
+    minSourcesFilter: params.get("minSources") || "",
+    maxDurationFilter: params.get("maxDuration") || "",
+    startDateFilter: params.get("startDate") || "",
+    endDateFilter: params.get("endDate") || "",
+    searchFilter: params.get("search") || "",
+    queryListSearch: params.get("qSearch") || "",
+    selectedQueryStem: params.get("query") || null,
+    selectedQueryVariant: params.get("queryVariant") || null,
+    selectedExperimentIds: parseCsvParam(params.get("experiments")),
+    httpDisplayMode: params.get("httpView") || "matrix",
+    httpAggregateMode: params.get("httpAgg") || "median",
+    httpQueryFilter: params.get("httpQuery") || "",
+    httpTopN: params.get("httpTopN") || "35",
+  };
+}
+
+function applyUrlDashboardState(urlState) {
+  isApplyingUrlState = true;
+  try {
+    state.includeOldResults = Boolean(urlState.includeOldResults);
+    dom.includeOldResults.checked = state.includeOldResults;
+
+    state.monthFocus = urlState.monthFocus || null;
+    state.explorerMode = urlState.explorerMode === "experiment" ? "experiment" : "query";
+
+    state.selectedQueryStem = urlState.selectedQueryStem || null;
+    if (urlState.selectedQueryStem && urlState.selectedQueryVariant) {
+      state.selectedQueryVariantByStem.set(urlState.selectedQueryStem, urlState.selectedQueryVariant);
+    }
+
+    state.selectedExperimentIds = new Set(urlState.selectedExperimentIds || []);
+    state.experimentSelectionInitialized = state.selectedExperimentIds.size > 0;
+
+    dom.queryListSearch.value = urlState.queryListSearch || "";
+    dom.searchFilter.value = urlState.searchFilter || "";
+    dom.minSourcesFilter.value = urlState.minSourcesFilter || "";
+    dom.maxDurationFilter.value = urlState.maxDurationFilter || "";
+    dom.startDateFilter.value = urlState.startDateFilter || "";
+    dom.endDateFilter.value = urlState.endDateFilter || "";
+    dom.httpQueryFilter.value = urlState.httpQueryFilter || "";
+
+    const topN = Number(urlState.httpTopN);
+    dom.httpTopN.value = Number.isFinite(topN) && topN > 0 ? String(Math.min(300, Math.floor(topN))) : "35";
+
+    setSelectValueIfPresent(dom.runFilter, urlState.runFilter);
+    setSelectValueIfPresent(dom.outcomeFilter, urlState.outcomeFilter);
+    setSelectValueIfPresent(dom.errorFilter, urlState.errorFilter);
+    setSelectValueIfPresent(dom.serviceFilter, urlState.serviceFilter);
+    setSelectValueIfPresent(dom.httpDisplayMode, urlState.httpDisplayMode);
+    setSelectValueIfPresent(dom.httpAggregateMode, urlState.httpAggregateMode);
+  } finally {
+    isApplyingUrlState = false;
+  }
+}
+
+function syncUrlDashboardState() {
+  if (isApplyingUrlState) {
+    return;
+  }
+  const params = new URLSearchParams();
+
+  if (state.includeOldResults) {
+    params.set("old", "1");
+  }
+  if (state.monthFocus) {
+    params.set("period", state.monthFocus);
+  }
+  params.set("mode", state.explorerMode);
+
+  if (dom.runFilter.value) params.set("run", dom.runFilter.value);
+  if (dom.outcomeFilter.value && dom.outcomeFilter.value !== "all") params.set("outcome", dom.outcomeFilter.value);
+  if (dom.errorFilter.value) params.set("error", dom.errorFilter.value);
+  if (dom.serviceFilter.value && dom.serviceFilter.value !== "all") params.set("service", dom.serviceFilter.value);
+  if (dom.minSourcesFilter.value) params.set("minSources", dom.minSourcesFilter.value);
+  if (dom.maxDurationFilter.value) params.set("maxDuration", dom.maxDurationFilter.value);
+  if (dom.startDateFilter.value) params.set("startDate", dom.startDateFilter.value);
+  if (dom.endDateFilter.value) params.set("endDate", dom.endDateFilter.value);
+  if (dom.searchFilter.value.trim()) params.set("search", dom.searchFilter.value.trim());
+  if (dom.queryListSearch.value.trim()) params.set("qSearch", dom.queryListSearch.value.trim());
+
+  if (state.selectedQueryStem) {
+    params.set("query", state.selectedQueryStem);
+    const queryVariant = state.selectedQueryVariantByStem.get(state.selectedQueryStem);
+    if (queryVariant) {
+      params.set("queryVariant", queryVariant);
+    }
+  }
+
+  if (state.selectedExperimentIds.size) {
+    params.set("experiments", [...state.selectedExperimentIds].sort().join(","));
+  }
+
+  if (dom.httpDisplayMode.value && dom.httpDisplayMode.value !== "matrix") {
+    params.set("httpView", dom.httpDisplayMode.value);
+  }
+  if (dom.httpAggregateMode.value && dom.httpAggregateMode.value !== "median") {
+    params.set("httpAgg", dom.httpAggregateMode.value);
+  }
+  if (dom.httpQueryFilter.value.trim()) {
+    params.set("httpQuery", dom.httpQueryFilter.value.trim());
+  }
+  if (dom.httpTopN.value && dom.httpTopN.value !== "35") {
+    params.set("httpTopN", dom.httpTopN.value);
+  }
+
+  const url = new URL(window.location.href);
+  const nextSearch = params.toString();
+  const currentSearch = url.search.replace(/^\?/, "");
+  if (nextSearch !== currentSearch) {
+    url.search = nextSearch ? `?${nextSearch}` : "";
+    history.replaceState(null, "", url);
+  }
+}
+
 function updateRunOptions() {
   const previous = dom.runFilter.value;
   const runs = getActiveRuns();
@@ -2345,11 +2491,15 @@ function renderOverviewCharts(records) {
           errorCategories: new Set(),
           hasNumericResult: false,
           maxResults: null,
+          // Used for heatmap variance markers: compare only non-error outcomes.
+          hasNonErrorNumericResult: false,
+          maxNonErrorResults: null,
         });
       }
       const summary = queryRunSummaryMap.get(key);
       summary.attempts += 1;
-      if (hasExplicitError(record)) {
+      const recordHasExplicitError = hasExplicitError(record);
+      if (recordHasExplicitError) {
         summary.hasError = true;
         if (record.error_category) {
           summary.errorCategories.add(record.error_category);
@@ -2360,6 +2510,12 @@ function renderOverviewCharts(records) {
         summary.hasNumericResult = true;
         if (summary.maxResults === null || numericCount > summary.maxResults) {
           summary.maxResults = numericCount;
+        }
+        if (!recordHasExplicitError) {
+          summary.hasNonErrorNumericResult = true;
+          if (summary.maxNonErrorResults === null || numericCount > summary.maxNonErrorResults) {
+            summary.maxNonErrorResults = numericCount;
+          }
         }
       }
     }
@@ -2488,13 +2644,14 @@ function renderOverviewCharts(records) {
       values.set(run.runId, outcomeState === "missing" ? null : 1);
     });
 
-    const numericRawValues = [...rawValues.values()]
-      .filter((value) => hasNumericValue(value))
-      .map((value) => Number(value));
+    const nonErrorNumericRawValues = sortedRuns
+      .map((run) => queryRunSummaryMap.get(`${stem}::${run.runId}`))
+      .filter((summary) => Boolean(summary?.hasNonErrorNumericResult) && hasNumericValue(summary?.maxNonErrorResults))
+      .map((summary) => Number(summary.maxNonErrorResults));
     let consistencyState = "insufficient";
-    if (numericRawValues.length >= 2) {
-      const firstValue = numericRawValues[0];
-      consistencyState = numericRawValues.every((value) => value === firstValue) ? "same" : "different";
+    if (nonErrorNumericRawValues.length >= 2) {
+      const firstValue = nonErrorNumericRawValues[0];
+      consistencyState = nonErrorNumericRawValues.every((value) => value === firstValue) ? "same" : "different";
     }
 
     return {
@@ -3487,6 +3644,7 @@ function renderAll() {
   ensureChartInfoCards();
   markExpandableSurfaces();
   scheduleExplorerListHeightSync();
+  syncUrlDashboardState();
 }
 
 function resetScopeAndFilters() {
@@ -3643,6 +3801,12 @@ async function loadData() {
 async function bootstrap() {
   try {
     await loadData();
+    const initialUrlState = parseUrlDashboardState();
+    state.includeOldResults = Boolean(initialUrlState.includeOldResults);
+    dom.includeOldResults.checked = state.includeOldResults;
+    updateRunOptions();
+    updateErrorOptions();
+    applyUrlDashboardState(initialUrlState);
     updateRunOptions();
     updateErrorOptions();
     bindEvents();

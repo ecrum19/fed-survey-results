@@ -4,15 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Federated Query Experiment Dashboard</title>
+    <!-- Repository-scoped favicon for GitHub Pages deployment. -->
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+    <link rel="alternate icon" href="./assets/favicon.svg" />
     <link rel="stylesheet" href="./assets/styles.css" />
   </head>
   <body>
     <div class="page-shell">
       <header class="hero">
-        <h1>Federated Query Experiment Dashboard</h1>
+        <h1>SPARQL federation in the Real-World Experiment Dashboard</h1>
         <p>
-          Interactive view of run-level and query-level outcomes from the
-          <code>experiments/</code> directory.
+          Interactive data visualization companion of from the
+          "Does SPARQL federation work in the real world? A case study over large biological SPARQL endpoints" study.
         </p>
         <p class="meta" id="dataMeta">Loading dataset metadata...</p>
       </header>
@@ -41,7 +44,7 @@
       </section>
 
       <details class="panel collapsible notes-panel" id="notesPanel">
-        <summary>Interesting Findings &amp; Outcome Notes (Verbatim)</summary>
+        <summary>Interesting Findings &amp; Outcome Notes</summary>
         <p class="notes-intro">
           This section shows curated field notes exactly as documented in
           <code>Experiment Outcomes (notes).txt</code>. It is presented as contextual narrative and troubleshooting evidence alongside the structured dashboard metrics.
