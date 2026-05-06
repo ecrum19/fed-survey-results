@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-04T12:02:34.268Z",
+  "generated_at": "2026-05-06T14:29:02.238Z",
   "scope": "old-results",
   "run_count": 1,
   "query_record_count": 43,
@@ -47,6 +47,7 @@
       "results_count": 4,
       "error_raw": 38,
       "error_category": "Error Code 38",
+      "error_group": "Other",
       "has_service_description": null
     },
     {
@@ -71,6 +72,7 @@
       "results_count": 66,
       "error_raw": "None",
       "error_category": "None",
+      "error_group": "No explicit error",
       "has_service_description": false
     },
     {
@@ -95,6 +97,7 @@
       "results_count": 0,
       "error_raw": "Aborted",
       "error_category": "Aborted",
+      "error_group": "Timeout-related",
       "has_service_description": false
     },
     {
@@ -119,6 +122,7 @@
       "results_count": 71,
       "error_raw": "None",
       "error_category": "None",
+      "error_group": "No explicit error",
       "has_service_description": false
     },
     {
@@ -144,6 +148,7 @@
       "results_count": 0,
       "error_raw": "Aborted",
       "error_category": "Aborted",
+      "error_group": "Timeout-related",
       "has_service_description": false
     },
     {
@@ -168,6 +173,7 @@
       "results_count": 0,
       "error_raw": "Aborted",
       "error_category": "Aborted",
+      "error_group": "Timeout-related",
       "has_service_description": false
     },
     {
@@ -192,6 +198,7 @@
       "results_count": 194,
       "error_raw": "None",
       "error_category": "None",
+      "error_group": "No explicit error",
       "has_service_description": false
     },
     {
@@ -217,6 +224,7 @@
       "results_count": 0,
       "error_raw": "fetch failed",
       "error_category": "Fetch Failure",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -241,6 +249,7 @@
       "results_count": 0,
       "error_raw": "Aborted",
       "error_category": "Aborted",
+      "error_group": "Timeout-related",
       "has_service_description": false
     },
     {
@@ -265,6 +274,7 @@
       "results_count": 0,
       "error_raw": "fetch failed",
       "error_category": "Fetch Failure",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -289,6 +299,7 @@
       "results_count": 0,
       "error_raw": "Aborted",
       "error_category": "Aborted",
+      "error_group": "Timeout-related",
       "has_service_description": false
     },
     {
@@ -313,6 +324,7 @@
       "results_count": 0,
       "error_raw": "fetch failed",
       "error_category": "Fetch Failure",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -338,6 +350,7 @@
       "results_count": 0,
       "error_raw": "Aborted",
       "error_category": "Aborted",
+      "error_group": "Timeout-related",
       "has_service_description": false
     },
     {
@@ -362,6 +375,7 @@
       "results_count": 0,
       "error_raw": "Aborted",
       "error_category": "Aborted",
+      "error_group": "Timeout-related",
       "has_service_description": false
     },
     {
@@ -387,6 +401,7 @@
       "results_count": 0,
       "error_raw": "Node.js v22.17.0",
       "error_category": "Node.js v22.17.0",
+      "error_group": "Other",
       "has_service_description": false
     },
     {
@@ -412,6 +427,7 @@
       "results_count": 0,
       "error_raw": "terminated",
       "error_category": "terminated",
+      "error_group": "Timeout-related",
       "has_service_description": false
     },
     {
@@ -436,6 +452,7 @@
       "results_count": 0,
       "error_raw": "fetch failed",
       "error_category": "Fetch Failure",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -460,6 +477,7 @@
       "results_count": 0,
       "error_raw": "fetch failed",
       "error_category": "Fetch Failure",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -484,6 +502,7 @@
       "results_count": 0,
       "error_raw": "fetch failed",
       "error_category": "Fetch Failure",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -508,6 +527,7 @@
       "results_count": 0,
       "error_raw": "fetch failed",
       "error_category": "Fetch Failure",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -532,6 +552,7 @@
       "results_count": 0,
       "error_raw": "Request failed: https://sparql.uniprot.org/sparql/",
       "error_category": "Request Failed",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -556,6 +577,7 @@
       "results_count": 266,
       "error_raw": "None",
       "error_category": "None",
+      "error_group": "No explicit error",
       "has_service_description": false
     },
     {
@@ -580,6 +602,7 @@
       "results_count": 0,
       "error_raw": "Request failed: https://biosoda.unil.ch/emi/sparql",
       "error_category": "Request Failed",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -605,6 +628,7 @@
       "results_count": 0,
       "error_raw": "None",
       "error_category": "None",
+      "error_group": "No explicit error",
       "has_service_description": false
     },
     {
@@ -629,6 +653,7 @@
       "results_count": 0,
       "error_raw": "Request failed: https://sparql.omabrowser.org/sparql-sd/",
       "error_category": "Request Failed",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -653,6 +678,7 @@
       "results_count": 0,
       "error_raw": "Request failed: https://biosoda.unil.ch/emi/sparql",
       "error_category": "Request Failed",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -677,6 +703,7 @@
       "results_count": 0,
       "error_raw": "fetch failed",
       "error_category": "Fetch Failure",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -701,6 +728,7 @@
       "results_count": 0,
       "error_raw": "fetch failed",
       "error_category": "Fetch Failure",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -726,6 +754,7 @@
       "results_count": 0,
       "error_raw": "fetch failed",
       "error_category": "Fetch Failure",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -750,6 +779,7 @@
       "results_count": 0,
       "error_raw": "Aborted",
       "error_category": "Aborted",
+      "error_group": "Timeout-related",
       "has_service_description": false
     },
     {
@@ -775,6 +805,7 @@
       "results_count": 0,
       "error_raw": "Request failed: https://www.bgee.org/sparql",
       "error_category": "Request Failed",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -799,6 +830,7 @@
       "results_count": 0,
       "error_raw": "terminated",
       "error_category": "terminated",
+      "error_group": "Timeout-related",
       "has_service_description": false
     },
     {
@@ -823,6 +855,7 @@
       "results_count": 0,
       "error_raw": "Request failed: https://biosoda.unil.ch/emi/sparql",
       "error_category": "Request Failed",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -847,6 +880,7 @@
       "results_count": 0,
       "error_raw": "Request failed: https://biosoda.unil.ch/emi/sparql",
       "error_category": "Request Failed",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -871,6 +905,7 @@
       "results_count": 0,
       "error_raw": "terminated",
       "error_category": "terminated",
+      "error_group": "Timeout-related",
       "has_service_description": false
     },
     {
@@ -895,6 +930,7 @@
       "results_count": 0,
       "error_raw": "Request failed: https://biosoda.unil.ch/emi/sparql",
       "error_category": "Request Failed",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -919,6 +955,7 @@
       "results_count": 0,
       "error_raw": "Request failed: https://biosoda.unil.ch/emi/sparql",
       "error_category": "Request Failed",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -943,6 +980,7 @@
       "results_count": 0,
       "error_raw": "Request failed: https://biosoda.unil.ch/emi/sparql",
       "error_category": "Request Failed",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -967,6 +1005,7 @@
       "results_count": 0,
       "error_raw": "Request failed: https://biosoda.unil.ch/emi/sparql",
       "error_category": "Request Failed",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -991,6 +1030,7 @@
       "results_count": 0,
       "error_raw": "Node.js v22.17.0",
       "error_category": "Node.js v22.17.0",
+      "error_group": "Other",
       "has_service_description": false
     },
     {
@@ -1015,6 +1055,7 @@
       "results_count": 0,
       "error_raw": "Request failed: https://biosoda.unil.ch/emi/sparql",
       "error_category": "Request Failed",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -1039,6 +1080,7 @@
       "results_count": 0,
       "error_raw": "Request failed: https://biosoda.unil.ch/emi/sparql",
       "error_category": "Request Failed",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -1063,6 +1105,7 @@
       "results_count": 0,
       "error_raw": "Request failed: https://biosoda.unil.ch/emi/sparql",
       "error_category": "Request Failed",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -1087,6 +1130,7 @@
       "results_count": 0,
       "error_raw": "Request failed: https://biosoda.unil.ch/emi/sparql",
       "error_category": "Request Failed",
+      "error_group": "Transport-level",
       "has_service_description": false
     }
   ]

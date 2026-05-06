@@ -31,6 +31,7 @@ Behavior:
    - `docs/data/summary.json` (main summary only)
    - `docs/data/summary-old-results.json`
    - `docs/data/queries.json` (query catalog + stats + observed performance)
+   - `docs/data/general-query-statistics.json` (SIB query-analysis structural statistics summary/buckets/detail rows)
 
 ## Commands
 
@@ -71,6 +72,7 @@ The site entrypoint is `docs/index.html`.
 - The dashboard does not fabricate missing values.
 - Unknown or unavailable values are shown as `N/A`.
 - Dashboard favicon is defined in [`docs/assets/favicon.svg`](./docs/assets/favicon.svg) and linked from [`docs/index.html`](./docs/index.html).
+- General Query Statistics section is sourced from `queries/stat.json`, aligned with [constraintAutomaton/query-analysis-sib-swiss-federated-query/results/stat.json](https://github.com/constraintAutomaton/query-analysis-sib-swiss-federated-query/blob/main/results/stat.json).
 - Main summary metrics exclude `old-results` by design; users can opt in via UI toggle.
 - Dashboard state is encoded into URL query params (filters, selected view, selected query/experiments, period focus), so shared links reopen the same data display.
 - Experiment family labels are remapped in webpage display for readability:

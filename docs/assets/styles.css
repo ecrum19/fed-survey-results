@@ -487,6 +487,11 @@ code {
   font-size: 0.9rem;
 }
 
+/* Keep standard chart height, but let this card span two columns for a wider comparison view. */
+.no-service-efficacy-card {
+  grid-column: span 2;
+}
+
 .month-pill-row {
   display: flex;
   flex-wrap: wrap;
@@ -774,7 +779,7 @@ code {
   cursor: pointer;
   user-select: none;
   list-style: none;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0.42rem;
   color: #2a4b68;
@@ -784,7 +789,8 @@ code {
   border-radius: 8px;
   background: #f6fbff;
   padding: 0.34rem 0.52rem;
-  width: fit-content;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .table-collapsible > summary::before {
@@ -824,16 +830,45 @@ code {
   min-width: 980px;
 }
 
+#generalStatsSummaryTable,
+#generalStatsBucketTable,
+#generalStatsDetailTable {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
 #querySibTableWrap {
   overflow-x: auto;
   overflow-y: hidden;
   max-width: 100%;
 }
 
+#generalStatsBucketTableWrap,
+#generalStatsDetailTableWrap {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+}
+
+#generalStatsBucketTable {
+  min-width: 900px;
+}
+
+#generalStatsDetailTable {
+  min-width: 980px;
+}
+
 #queryRunsTable th,
 #queryRunsTable td,
 #experimentQueryTable th,
 #experimentQueryTable td,
+#generalStatsSummaryTable th,
+#generalStatsSummaryTable td,
+#generalStatsBucketTable th,
+#generalStatsBucketTable td,
+#generalStatsDetailTable th,
+#generalStatsDetailTable td,
 #querySibTable th,
 #querySibTable td {
   text-align: left;
@@ -853,11 +888,86 @@ code {
 
 #queryRunsTable th,
 #queryRunsTable td,
+#generalStatsSummaryTable th,
+#generalStatsSummaryTable td,
+#generalStatsBucketTable th,
+#generalStatsBucketTable td,
+#generalStatsDetailTable th,
+#generalStatsDetailTable td,
 #querySibTable th,
 #querySibTable td {
   white-space: normal;
   overflow-wrap: anywhere;
   word-break: break-word;
+}
+
+#generalStatsSummaryTable th,
+#generalStatsBucketTable th,
+#generalStatsDetailTable th {
+  font-size: 0.8rem;
+  color: #2a4660;
+  letter-spacing: 0.01em;
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f8fcff;
+}
+
+#generalStatsDetailTable td:first-child a {
+  color: #0a5ca6;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 600;
+}
+
+.interactive-figure-wrap {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+  min-height: 420px;
+  position: relative;
+}
+
+.interactive-figure-wrap.chart {
+  height: auto;
+  min-height: 420px;
+}
+
+#generalStatsInteractiveFigure {
+  width: calc(100% / 0.8);
+  height: calc(min(78vh, 860px) / 0.8);
+  min-height: 420px;
+  border: 0;
+  display: block;
+  transform: scale(0.8);
+  transform-origin: top left;
+}
+
+.figure-expand-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 16;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  border: 1px solid #b9cde2;
+  background: #f4f9ff;
+  color: #1e5f96;
+  font-size: 0.78rem;
+  line-height: 1;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.figure-expand-btn:hover {
+  background: #dcecff;
+  border-color: #7ea9d4;
 }
 
 #querySibTable th {
@@ -1684,9 +1794,16 @@ body.modal-open {
 #focusModalContent .table-wrap,
 #focusModalContent .http-matrix-wrap,
 #focusModalContent .http-chart-wrap,
-#focusModalContent .outcome-heatmap-wrap {
+#focusModalContent .outcome-heatmap-wrap,
+#focusModalContent .interactive-figure-wrap {
   max-height: none;
   border-radius: 12px;
+}
+
+#focusModalContent #generalStatsInteractiveFigure {
+  height: min(82vh, 980px);
+  width: 100%;
+  transform: none;
 }
 
 #focusModalContent .table-wrap {
@@ -1953,6 +2070,10 @@ body.modal-open {
 
   .chart {
     height: 196px;
+  }
+
+  .no-service-efficacy-card {
+    grid-column: span 1;
   }
 
   .chart-grid {

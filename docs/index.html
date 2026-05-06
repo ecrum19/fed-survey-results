@@ -85,9 +85,9 @@
           </label>
 
           <label>
-            Error category
+            Error group
             <select id="errorFilter">
-              <option value="">All categories</option>
+              <option value="">All error groups</option>
             </select>
           </label>
 
@@ -146,7 +146,7 @@
             <div id="runSuccessChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
           <div class="chart-card">
-            <h3>Error category counts</h3>
+            <h3>Error group counts</h3>
             <div id="errorCategoryChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
           <div class="chart-card">
@@ -156,6 +156,10 @@
           <div class="chart-card">
             <h3>Queries with result sets &gt; 0 by run</h3>
             <div id="runPositiveResultCountChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
+          </div>
+          <div class="chart-card no-service-efficacy-card">
+            <h3>NO-SERVICE algorithm efficacy comparison</h3>
+            <div id="noServiceAlgorithmChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
           <div class="chart-card query-overview-card">
             <h3>Query outcome heatmap by experiment run</h3>
@@ -186,6 +190,77 @@
         </div>
         <div class="monthly-run-grid" id="monthlyRunGrid"></div>
       </details>
+
+      <section class="panel" id="generalQueryStatsSection">
+        <h2>General Query Statistics</h2>
+        <p class="section-intro">
+          This section summarizes structural characteristics of the federated query set using the SIB query-analysis
+          statistics dataset. It mirrors the paper tables with descriptive summaries, bucketed feature distributions,
+          and per-query feature listings.
+        </p>
+        <p class="meta" id="generalQueryStatsMeta">Loading general query statistics...</p>
+
+        <details class="table-collapsible">
+          <summary>Show Feature Summary Table</summary>
+          <div class="table-wrap">
+            <table id="generalStatsSummaryTable">
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th>Average</th>
+                  <th>Maximum</th>
+                  <th>Minimum</th>
+                  <th>Standard Deviation</th>
+                </tr>
+              </thead>
+              <tbody id="generalStatsSummaryTableBody"></tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class="table-collapsible">
+          <summary>Show Feature Bucket Table</summary>
+          <div class="table-wrap" id="generalStatsBucketTableWrap">
+            <table id="generalStatsBucketTable">
+              <thead id="generalStatsBucketTableHead"></thead>
+              <tbody id="generalStatsBucketTableBody"></tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class="table-collapsible">
+          <summary>Show Per-Query Feature Table</summary>
+          <div class="table-wrap" id="generalStatsDetailTableWrap">
+            <table id="generalStatsDetailTable">
+              <thead>
+                <tr>
+                  <th>Query</th>
+                  <th># Triple Patterns</th>
+                  <th># OGPs</th>
+                  <th># UGPs</th>
+                  <th># UGPs w/ Multiple TPs</th>
+                  <th># Federation Members</th>
+                </tr>
+              </thead>
+              <tbody id="generalStatsDetailTableBody"></tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class="table-collapsible" open>
+          <summary>Show Interactive Query Complexity Figure</summary>
+          <div class="interactive-figure-wrap chart plot-chart" id="generalStatsInteractiveFigureChart">
+            <button type="button" class="figure-expand-btn" aria-label="Open interactive figure fullscreen">⤢</button>
+            <iframe
+              id="generalStatsInteractiveFigure"
+              src="./assets/Queries_Summary_Figure_interactive.html"
+              title="Interactive SPARQL Query Complexity Figure"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+            ></iframe>
+          </div>
+        </details>
+      </section>
 
       <section class="panel explorer-panel">
         <h2>Data Explorer</h2>
@@ -307,7 +382,7 @@
                   <div id="selectedRunDurationChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                 </div>
                 <div class="chart-card">
-                  <h3>Error categories in selection</h3>
+                  <h3>Error groups in selection</h3>
                   <div id="selectedRunErrorChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                 </div>
               </div>
@@ -361,7 +436,7 @@
                     <div id="successOnlyDurationChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                   </div>
                   <div class="chart-card">
-                    <h3>Failure-only error categories</h3>
+                    <h3>Failure-only error groups</h3>
                     <div id="failureErrorChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                   </div>
                   <div class="chart-card">

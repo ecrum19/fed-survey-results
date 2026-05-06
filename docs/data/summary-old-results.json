@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-04T12:02:34.268Z",
+  "generated_at": "2026-05-06T14:29:02.238Z",
   "scope": "old-results",
   "run_count": 1,
   "query_count": 43,
@@ -18,5 +18,11 @@
     "Node.js v22.17.0": 2,
     "terminated": 3,
     "Request Failed": 15
+  },
+  "error_group_counts": {
+    "No explicit error": 5,
+    "Timeout-related": 11,
+    "Transport-level": 25,
+    "Other": 2
   }
 }

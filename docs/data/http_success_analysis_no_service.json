@@ -1,0 +1,55 @@
+{
+  "diagnostics": {
+    "records_seen": 1234,
+    "records_kept": 954,
+    "excluded_summary_rows": 20,
+    "excluded_non_no_service_runs": 260,
+    "excluded_missing_http": 0,
+    "excluded_negative_http": 0
+  },
+  "definition_a": {
+    "name": "Definition A: success = no explicit error (includes both =0 and >0 results)",
+    "n_total": 954,
+    "n_success": 47,
+    "n_failure": 907,
+    "success_http_mean": 46366.425531914894,
+    "success_http_median": 22.0,
+    "failure_http_mean": 16662.96802646086,
+    "failure_http_median": 6.0,
+    "point_biserial_r": 0.049285427716619215,
+    "point_biserial_perm_p_two_sided": 0.06536448785040498,
+    "point_biserial_perm_p_positive": 0.06536448785040498,
+    "mean_success_minus_failure": 29703.457505454033,
+    "mean_diff_perm_p_two_sided": 0.0641645278490717,
+    "mean_diff_perm_p_positive": 0.0641645278490717,
+    "mann_whitney_u": 33858.5,
+    "mann_whitney_z": 6.8868832056220475,
+    "mann_whitney_p_two_sided": 5.702771588289579e-12,
+    "mann_whitney_p_positive": 2.8513857941447895e-12
+  },
+  "definition_b": {
+    "name": "Definition B: success = result_count > 0 (non-error only)",
+    "n_total": 954,
+    "n_success": 29,
+    "n_failure": 925,
+    "success_http_mean": 68084.89655172414,
+    "success_http_median": 580.0,
+    "failure_http_mean": 16560.077837837838,
+    "failure_http_median": 6.0,
+    "point_biserial_r": 0.06781804882324298,
+    "point_biserial_perm_p_two_sided": 0.03629879004033199,
+    "point_biserial_perm_p_positive": 0.03629879004033199,
+    "mean_success_minus_failure": 51524.81871388631,
+    "mean_diff_perm_p_two_sided": 0.03346555114829506,
+    "mean_diff_perm_p_positive": 0.03346555114829506,
+    "mann_whitney_u": 22351.0,
+    "mann_whitney_z": 6.1863434062155305,
+    "mann_whitney_p_two_sided": 6.157578891219373e-10,
+    "mann_whitney_p_positive": 3.0787894456096865e-10
+  },
+  "parameters": {
+    "main_json": "docs/data/main.json",
+    "permutations": 30000,
+    "seed": 42
+  }
+}

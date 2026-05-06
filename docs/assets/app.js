@@ -12,6 +12,7 @@ const state = {
   mainDataset: null,
   oldDataset: null,
   queriesDataset: null,
+  generalQueryStats: null,
   summary: null,
   notesText: null,
 
@@ -50,6 +51,7 @@ const dom = {
   errorCategoryChart: document.getElementById("errorCategoryChart"),
   runMedianChart: document.getElementById("runMedianChart"),
   runPositiveResultCountChart: document.getElementById("runPositiveResultCountChart"),
+  noServiceAlgorithmChart: document.getElementById("noServiceAlgorithmChart"),
   queryResultsByRunOverviewChart: document.getElementById("queryResultsByRunOverviewChart"),
   queryErrorTypeHeatmapChart: document.getElementById("queryErrorTypeHeatmapChart"),
 
@@ -57,6 +59,11 @@ const dom = {
   monthSuccessChart: document.getElementById("monthSuccessChart"),
   monthVolumeChart: document.getElementById("monthVolumeChart"),
   monthlyRunGrid: document.getElementById("monthlyRunGrid"),
+  generalQueryStatsMeta: document.getElementById("generalQueryStatsMeta"),
+  generalStatsSummaryTableBody: document.getElementById("generalStatsSummaryTableBody"),
+  generalStatsBucketTableHead: document.getElementById("generalStatsBucketTableHead"),
+  generalStatsBucketTableBody: document.getElementById("generalStatsBucketTableBody"),
+  generalStatsDetailTableBody: document.getElementById("generalStatsDetailTableBody"),
 
   modeByQuery: document.getElementById("modeByQuery"),
   modeByExperiment: document.getElementById("modeByExperiment"),
@@ -116,29 +123,31 @@ const focusView = {
   focusBeforeOpen: null,
 };
 
-const EXPANDABLE_SURFACE_SELECTOR = ".chart-card, .table-wrap, .http-matrix-wrap, .http-chart-wrap";
+const EXPANDABLE_SURFACE_SELECTOR = ".chart-card, .table-wrap, .http-matrix-wrap, .http-chart-wrap, .interactive-figure-wrap";
 const INTERACTIVE_BLOCK_SELECTOR = "button, a, input, select, textarea, label, summary, [role='button']";
 const URL_MATCH_RE = /https?:\/\/[^\s<>"']+/gi;
 const CHART_CAPTIONS = Object.freeze({
   runSuccessChart: "Each bar shows the percentage of query attempts in a run that produced results. This is the clearest high-level reliability signal when comparing run configurations.",
-  errorCategoryChart: "Bars count failed query attempts by error category in the current scope. The distribution shows which failure modes dominate and where mitigation is most needed.",
+  errorCategoryChart: "Bars count failed query attempts by high-level error group (Client-side HTTP, Server-side HTTP, Transport-level, Timeout-related, Other) in the current scope.",
   runMedianChart: "Bars show median runtime per run in seconds. This helps compare typical execution cost between runs without over-weighting extreme outliers.",
   runPositiveResultCountChart: "Bars show the number of query attempts per run with non-empty result sets (>0). This highlights runs that produced useful, non-empty outputs.",
+  noServiceAlgorithmChart: "This chart compares only NO-SERVICE algorithm families using direct experimental outcomes: explicit-error-free rate, >0-result rate, and median HTTP requests among successful (no-explicit-error) query attempts.",
   queryResultsByRunOverviewChart: "Heatmap cells show per-query outcomes by run with distinct states for >0 results, 0 results, explicit errors, and missing data. A ≠ marker flags queries whose non-error raw result counts differ between runs, highlighting cross-run result instability.",
-  queryErrorTypeHeatmapChart: "Heatmap cells show whether each query-run pair had explicit errors. Non-error outcomes (both 0 and >0 results) share one color, while explicit errors are colored by observed error category.",
+  queryErrorTypeHeatmapChart: "Heatmap cells show whether each query-run pair had explicit errors. Non-error outcomes (both 0 and >0 results) share one color, while explicit errors are colored by high-level error group with raw messages available on hover.",
   monthSuccessChart: "Each bar is success rate within one user-defined testing period. It indicates whether robustness improved, declined, or stayed stable across study phases.",
   monthVolumeChart: "Bars show how many query records were executed in each user-defined testing period. This gives workload context for interpreting period-level outcome trends.",
+  generalStatsInteractiveFigureChart: "This interactive figure shows query complexity by triple-pattern count, grouped by federation-member cardinality, with OPTIONAL and UNION markers to highlight structural query features.",
   queryDurationChart: "For the selected query, bars show runtime per experiment run in seconds. This reveals run-to-run execution variability for the same query logic.",
   queryResultsChart: "For the selected query, bars show result count per run. This is useful for spotting consistency issues, empty-result behavior, or large output shifts across runs.",
-  queryHttpOutcomeChart: "Each point is one query attempt for the selected query. The x-axis is HTTP requests and the y-axis is outcome (success or failure), allowing direct inspection of request-load vs success correlation.",
+  queryHttpOutcomeChart: "Each point is one query attempt for the selected query. The x-axis is HTTP requests and the y-axis indicates success (no explicit error) vs failure (explicit error), enabling direct inspection of request-load vs reliability.",
   queryResultVariabilityChart: "This timeline highlights result-count shifts for the selected query across chronological runs. Red bars indicate explicit changes between adjacent time points, making instability easy to spot.",
   selectedRunSuccessChart: "Each bar is success rate for one selected experiment. This allows direct side-by-side comparison of reliability among the chosen runs.",
   selectedRunDurationChart: "Bars show median runtime (seconds) for each selected experiment. It summarizes typical cost per run for the current selection.",
-  selectedRunErrorChart: "Bars count failed queries by error category within selected experiments. This isolates which technical issues explain observed failures in the current comparison.",
+  selectedRunErrorChart: "Bars count failed queries by high-level error group within selected experiments.",
   httpRequestBarChart: "Grouped bars show per-query HTTP request load across selected experiments using the chosen aggregation. This highlights high-cost queries and cross-run request amplification.",
   successOnlyResultsChart: "Bars total result counts from successful queries per experiment. It summarizes useful output volume while excluding failed attempts.",
   successOnlyDurationChart: "Bars show median runtime of only successful queries by experiment. This reveals efficiency of successful executions independent of failure overhead.",
-  failureErrorChart: "Bars count error categories considering only failed queries. It focuses troubleshooting attention on the concrete reasons queries did not complete successfully.",
+  failureErrorChart: "Bars count failed queries by high-level error group (failed attempts only). Raw error text remains available in detailed views and heatmap tooltips.",
   httpByRunChart: "Bars show median HTTP requests per selected experiment. This helps quantify network/API pressure and compare request efficiency across runs.",
 });
 const LEGACY_QUERY_STEM_MAP = Object.freeze({
@@ -189,6 +198,12 @@ const TEMPORAL_GROUP_ORDER = Object.freeze([
   "fall-2025",
   "winter-2026",
   "spring-2026",
+]);
+const NO_SERVICE_ALGORITHM_META = Object.freeze([
+  { key: "NOINDEX-ASK", label: "NOINDEX-ASK", color: "#0072B2" },
+  { key: "NOINDEX-COUNT", label: "NOINDEX-COUNT", color: "#56B4E9" },
+  { key: "VOID-TRIPLE", label: "VOID-TRIPLE", color: "#009E73" },
+  { key: "VOID-BLOCK", label: "VOID-BLOCK", color: "#E69F00" },
 ]);
 const RUN_TEMPORAL_GROUP_OVERRIDES = Object.freeze({
   // Spring 2025 controls
@@ -843,6 +858,65 @@ function normalizeErrorCategoryLabel(value) {
   return label || "Uncategorized explicit error";
 }
 
+function normalizeErrorGroupLabel(value) {
+  const text = typeof value === "string" ? value.trim().toLowerCase() : "";
+  if (text === "client-side http") {
+    return "Client-side HTTP";
+  }
+  if (text === "server-side http") {
+    return "Server-side HTTP";
+  }
+  if (text === "transport-level" || text === "transport level") {
+    return "Transport-level";
+  }
+  if (text === "timeout-related") {
+    return "Timeout-related";
+  }
+  if (text === "other errors" || text === "other error" || text === "other") {
+    return "Other";
+  }
+  return "Other";
+}
+
+function deriveErrorGroupFromText(errorCategory, errorRaw) {
+  const categoryText = errorCategory === null || errorCategory === undefined ? "" : String(errorCategory).trim().toLowerCase();
+  const rawText = errorRaw === null || errorRaw === undefined ? "" : String(errorRaw).trim().toLowerCase();
+  const combined = `${categoryText} ${rawText}`.trim();
+
+  if (
+    /\btimeout\b|\btimed out\b|\bdeadline\b|\blong runtime\b|\bterminated\b|\baborted\b/.test(combined)
+    || /\bhttp\s*408\b|\bhttp\s*504\b|\berror\s*408\b|\berror\s*504\b/.test(combined)
+  ) {
+    return "Timeout-related";
+  }
+  if (
+    /\bclient-side\b|\bhttp\s*4\d\d\b|\berror\s*4\d\d\b|\bbad request\b|\bforbidden\b|\bnot found\b|\brate limited\b/.test(combined)
+  ) {
+    return "Client-side HTTP";
+  }
+  if (
+    /\bserver-side\b|\bhttp\s*5\d\d\b|\berror\s*5\d\d\b/.test(combined)
+  ) {
+    return "Server-side HTTP";
+  }
+  if (
+    /\bfetch failure\b|\brequest failed\b|\bdereference failure\b|\binvalid endpoint response\b|\bnetwork\b|\bsocket\b|\beconnreset\b|\beconnrefused\b|\benotfound\b|\bconnection refused\b/.test(combined)
+  ) {
+    return "Transport-level";
+  }
+  return "Other";
+}
+
+function getRecordErrorGroup(record) {
+  if (!hasExplicitError(record)) {
+    return "No explicit error";
+  }
+  if (record && typeof record.error_group === "string" && record.error_group.trim()) {
+    return normalizeErrorGroupLabel(record.error_group);
+  }
+  return deriveErrorGroupFromText(record?.error_category, record?.error_raw);
+}
+
 function normalizeErrorMessageLabel(rawValue, fallbackCategory = null) {
   const text = rawValue === null || rawValue === undefined ? "" : String(rawValue).trim();
   const normalized = text.toLowerCase();
@@ -1049,6 +1123,11 @@ function hasExplicitError(record) {
   return !(rawLooksNonError && categoryLooksNonError);
 }
 
+function hasPositiveResultSet(record) {
+  // Query-level success is defined as NOT having an explicit error.
+  return !hasExplicitError(record);
+}
+
 function getRunControlLabel(runId) {
   if (typeof runId !== "string") {
     return null;
@@ -1063,6 +1142,21 @@ function getRunDisplayLabel(runId, runLabel) {
   }
   const mappedRunLabel = mapExperimentFamilyLabel(runLabel || "");
   return mappedRunLabel;
+}
+
+function getNoServiceAlgorithmFamily(runId, runLabel) {
+  const displayLabel = getRunDisplayLabel(runId, runLabel);
+  if (!displayLabel) {
+    return null;
+  }
+  const normalized = String(displayLabel).toUpperCase();
+  const matched = NO_SERVICE_ALGORITHM_META.find((item) => {
+    if (normalized.startsWith(`${item.key}-`)) {
+      return true;
+    }
+    return normalized === item.key;
+  });
+  return matched?.key || null;
 }
 
 function renderRunControlTag(runId) {
@@ -1830,6 +1924,140 @@ function renderGroupedBarChart(svg, groups, series, options = {}) {
   chartRegistry.set(chartEl.id, instance);
 }
 
+function renderNoServiceAlgorithmEfficacyChart(chartEl, algorithmRows, periodLabel = null) {
+  clearChartElement(chartEl);
+  const xLabel = "NO-SERVICE algorithm family";
+  const yLabel = "Rate (%)";
+
+  if (!(chartEl instanceof HTMLElement)) {
+    return;
+  }
+  if (!Array.isArray(algorithmRows) || !algorithmRows.length) {
+    renderNoDataPlot(chartEl, "No NO-SERVICE algorithm data for current selection", xLabel, yLabel);
+    return;
+  }
+
+  const ChartJs = getChartJs();
+  if (!ChartJs) {
+    chartEl.innerHTML = "<div class='chart-empty'>Interactive chart library not available.</div>";
+    return;
+  }
+
+  const labels = algorithmRows.map((row) => row.label);
+  const errorFreeRates = algorithmRows.map((row) => row.errorFreeRate * 100);
+  const positiveRates = algorithmRows.map((row) => row.positiveRate * 100);
+  const medianHttpSuccess = algorithmRows.map((row) => row.medianHttpSuccess);
+  const maxRate = Math.max(...errorFreeRates, ...positiveRates, 0);
+  const yMax = Math.max(10, Math.min(100, Math.ceil((maxRate + 2) / 5) * 5));
+
+  const canvas = buildChartCanvas(chartEl);
+  const chartOptions = chartBaseOptions(xLabel, yLabel, labels);
+  chartOptions.scales.y.max = yMax;
+  chartOptions.scales.y.suggestedMin = 0;
+  chartOptions.scales.y.ticks.callback = (value) => `${Number(value).toFixed(0)}%`;
+  chartOptions.scales.y1 = {
+    beginAtZero: true,
+    position: "right",
+    title: {
+      display: true,
+      text: "Median HTTP requests for successful queries (count)",
+      color: "#345a79",
+      font: { size: 12, weight: "600" },
+    },
+    ticks: {
+      color: "#4d6980",
+      callback: (value) => formatAxisNumber(Number(value)),
+    },
+    grid: {
+      drawOnChartArea: false,
+    },
+  };
+  chartOptions.plugins.legend.display = true;
+  chartOptions.interaction = {
+    mode: "index",
+    intersect: false,
+    axis: "x",
+  };
+  chartOptions.plugins.tooltip.callbacks = {
+    title: (items) => {
+      const idx = items[0]?.dataIndex ?? 0;
+      return `Algorithm: ${labels[idx]}`;
+    },
+    label: (context) => {
+      const label = context.dataset.label || "Value";
+      const value = context.dataset.yAxisID === "y1"
+        ? `${formatNumber(Number(context.raw), 1)}`
+        : `${Number(context.raw).toFixed(1)}%`;
+      if (label.includes("Median HTTP")) {
+        return `${label}: ${value}`;
+      }
+      return `${label}: ${value}`;
+    },
+    afterBody: (items) => {
+      const idx = items[0]?.dataIndex ?? 0;
+      const row = algorithmRows[idx];
+      const lines = [
+        `Attempts: ${formatNumber(row.attempts, 0)}`,
+        `>0 results: ${formatNumber(row.positiveCount, 0)}/${formatNumber(row.attempts, 0)}`,
+        `=0 results (no explicit error): ${formatNumber(row.zeroNoErrorCount, 0)}/${formatNumber(row.attempts, 0)}`,
+        `Explicit errors: ${formatNumber(row.errorCount, 0)}/${formatNumber(row.attempts, 0)}`,
+        `No explicit errors: ${formatNumber(row.errorFreeCount, 0)}`,
+        `Successful HTTP sample size: ${formatNumber(row.successHttpCount, 0)}`,
+      ];
+      if (periodLabel) {
+        lines.push(`Period: ${periodLabel}`);
+      }
+      return lines;
+    },
+  };
+
+  const instance = new ChartJs(canvas.getContext("2d"), {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [
+        {
+          label: "No explicit error rate",
+          data: errorFreeRates,
+          backgroundColor: "rgba(0, 114, 178, 0.78)",
+          borderColor: "#0072B2",
+          borderWidth: 1,
+          borderRadius: 4,
+          maxBarThickness: 42,
+          order: 2,
+        },
+        {
+          label: "Result set > 0 rate",
+          data: positiveRates,
+          backgroundColor: "rgba(230, 159, 0, 0.78)",
+          borderColor: "#E69F00",
+          borderWidth: 1,
+          borderRadius: 4,
+          maxBarThickness: 42,
+          order: 2,
+        },
+        {
+          type: "line",
+          label: "Median HTTP requests (successful queries)",
+          data: medianHttpSuccess,
+          yAxisID: "y1",
+          borderColor: "#332288",
+          backgroundColor: "#332288",
+          pointBackgroundColor: "#332288",
+          pointBorderColor: "#f8fbff",
+          pointBorderWidth: 1,
+          pointRadius: 3.3,
+          pointHoverRadius: 4.5,
+          tension: 0.24,
+          order: 1,
+        },
+      ],
+    },
+    options: chartOptions,
+  });
+  chartRegistry.set(chartEl.id, instance);
+}
+
 function renderQueryOutcomeHeatmap(chartEl, groups, series) {
   clearChartElement(chartEl);
   const xLabel = "Query";
@@ -2034,7 +2262,7 @@ function renderQueryErrorTypeHeatmap(chartEl, groups, series, errorCategoryTotal
         `Error messages: ${cellMeta.errorMessages.length ? cellMeta.errorMessages.join(" ; ") : "None"}`,
         `Raw result count: ${formatNullableNumber(cellMeta.rawResultCount, 0)}`,
         `Attempts represented: ${formatNumber(cellMeta.attempts, 0)}`,
-        `Explicit error categories observed: ${cellMeta.errorCategories.length ? cellMeta.errorCategories.join("; ") : "None"}`,
+        `Explicit error groups observed: ${cellMeta.errorCategories.length ? cellMeta.errorCategories.join("; ") : "None"}`,
       ].join("\n");
 
       return `
@@ -2050,7 +2278,7 @@ function renderQueryErrorTypeHeatmap(chartEl, groups, series, errorCategoryTotal
           data-tooltip-errors="${escapeHtmlAttr(cellMeta.errorCategories.length ? cellMeta.errorCategories.join("; ") : "None")}"
           data-tooltip-details-title="Details"
           data-tooltip-details="${escapeHtmlAttr(detailText)}"
-          data-tooltip-consistency="${escapeHtmlAttr(cellMeta.dominantErrorCategory || "No explicit error category")}"
+          data-tooltip-consistency="${escapeHtmlAttr(cellMeta.dominantErrorCategory || "No explicit error group")}"
           aria-label="${escapeHtmlAttr(cellTitle)}"
         ></td>
       `;
@@ -2097,7 +2325,7 @@ function renderQueryErrorTypeHeatmap(chartEl, groups, series, errorCategoryTotal
       class="outcome-heatmap-wrap"
       style="--heatmap-run-col-size:${compactRunColSize}px; --heatmap-header-size:${compactHeaderSize}px;"
       role="img"
-      aria-label="Heatmap of query error categories by run"
+      aria-label="Heatmap of query error groups by run"
     >
       <table class="outcome-heatmap-table">
         <colgroup>${columnDefs}</colgroup>
@@ -2116,8 +2344,8 @@ function renderQueryErrorTypeHeatmap(chartEl, groups, series, errorCategoryTotal
       </table>
     </div>
     <div class="outcome-heatmap-tooltip hidden" role="tooltip"></div>
-    <div class="outcome-heatmap-legend legend-large" aria-label="Error category heatmap legend">
-      <span class="legend-title">Explicit Error Categories (Current Scope)</span>
+    <div class="outcome-heatmap-legend legend-large" aria-label="Error group heatmap legend">
+      <span class="legend-title">Explicit Error Groups (Current Scope)</span>
       <span class="legend-item heatmap-legend-item error-legend-item" data-highlight-key="state:no-error" data-legend-title="No explicit error" data-legend-details="Includes cells with result count = 0 and result count > 0, as long as no explicit error was recorded."><span class="legend-swatch" style="background:${ERROR_HEATMAP_BASE_COLORS.noError};"></span>No explicit error (includes 0 and &gt;0 results)</span>
       <span class="legend-item heatmap-legend-item error-legend-item" data-highlight-key="state:missing" data-legend-title="Missing" data-legend-details="No query-run record is available for this cell under the current filter scope."><span class="legend-swatch" style="background:${ERROR_HEATMAP_BASE_COLORS.missing};"></span>Missing</span>
       ${errorLegendItems}
@@ -2276,7 +2504,7 @@ function handleHeatmapPointerMove(event) {
 
 function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
   const xLabel = "HTTP Requests (count)";
-  const yLabel = "Outcome (0 = failure, 1 = success)";
+  const yLabel = "Outcome (0 = explicit error, 1 = no explicit error)";
   clearChartElement(chartEl);
 
   if (!queryRecords.length) {
@@ -2284,29 +2512,57 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
     return;
   }
 
-  const points = queryRecords
-    .map((record, index) => {
+  const basePoints = queryRecords
+    .map((record) => {
       const httpValue = record.http_requests;
-      if (!hasNumericValue(httpValue)) {
-        return null;
-      }
-
       const run = runsById.get(record.run_id) || { run_id: record.run_id, run_label: record.run_label };
-      const baseY = record.produced_results ? 1 : 0;
-      // Small deterministic jitter keeps overlapping attempts visible without changing interpretation.
-      const jitter = ((index % 11) - 5) * 0.015;
+      const outcomePositive = hasPositiveResultSet(record);
+      const httpIsMissing = !hasNumericValue(httpValue);
       return {
-        x: Number(httpValue),
-        y: baseY + jitter,
+        xBase: httpIsMissing ? null : Number(httpValue),
+        rawHttpRequests: httpIsMissing ? null : Number(httpValue),
         runLabel: getRunDisplayLabel(run.run_id, run.run_label),
         start: record.start,
         duration: record.duration_seconds,
         resultsCount: record.results_count,
-        producedResults: record.produced_results,
+        producedResults: outcomePositive,
+        httpIsMissing,
         errorCategory: record.error_category || "N/A",
       };
     })
     .filter(Boolean);
+
+  // Resolve visual overlap deterministically by spreading points that share the same x+outcome bucket.
+  const groupedPointIndexes = new Map();
+  basePoints.forEach((point, index) => {
+    const key = `${point.producedResults ? "success" : "failure"}::${point.httpIsMissing ? "missing" : point.xBase}`;
+    if (!groupedPointIndexes.has(key)) {
+      groupedPointIndexes.set(key, []);
+    }
+    groupedPointIndexes.get(key).push(index);
+  });
+  const pointOffsetMap = new Map();
+  groupedPointIndexes.forEach((indexes) => {
+    const center = (indexes.length - 1) / 2;
+    indexes.forEach((pointIndex, localIndex) => {
+      pointOffsetMap.set(pointIndex, localIndex - center);
+    });
+  });
+
+  const points = basePoints.map((point, index) => {
+    const overlapOffset = pointOffsetMap.get(index) || 0;
+    const yJitter = overlapOffset * 0.12;
+    // Preserve real HTTP values on x-axis for non-missing points.
+    // Missing HTTP values are rendered near origin solely for visibility.
+    const xValue = point.httpIsMissing
+      ? Math.max(0, 0.8 + (overlapOffset * 0.7))
+      : (point.xBase ?? 0);
+    return {
+      ...point,
+      x: xValue,
+      y: (point.producedResults ? 1 : 0) + yJitter,
+    };
+  });
 
   if (!points.length) {
     renderNoDataPlot(chartEl, "No HTTP request data for selected query", xLabel, yLabel);
@@ -2324,7 +2580,7 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
   const canvas = buildChartCanvas(chartEl);
   const datasets = [
     {
-      label: "Produced results",
+      label: "No explicit error",
       data: successPoints,
       parsing: false,
       backgroundColor: CHART_COLORS.success,
@@ -2334,7 +2590,7 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
       pointHoverRadius: 7,
     },
     {
-      label: "Failed / no results",
+      label: "Explicit error",
       data: failurePoints,
       parsing: false,
       backgroundColor: CHART_COLORS.danger,
@@ -2380,10 +2636,10 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
           },
           label: (context) => {
             const point = context.raw;
-            const outcomeLabel = point.producedResults ? "Produced results" : "Failed / no results";
+            const outcomeLabel = point.producedResults ? "No explicit error" : "Explicit error";
             return [
               `Outcome: ${outcomeLabel}`,
-              `HTTP requests: ${formatNumber(point.x, 0)}`,
+              `HTTP requests: ${point.httpIsMissing ? "N/A (plotted near origin)" : formatNumber(point.rawHttpRequests, 0)}`,
               `Results count: ${formatNullableNumber(point.resultsCount, 0)}`,
               `Duration: ${formatNullableNumber(point.duration, 2)} s`,
             ];
@@ -2433,10 +2689,10 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
           stepSize: 1,
           callback: (value) => {
             if (Number(value) === 1) {
-              return "Success";
+              return "No error";
             }
             if (Number(value) === 0) {
-              return "Failure";
+              return "Error";
             }
             return "";
           },
@@ -2663,11 +2919,14 @@ function updateErrorOptions() {
 
   const categories = new Set();
   for (const record of records) {
-    categories.add(record.error_category || "Unknown Error");
+    if (!hasExplicitError(record)) {
+      continue;
+    }
+    categories.add(getRecordErrorGroup(record));
   }
 
   const sorted = [...categories].sort((a, b) => a.localeCompare(b));
-  const options = ["<option value=''>All categories</option>"];
+  const options = ["<option value=''>All error groups</option>"];
   for (const category of sorted) {
     options.push(`<option value="${category}">${category}</option>`);
   }
@@ -2705,7 +2964,7 @@ function filterOverviewRecords({ applyMonthFocus = true } = {}) {
       return false;
     }
 
-    if (errorFilter && record.error_category !== errorFilter) {
+    if (errorFilter && getRecordErrorGroup(record) !== errorFilter) {
       return false;
     }
 
@@ -2843,7 +3102,7 @@ function renderOverviewCharts(records) {
       const recordHasExplicitError = hasExplicitError(record);
       if (recordHasExplicitError) {
         summary.hasError = true;
-        const errorCategory = normalizeErrorCategoryLabel(record.error_category);
+        const errorCategory = getRecordErrorGroup(record);
         const errorMessage = normalizeErrorMessageLabel(record.error_raw, errorCategory);
         summary.errorCategories.add(errorCategory);
         summary.errorCategoryCounts.set(errorCategory, (summary.errorCategoryCounts.get(errorCategory) || 0) + 1);
@@ -2903,7 +3162,10 @@ function renderOverviewCharts(records) {
 
   const errorCounts = new Map();
   for (const record of records) {
-    const key = record.error_category || "Unknown Error";
+    if (!hasExplicitError(record)) {
+      continue;
+    }
+    const key = getRecordErrorGroup(record);
     errorCounts.set(key, (errorCounts.get(key) || 0) + 1);
   }
   const errorBars = [...errorCounts.entries()]
@@ -2912,11 +3174,11 @@ function renderOverviewCharts(records) {
     .slice(0, 12);
 
   if (activePeriodLabel) {
-    setChartCardTitle(dom.errorCategoryChart, `Error categories (${activePeriodLabel})`);
+    setChartCardTitle(dom.errorCategoryChart, `Error groups (${activePeriodLabel})`);
   } else {
-    setChartCardTitle(dom.errorCategoryChart, "Error category counts");
+    setChartCardTitle(dom.errorCategoryChart, "Error group counts");
   }
-  renderBarChart(dom.errorCategoryChart, errorBars, (value) => formatNumber(value, 0), { xLabel: "Error Category", yLabel: "Failed Queries (count)" });
+  renderBarChart(dom.errorCategoryChart, errorBars, (value) => formatNumber(value, 0), { xLabel: "Error Group", yLabel: "Failed Queries (count)" });
 
   const medianBars = sortedRuns
     .map((run) => ({
@@ -2944,6 +3206,73 @@ function renderOverviewCharts(records) {
     }));
 
   renderBarChart(dom.runPositiveResultCountChart, positiveResultBars, (value) => formatNumber(value, 0), { xLabel: "Experiment Run", yLabel: "Queries With Result Set > 0 (count)" });
+
+  const noServiceAlgorithmMap = new Map(
+    NO_SERVICE_ALGORITHM_META.map((item) => [item.key, {
+      key: item.key,
+      label: item.label,
+      color: item.color,
+      attempts: 0,
+      errorFreeCount: 0,
+      positiveCount: 0,
+      zeroNoErrorCount: 0,
+      errorCount: 0,
+      successHttpValues: [],
+    }]),
+  );
+  records.forEach((record) => {
+    const runMeta = runsById.get(record.run_id);
+    if (normalizeServiceModeValue(getRunServiceMode(runMeta, [])) !== "no-service") {
+      return;
+    }
+    const familyKey = getNoServiceAlgorithmFamily(record.run_id, record.run_label);
+    if (!familyKey || !noServiceAlgorithmMap.has(familyKey)) {
+      return;
+    }
+    const bucket = noServiceAlgorithmMap.get(familyKey);
+    bucket.attempts += 1;
+    const recordHasError = hasExplicitError(record);
+    if (!recordHasError) {
+      bucket.errorFreeCount += 1;
+      if (hasNumericValue(record.http_requests)) {
+        const successHttpValue = Number(record.http_requests);
+        if (successHttpValue >= 0) {
+          bucket.successHttpValues.push(successHttpValue);
+        }
+      }
+      if (hasNumericValue(record.results_count) && Number(record.results_count) === 0) {
+        bucket.zeroNoErrorCount += 1;
+      }
+    } else {
+      bucket.errorCount += 1;
+    }
+    if (hasNumericValue(record.results_count) && Number(record.results_count) > 0) {
+      bucket.positiveCount += 1;
+    }
+  });
+  const algorithmRows = NO_SERVICE_ALGORITHM_META
+    .map((item) => noServiceAlgorithmMap.get(item.key))
+    .filter((bucket) => bucket && bucket.attempts > 0)
+    .map((bucket) => ({
+      key: bucket.key,
+      label: bucket.label,
+      color: bucket.color,
+      attempts: bucket.attempts,
+      errorFreeCount: bucket.errorFreeCount,
+      positiveCount: bucket.positiveCount,
+      zeroNoErrorCount: bucket.zeroNoErrorCount,
+      errorCount: bucket.errorCount,
+      errorFreeRate: bucket.attempts ? bucket.errorFreeCount / bucket.attempts : 0,
+      positiveRate: bucket.attempts ? bucket.positiveCount / bucket.attempts : 0,
+      successHttpCount: bucket.successHttpValues.length,
+      medianHttpSuccess: median(bucket.successHttpValues) ?? 0,
+    }));
+  if (activePeriodLabel) {
+    setChartCardTitle(dom.noServiceAlgorithmChart, `NO-SERVICE algorithm efficacy (${activePeriodLabel})`);
+  } else {
+    setChartCardTitle(dom.noServiceAlgorithmChart, "NO-SERVICE algorithm efficacy comparison");
+  }
+  renderNoServiceAlgorithmEfficacyChart(dom.noServiceAlgorithmChart, algorithmRows, activePeriodLabel);
 
   const queryStems = [...new Set(
     records
@@ -3206,7 +3535,7 @@ function renderMonthlyViews(recordsBeforeMonthFocus) {
       if (!hasExplicitError(record)) {
         return;
       }
-      const category = record.error_category || "Unknown Error";
+      const category = getRecordErrorGroup(record);
       errorCounts.set(category, (errorCounts.get(category) || 0) + 1);
     });
 
@@ -3223,10 +3552,10 @@ function renderMonthlyViews(recordsBeforeMonthFocus) {
 
     setChartCardTitle(
       dom.monthVolumeChart,
-      `Error categories observed (${focusMonth.label}) · ${errorCounts.size} category${errorCounts.size === 1 ? "" : "ies"}`,
+      `Error groups observed (${focusMonth.label}) · ${errorCounts.size} group${errorCounts.size === 1 ? "" : "s"}`,
     );
     renderBarChart(dom.monthVolumeChart, periodErrorBars, (value) => formatNumber(value, 0), {
-      xLabel: "Error Category",
+      xLabel: "Error Group",
       yLabel: "Failed Queries (count)",
     });
   } else {
@@ -3271,6 +3600,66 @@ function renderMonthlyViews(recordsBeforeMonthFocus) {
   }).join("");
 }
 
+function renderGeneralQueryStatistics() {
+  const stats = state.generalQueryStats;
+
+  if (!stats || !Array.isArray(stats.query_rows) || !stats.query_rows.length) {
+    dom.generalQueryStatsMeta.textContent = "No general query statistics dataset loaded.";
+    dom.generalStatsSummaryTableBody.innerHTML = "";
+    dom.generalStatsBucketTableHead.innerHTML = "";
+    dom.generalStatsBucketTableBody.innerHTML = "";
+    dom.generalStatsDetailTableBody.innerHTML = "";
+    return;
+  }
+
+  const sourceUrl = stats.source_url || "N/A";
+  dom.generalQueryStatsMeta.innerHTML = [
+    `Source entries: ${formatNumber(stats.query_count, 0)}`,
+    `Generated: ${formatDateTime(stats.generated_at)}`,
+    `Source: <a href="${escapeHtmlAttr(sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(sourceUrl)}</a>`,
+  ].join(" | ");
+
+  const summaryRows = Array.isArray(stats.summary_rows) ? stats.summary_rows : [];
+  dom.generalStatsSummaryTableBody.innerHTML = summaryRows.map((row) => `
+    <tr>
+      <td>${escapeHtml(row.feature_label)}</td>
+      <td>${formatNumber(row.average, 2)}</td>
+      <td>${formatNumber(row.maximum, 2)}</td>
+      <td>${formatNumber(row.minimum, 2)}</td>
+      <td>${formatNumber(row.std_dev, 2)}</td>
+    </tr>
+  `).join("");
+
+  const bucketColumns = Array.isArray(stats.bucket_columns) ? stats.bucket_columns : [];
+  const bucketRows = Array.isArray(stats.bucket_rows) ? stats.bucket_rows : [];
+  dom.generalStatsBucketTableHead.innerHTML = `
+    <tr>
+      <th>Feature / Range</th>
+      ${bucketColumns.map((columnLabel) => `<th>${escapeHtml(columnLabel)}</th>`).join("")}
+    </tr>
+  `;
+  dom.generalStatsBucketTableBody.innerHTML = bucketRows.map((row) => `
+    <tr>
+      <td>${escapeHtml(row.feature_label)}</td>
+      ${bucketColumns.map((columnLabel) => `<td>${formatNumber(Number(row.counts?.[columnLabel] || 0), 0)}</td>`).join("")}
+    </tr>
+  `).join("");
+
+  dom.generalStatsDetailTableBody.innerHTML = stats.query_rows.map((row) => `
+    <tr>
+      <td>
+        <a href="${escapeHtmlAttr(row.source_url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(row.query_label)}</a>
+      </td>
+      <td>${formatNumber(row.number_triple_patterns, 0)}</td>
+      <td>${formatNumber(row.number_optional, 0)}</td>
+      <td>${formatNumber(row.number_union, 0)}</td>
+      <td>${formatNumber(row.number_union_with_multiple_triple_triple_patterns, 0)}</td>
+      <td>${formatNumber(row.number_federation_member, 0)}</td>
+    </tr>
+  `).join("");
+
+}
+
 function computeObservedStatsMap(records) {
   const map = new Map();
 
@@ -3291,7 +3680,7 @@ function computeObservedStatsMap(records) {
 
     const item = map.get(stem);
     item.attempts += 1;
-    if (record.produced_results) {
+    if (hasPositiveResultSet(record)) {
       item.successes += 1;
     }
     if ((record.results_count || 0) > item.resultsMax) {
@@ -3416,7 +3805,7 @@ function renderQueryDetail(records) {
     .sort((a, b) => (parseIso(a.start)?.valueOf() || 0) - (parseIso(b.start)?.valueOf() || 0));
   const runsById = new Map(getActiveRuns().map((run) => [run.run_id, run]));
 
-  const succeeded = queryRecords.filter((record) => record.produced_results).length;
+  const succeeded = queryRecords.filter((record) => hasPositiveResultSet(record)).length;
   const durations = queryRecords.map((record) => record.duration_seconds).filter((v) => v !== null && v !== undefined);
   const resultsMax = Math.max(0, ...queryRecords.map((record) => record.results_count || 0));
   const displayName = getQueryDisplayName(state.selectedQueryStem);
@@ -3517,8 +3906,8 @@ function renderQueryDetail(records) {
 
   dom.queryRunTableMeta.textContent = `Showing ${queryRecords.length} run records for this query.`;
   dom.queryRunsTableBody.innerHTML = queryRecords.map((record) => {
-    const badgeClass = record.produced_results ? "success" : "failure";
-    const badgeText = record.produced_results ? "Produced" : "No results";
+    const badgeClass = hasPositiveResultSet(record) ? "success" : "failure";
+    const badgeText = hasPositiveResultSet(record) ? "No explicit error" : "Explicit error";
 
     const runDisplayLabel = getRunDisplayLabel(record.run_id, record.run_label);
     const runAbbrevLabel = abbreviateRunLabelForAxis(runDisplayLabel);
@@ -3538,7 +3927,7 @@ function renderQueryDetail(records) {
         <td data-label="Results">${formatNumber(record.results_count, 0)}</td>
         <td data-label="HTTP Requests">${record.http_requests === null || record.http_requests === undefined ? "N/A" : formatNumber(record.http_requests, 0)}</td>
         <td data-label="Error">
-          <span class="tag error">${escapeHtml(record.error_category || "N/A")}</span>
+          <span class="tag error" title="${escapeHtmlAttr(`Original category: ${record.error_category || "N/A"}`)}">${escapeHtml(getRecordErrorGroup(record))}</span>
           <div class="error-raw">${escapeHtml(record.error_raw === null || record.error_raw === undefined || record.error_raw === "" ? "null" : String(record.error_raw))}</div>
         </td>
       </tr>
@@ -3704,7 +4093,10 @@ function renderExperimentCharts(selectedRuns, selectedRecords) {
 
   const errorMap = new Map();
   for (const record of selectedRecords) {
-    const key = record.error_category || "Unknown Error";
+    if (!hasExplicitError(record)) {
+      continue;
+    }
+    const key = getRecordErrorGroup(record);
     errorMap.set(key, (errorMap.get(key) || 0) + 1);
   }
   const errorBars = [...errorMap.entries()]
@@ -3714,7 +4106,7 @@ function renderExperimentCharts(selectedRuns, selectedRecords) {
 
   renderBarChart(dom.selectedRunSuccessChart, successBars, (value) => `${value.toFixed(1)}%`, { xLabel: "Experiment Run", yLabel: "Success Rate (%)" });
   renderBarChart(dom.selectedRunDurationChart, durationBars, (value) => formatNumber(value, 1), { xLabel: "Experiment Run", yLabel: "Median Runtime (seconds)" });
-  renderBarChart(dom.selectedRunErrorChart, errorBars, (value) => formatNumber(value, 0), { xLabel: "Error Category", yLabel: "Failed Queries (count)" });
+  renderBarChart(dom.selectedRunErrorChart, errorBars, (value) => formatNumber(value, 0), { xLabel: "Error Group", yLabel: "Failed Queries (count)" });
 }
 
 function buildHttpViewData(selectedRuns, selectedRecords) {
@@ -3888,7 +4280,7 @@ function renderOptionalInsights(selectedRuns, selectedRecords) {
     dom.successOnlyMeta.innerHTML = "<span class='stat-chip'>No experiments selected</span>";
     renderBarChart(dom.successOnlyResultsChart, [], (value) => formatNumber(value, 0), { xLabel: "Experiment Run", yLabel: "Total Results (count)" });
     renderBarChart(dom.successOnlyDurationChart, [], (value) => formatNumber(value, 1), { xLabel: "Experiment Run", yLabel: "Median Runtime (seconds)" });
-    renderBarChart(dom.failureErrorChart, [], (value) => formatNumber(value, 0), { xLabel: "Error Category", yLabel: "Failed Queries (count)" });
+    renderBarChart(dom.failureErrorChart, [], (value) => formatNumber(value, 0), { xLabel: "Error Group", yLabel: "Failed Queries (count)" });
     renderBarChart(dom.httpByRunChart, [], (value) => formatNumber(value, 0), { xLabel: "Experiment Run", yLabel: "Median HTTP Requests (count)" });
     return;
   }
@@ -3943,7 +4335,10 @@ function renderOptionalInsights(selectedRuns, selectedRecords) {
 
   const failureErrorCounts = new Map();
   for (const record of failureRecords) {
-    const category = record.error_category || "Unknown Error";
+    if (!hasExplicitError(record)) {
+      continue;
+    }
+    const category = getRecordErrorGroup(record);
     failureErrorCounts.set(category, (failureErrorCounts.get(category) || 0) + 1);
   }
   const failureErrorBars = [...failureErrorCounts.entries()]
@@ -3966,7 +4361,7 @@ function renderOptionalInsights(selectedRuns, selectedRecords) {
 
   renderBarChart(dom.successOnlyResultsChart, successResultsBars, (value) => formatNumber(value, 0), { xLabel: "Experiment Run", yLabel: "Total Results (count)" });
   renderBarChart(dom.successOnlyDurationChart, successDurationBars, (value) => formatNumber(value, 1), { xLabel: "Experiment Run", yLabel: "Median Runtime (seconds)" });
-  renderBarChart(dom.failureErrorChart, failureErrorBars, (value) => formatNumber(value, 0), { xLabel: "Error Category", yLabel: "Failed Queries (count)" });
+  renderBarChart(dom.failureErrorChart, failureErrorBars, (value) => formatNumber(value, 0), { xLabel: "Error Group", yLabel: "Failed Queries (count)" });
   renderBarChart(dom.httpByRunChart, httpByRunBars, (value) => formatNumber(value, 0), { xLabel: "Experiment Run", yLabel: "Median HTTP Requests (count)" });
 }
 
@@ -4058,6 +4453,7 @@ function renderAll() {
   renderOverviewKpis(records);
   renderOverviewCharts(records);
   renderMonthlyViews(recordsBeforeMonthFocus);
+  renderGeneralQueryStatistics();
   renderExplorerSection();
   renderNotesSection();
   ensureChartInfoCards();
@@ -4180,6 +4576,20 @@ function bindEvents() {
     toggleChartCaption(infoButton);
   });
 
+  document.addEventListener("click", (event) => {
+    const expandButton = event.target.closest(".figure-expand-btn");
+    if (!(expandButton instanceof HTMLButtonElement)) {
+      return;
+    }
+    const surface = expandButton.closest(".interactive-figure-wrap");
+    if (!(surface instanceof HTMLElement)) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    openFocusView(surface);
+  });
+
   dom.focusModalClose.addEventListener("click", closeFocusView);
   dom.focusModal.addEventListener("click", handleExpandableClick);
   document.addEventListener("click", handleExpandableClick);
@@ -4202,11 +4612,14 @@ function bindEvents() {
 }
 
 async function loadData() {
-  const [mainDataset, oldDataset, summary, queriesDataset, notesText] = await Promise.all([
+  const [mainDataset, oldDataset, summary, queriesDataset, generalQueryStats, notesText] = await Promise.all([
     fetch("./data/main.json").then((response) => response.json()),
     fetch("./data/old-results.json").then((response) => response.json()),
     fetch("./data/summary.json").then((response) => response.json()),
     fetch("./data/queries.json").then((response) => response.json()),
+    fetch("./data/general-query-statistics.json")
+      .then((response) => (response.ok ? response.json() : null))
+      .catch(() => null),
     fetch("./data/experiment-outcomes-notes.txt").then((response) => response.text()),
   ]);
 
@@ -4214,6 +4627,7 @@ async function loadData() {
   state.oldDataset = oldDataset;
   state.summary = summary;
   state.queriesDataset = queriesDataset;
+  state.generalQueryStats = generalQueryStats;
   state.notesText = notesText;
 
   dom.dataMeta.textContent = [

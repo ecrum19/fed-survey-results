@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-04T12:02:34.267Z",
+  "generated_at": "2026-05-06T14:29:02.238Z",
   "scope": "main",
   "run_count": 20,
   "query_count": 1214,
@@ -34,5 +34,13 @@
     "No Comunica Results": 1,
     "HTTP 404 / Not Found": 2,
     "general: error (https://sparql.api.identifiers.org/sparql)": 2
+  },
+  "error_group_counts": {
+    "No explicit error": 181,
+    "Timeout-related": 63,
+    "Transport-level": 85,
+    "Client-side HTTP": 577,
+    "Other": 86,
+    "Server-side HTTP": 222
   }
 }

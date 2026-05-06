@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Interactive SPARQL Query Complexity</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --line: #d8e0ea;
+      --text: #1f2a36;
+      --muted: #56718a;
+    }
+    body {
+      margin: 0;
+      font-family: "Source Sans 3", "Segoe UI", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 14px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px 12px;
+      box-shadow: 0 1px 6px rgba(18, 38, 61, 0.05);
+    }
+    .title {
+      margin: 0 0 8px;
+      font-size: 1.45rem;
+      font-weight: 800;
+      text-align: center;
+      letter-spacing: 0.01em;
+    }
+    .legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0 0 8px;
+    }
+    .legend-box {
+      border: 1px solid #ccd8e6;
+      border-radius: 8px;
+      background: #f8fbff;
+      padding: 8px 10px;
+      min-width: 240px;
+    }
+    .legend-title {
+      margin: 0 0 6px;
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+      color: #2b445c;
+      margin: 4px 0;
+    }
+    .legend-swatch {
+      width: 24px;
+      height: 12px;
+      border: 1px solid #667d95;
+      box-sizing: border-box;
+      display: inline-block;
+      border-radius: 2px;
+    }
+    .plot-wrap {
+      overflow-x: auto;
+      border: 1px solid #ced9e6;
+      border-radius: 8px;
+      background: #ffffff;
+      position: relative;
+    }
+    svg {
+      display: block;
+      min-height: 420px;
+    }
+    .axis-label {
+      fill: #20384f;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .tick-label {
+      fill: #4a637b;
+      font-size: 12px;
+    }
+    .y-tick {
+      fill: #4a637b;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .grid-line {
+      stroke: #d9e3ef;
+      stroke-width: 1;
+      stroke-dasharray: 5 4;
+    }
+    .bar {
+      cursor: pointer;
+      transition: opacity 90ms linear;
+    }
+    .bar:hover {
+      opacity: 0.82;
+      stroke: #1d2c3b;
+      stroke-width: 1.1;
+    }
+    .symbol {
+      font-size: 16px;
+      font-weight: 800;
+      fill: #0f1720;
+      text-anchor: middle;
+      font-family: "Courier New", monospace;
+      pointer-events: none;
+    }
+    .x-label {
+      fill: #4d6980;
+      font-size: 12px;
+      text-anchor: end;
+    }
+    .tooltip {
+      position: fixed;
+      pointer-events: none;
+      z-index: 99;
+      border: 1px solid #9db9d3;
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 8px;
+      padding: 8px 10px;
+      box-shadow: 0 8px 24px rgba(24, 45, 70, 0.15);
+      font-size: 13px;
+      min-width: 250px;
+      max-width: 420px;
+      display: none;
+      white-space: normal;
+      color: #13293d;
+    }
+    .tooltip .head {
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: #173a59;
+    }
+    .foot {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <h1 class="title">SPARQL Query Complexity (Grouped by Federation Members)</h1>
+    <div class="legend-row">
+      <div class="legend-box">
+        <p class="legend-title">Number of Federation Members</p>
+        <div class="legend-item"><span class="legend-swatch" id="fm2Swatch"></span>Federation Members: 2</div>
+        <div class="legend-item"><span class="legend-swatch" id="fm3Swatch"></span>Federation Members: 3 (hatched)</div>
+      </div>
+      <div class="legend-box">
+        <p class="legend-title">Query Features</p>
+        <div class="legend-item"><strong style="font-family: monospace;">O</strong>Contains OPTIONAL</div>
+        <div class="legend-item"><strong style="font-family: monospace;">U</strong>Contains UNION</div>
+      </div>
+    </div>
+    <div class="plot-wrap">
+      <svg id="chart" role="img" aria-label="Interactive SPARQL query complexity chart"></svg>
+    </div>
+    <p class="foot">Hover bars for detailed query metadata. Scroll horizontally if needed.</p>
+  </div>
+  <div class="tooltip" id="tooltip"></div>
+
+  <script>
+    const data = {"bars": [{"x": 0.3, "height": 2, "fed_member": 2, "color_hex": "#1f77b4", "label": "92-bioregistry-xref", "abbr_label": "UniProt-92...", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/92_uniprot_bioregistry_iri_translation", "query_stem": "92_uniprot_bioregistry_iri_translation", "optional": 0, "union": 0}, {"x": 0.42, "height": 2, "fed_member": 2, "color_hex": "#1f77b4", "label": "99-identifiers-xref", "abbr_label": "UniProt-99...", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/99_uniprot_identifiers_org_translation", "query_stem": "99_uniprot_identifiers_org_translation", "optional": 0, "union": 0}, {"x": 0.54, "height": 3, "fed_member": 2, "color_hex": "#1f77b4", "label": "42", "abbr_label": "UniProt-42", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/42", "query_stem": "42", "optional": 0, "union": 0}, {"x": 0.66, "height": 3, "fed_member": 2, "color_hex": "#1f77b4", "label": "20-japanese-chem-search", "abbr_label": "Rhea-20...", "query": "https://sparql.rhea-db.org/.well-known/sparql-examples/20_search_chemical_names_in_japanese", "query_stem": "20_search_chemical_names_in_japanese", "optional": 0, "union": 0}, {"x": 0.78, "height": 4, "fed_member": 2, "color_hex": "#1f77b4", "label": "11", "abbr_label": "Rhea-11", "query": "https://sparql.rhea-db.org/.well-known/sparql-examples/11", "query_stem": "11", "optional": 0, "union": 0}, {"x": 0.9, "height": 5, "fed_member": 2, "color_hex": "#1f77b4", "label": "43", "abbr_label": "UniProt-43", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/43", "query_stem": "43", "optional": 0, "union": 0}, {"x": 1.02, "height": 5, "fed_member": 2, "color_hex": "#1f77b4", "label": "12", "abbr_label": "Rhea-12", "query": "https://sparql.rhea-db.org/.well-known/sparql-examples/12", "query_stem": "12", "optional": 0, "union": 0}, {"x": 1.1400000000000001, "height": 6, "fed_member": 2, "color_hex": "#1f77b4", "label": "46", "abbr_label": "UniProt-46", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/46", "query_stem": "46", "optional": 0, "union": 0}, {"x": 1.2600000000000002, "height": 6, "fed_member": 2, "color_hex": "#1f77b4", "label": "18", "abbr_label": "Rhea-18", "query": "https://sparql.rhea-db.org/.well-known/sparql-examples/18", "query_stem": "18", "optional": 0, "union": 0}, {"x": 1.3800000000000003, "height": 7, "fed_member": 2, "color_hex": "#1f77b4", "label": "90-metabolic-disease-mesh", "abbr_label": "UniProt-90...", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/90_uniprot_affected_by_metabolic_diseases_using_MeSH", "query_stem": "90_uniprot_affected_by_metabolic_diseases_using_MeSH", "optional": 0, "union": 0}, {"x": 1.5000000000000004, "height": 8, "fed_member": 2, "color_hex": "#1f77b4", "label": "29", "abbr_label": "UniProt-29", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/29", "query_stem": "29", "optional": 0, "union": 1}, {"x": 1.6200000000000006, "height": 8, "fed_member": 2, "color_hex": "#1f77b4", "label": "13", "abbr_label": "Rhea-13", "query": "https://sparql.rhea-db.org/.well-known/sparql-examples/13", "query_stem": "13", "optional": 0, "union": 0}, {"x": 1.7400000000000007, "height": 9, "fed_member": 2, "color_hex": "#1f77b4", "label": "109-transporter-liver", "abbr_label": "UniProt-109...", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/109_uniprot_transporter_in_liver", "query_stem": "109_uniprot_transporter_in_liver", "optional": 0, "union": 0}, {"x": 1.8600000000000008, "height": 9, "fed_member": 2, "color_hex": "#1f77b4", "label": "5", "abbr_label": "SwissLipids-5", "query": "https://sparql.swisslipids.org/.well-known/sparql-examples/5", "query_stem": "5", "optional": 0, "union": 0}, {"x": 1.9800000000000009, "height": 9, "fed_member": 2, "color_hex": "#1f77b4", "label": "17", "abbr_label": "OrthoDB-17", "query": "https://sparql.orthodb.org/.well-known/sparql-examples/17", "query_stem": "17", "optional": 0, "union": 0}, {"x": 2.100000000000001, "height": 9, "fed_member": 2, "color_hex": "#1f77b4", "label": "3", "abbr_label": "OMA-3", "query": "https://sparql.omabrowser.org/.well-known/sparql-examples/3", "query_stem": "3", "optional": 0, "union": 0}, {"x": 2.220000000000001, "height": 10, "fed_member": 2, "color_hex": "#1f77b4", "label": "70-dopamine-sim-enzymes", "abbr_label": "UniProt-70...", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/70_enzymes_interacting_with_molecules_similar_to_dopamine", "query_stem": "70_enzymes_interacting_with_molecules_similar_to_dopamine", "optional": 0, "union": 0}, {"x": 2.340000000000001, "height": 10, "fed_member": 2, "color_hex": "#1f77b4", "label": "48", "abbr_label": "UniProt-48", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/48", "query_stem": "48", "optional": 0, "union": 0}, {"x": 2.4600000000000013, "height": 10, "fed_member": 2, "color_hex": "#1f77b4", "label": "examples011b", "abbr_label": "DGBI-E011b", "query": "https://purl.org/emi#examples011b", "query_stem": "examples011b", "optional": 1, "union": 0}, {"x": 2.5800000000000014, "height": 11, "fed_member": 2, "color_hex": "#1f77b4", "label": "67-metabolome-draft", "abbr_label": "UniProt-67...", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/67_draft_human_metabolome", "query_stem": "67_draft_human_metabolome", "optional": 0, "union": 0}, {"x": 2.7000000000000015, "height": 11, "fed_member": 2, "color_hex": "#1f77b4", "label": "19-metabolome-draft", "abbr_label": "Rhea-19...", "query": "https://sparql.rhea-db.org/.well-known/sparql-examples/19_draft_human_metabolome", "query_stem": "19_draft_human_metabolome", "optional": 0, "union": 0}, {"x": 2.8200000000000016, "height": 12, "fed_member": 2, "color_hex": "#1f77b4", "label": "40", "abbr_label": "UniProt-40", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/40", "query_stem": "40", "optional": 0, "union": 0}, {"x": 2.9400000000000017, "height": 12, "fed_member": 2, "color_hex": "#1f77b4", "label": "examples011a", "abbr_label": "DGBI-E011a", "query": "https://purl.org/emi#examples011a", "query_stem": "examples011a", "optional": 0, "union": 1}, {"x": 3.060000000000002, "height": 12, "fed_member": 2, "color_hex": "#1f77b4", "label": "027-biosodafrontend", "abbr_label": "Bgee-027", "query": "https://www.bgee.org/sparql/.well-known/sparql-examples/027-biosodafrontend", "query_stem": "027-biosodafrontend", "optional": 0, "union": 0}, {"x": 3.180000000000002, "height": 13, "fed_member": 2, "color_hex": "#1f77b4", "label": "51", "abbr_label": "UniProt-51", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/51", "query_stem": "51", "optional": 1, "union": 0}, {"x": 3.300000000000002, "height": 13, "fed_member": 2, "color_hex": "#1f77b4", "label": "017", "abbr_label": "Bgee-017", "query": "https://www.bgee.org/sparql/.well-known/sparql-examples/017", "query_stem": "017", "optional": 0, "union": 0}, {"x": 3.420000000000002, "height": 14, "fed_member": 2, "color_hex": "#1f77b4", "label": "38", "abbr_label": "UniProt-38", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/38", "query_stem": "38", "optional": 0, "union": 0}, {"x": 3.5400000000000023, "height": 14, "fed_member": 2, "color_hex": "#1f77b4", "label": "028-biosodafrontend", "abbr_label": "Bgee-028", "query": "https://www.bgee.org/sparql/.well-known/sparql-examples/028-biosodafrontend", "query_stem": "028-biosodafrontend", "optional": 0, "union": 0}, {"x": 3.6600000000000024, "height": 15, "fed_member": 2, "color_hex": "#1f77b4", "label": "36", "abbr_label": "UniProt-36", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/36", "query_stem": "36", "optional": 1, "union": 0}, {"x": 3.7800000000000025, "height": 15, "fed_member": 2, "color_hex": "#1f77b4", "label": "54", "abbr_label": "UniProt-54", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/54", "query_stem": "54", "optional": 0, "union": 0}, {"x": 3.9000000000000026, "height": 15, "fed_member": 2, "color_hex": "#1f77b4", "label": "002", "abbr_label": "DGBI-002", "query": "https://biosoda.unil.ch/emi/sparql/.well-known/sparql-examples/002", "query_stem": "002", "optional": 0, "union": 0}, {"x": 4.020000000000002, "height": 16, "fed_member": 2, "color_hex": "#1f77b4", "label": "71-dopamine-disease-variants", "abbr_label": "UniProt-71...", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease", "query_stem": "71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease", "optional": 0, "union": 0}, {"x": 4.140000000000002, "height": 16, "fed_member": 2, "color_hex": "#1f77b4", "label": "14", "abbr_label": "OMA-14", "query": "https://sparql.omabrowser.org/.well-known/sparql-examples/14", "query_stem": "14", "optional": 1, "union": 0}, {"x": 4.2600000000000025, "height": 16, "fed_member": 2, "color_hex": "#1f77b4", "label": "116-rabbit-mouse-orthologs", "abbr_label": "UniProt-116...", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/116_biosodafrontend_rabit_mouse_orthologs", "query_stem": "116_biosodafrontend_rabit_mouse_orthologs", "optional": 0, "union": 0}, {"x": 4.380000000000003, "height": 17, "fed_member": 2, "color_hex": "#1f77b4", "label": "examples019b", "abbr_label": "DGBI-E019b", "query": "https://purl.org/emi#examples019b", "query_stem": "examples019b", "optional": 0, "union": 0}, {"x": 4.500000000000003, "height": 18, "fed_member": 2, "color_hex": "#1f77b4", "label": "18", "abbr_label": "OrthoDB-18", "query": "https://sparql.orthodb.org/.well-known/sparql-examples/18", "query_stem": "18", "optional": 0, "union": 0}, {"x": 4.620000000000003, "height": 18, "fed_member": 2, "color_hex": "#1f77b4", "label": "examples019a", "abbr_label": "DGBI-E019a", "query": "https://purl.org/emi#examples019a", "query_stem": "examples019a", "optional": 2, "union": 0}, {"x": 4.740000000000003, "height": 19, "fed_member": 2, "color_hex": "#1f77b4", "label": "019", "abbr_label": "Bgee-019", "query": "https://www.bgee.org/sparql/.well-known/sparql-examples/019", "query_stem": "019", "optional": 0, "union": 0}, {"x": 4.860000000000003, "height": 19, "fed_member": 2, "color_hex": "#1f77b4", "label": "15-rat-TP53", "abbr_label": "OMA-15...", "query": "https://sparql.omabrowser.org/.well-known/sparql-examples/15-rat-TP53-biosodafrontend", "query_stem": "15-rat-TP53-biosodafrontend", "optional": 0, "union": 0}, {"x": 4.980000000000003, "height": 21, "fed_member": 2, "color_hex": "#1f77b4", "label": "examples018", "abbr_label": "DGBI-E018", "query": "https://purl.org/emi#examples018", "query_stem": "examples018", "optional": 0, "union": 1}, {"x": 5.100000000000003, "height": 22, "fed_member": 2, "color_hex": "#1f77b4", "label": "009", "abbr_label": "DGBI-009", "query": "https://biosoda.unil.ch/emi/sparql/.well-known/sparql-examples/009", "query_stem": "009", "optional": 0, "union": 0}, {"x": 5.220000000000003, "height": 22, "fed_member": 2, "color_hex": "#1f77b4", "label": "examples015", "abbr_label": "DGBI-E015", "query": "https://purl.org/emi#examples015", "query_stem": "examples015", "optional": 0, "union": 1}, {"x": 5.340000000000003, "height": 22, "fed_member": 2, "color_hex": "#1f77b4", "label": "examples012", "abbr_label": "DGBI-E012", "query": "https://purl.org/emi#examples012", "query_stem": "examples012", "optional": 0, "union": 1}, {"x": 5.4600000000000035, "height": 22, "fed_member": 2, "color_hex": "#1f77b4", "label": "examples021", "abbr_label": "DGBI-E021", "query": "https://purl.org/emi#examples021", "query_stem": "examples021", "optional": 0, "union": 1}, {"x": 5.580000000000004, "height": 23, "fed_member": 2, "color_hex": "#1f77b4", "label": "007", "abbr_label": "DGBI-007", "query": "https://biosoda.unil.ch/emi/sparql/.well-known/sparql-examples/007", "query_stem": "007", "optional": 0, "union": 1}, {"x": 5.700000000000004, "height": 24, "fed_member": 2, "color_hex": "#1f77b4", "label": "018", "abbr_label": "Bgee-018", "query": "https://www.bgee.org/sparql/.well-known/sparql-examples/018", "query_stem": "018", "optional": 0, "union": 0}, {"x": 5.820000000000004, "height": 25, "fed_member": 2, "color_hex": "#1f77b4", "label": "020", "abbr_label": "Bgee-020", "query": "https://www.bgee.org/sparql/.well-known/sparql-examples/020", "query_stem": "020", "optional": 0, "union": 0}, {"x": 5.940000000000004, "height": 25, "fed_member": 2, "color_hex": "#1f77b4", "label": "001", "abbr_label": "DGBI-001", "query": "https://biosoda.unil.ch/emi/sparql/.well-known/sparql-examples/001", "query_stem": "001", "optional": 0, "union": 0}, {"x": 6.060000000000004, "height": 28, "fed_member": 2, "color_hex": "#1f77b4", "label": "examples013", "abbr_label": "DGBI-E013", "query": "https://purl.org/emi#examples013", "query_stem": "examples013", "optional": 0, "union": 1}, {"x": 6.180000000000004, "height": 33, "fed_member": 2, "color_hex": "#1f77b4", "label": "006", "abbr_label": "DGBI-006", "query": "https://biosoda.unil.ch/emi/sparql/.well-known/sparql-examples/006", "query_stem": "006", "optional": 2, "union": 0}, {"x": 6.300000000000004, "height": 34, "fed_member": 2, "color_hex": "#1f77b4", "label": "20", "abbr_label": "OrthoDB-20", "query": "https://sparql.orthodb.org/.well-known/sparql-examples/20", "query_stem": "20", "optional": 0, "union": 0}, {"x": 6.720000000000004, "height": 9, "fed_member": 3, "color_hex": "#ff7f0e", "label": "26", "abbr_label": "SwissLipids-26", "query": "https://sparql.swisslipids.org/.well-known/sparql-examples/26", "query_stem": "26", "optional": 0, "union": 0}, {"x": 6.840000000000004, "height": 9, "fed_member": 3, "color_hex": "#ff7f0e", "label": "34", "abbr_label": "SwissLipids-34", "query": "https://sparql.swisslipids.org/.well-known/sparql-examples/34", "query_stem": "34", "optional": 0, "union": 0}, {"x": 6.960000000000004, "height": 10, "fed_member": 3, "color_hex": "#ff7f0e", "label": "16", "abbr_label": "SwissLipids-16", "query": "https://sparql.swisslipids.org/.well-known/sparql-examples/16", "query_stem": "16", "optional": 0, "union": 0}, {"x": 7.0800000000000045, "height": 11, "fed_member": 3, "color_hex": "#ff7f0e", "label": "27", "abbr_label": "SwissLipids-27", "query": "https://sparql.swisslipids.org/.well-known/sparql-examples/27", "query_stem": "27", "optional": 0, "union": 0}, {"x": 7.200000000000005, "height": 13, "fed_member": 3, "color_hex": "#ff7f0e", "label": "6", "abbr_label": "SwissLipids-6", "query": "https://sparql.swisslipids.org/.well-known/sparql-examples/6", "query_stem": "6", "optional": 0, "union": 0}, {"x": 7.320000000000005, "height": 14, "fed_member": 3, "color_hex": "#ff7f0e", "label": "60", "abbr_label": "UniProt-60", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/60", "query_stem": "60", "optional": 1, "union": 0}, {"x": 7.440000000000005, "height": 16, "fed_member": 3, "color_hex": "#ff7f0e", "label": "49", "abbr_label": "UniProt-49", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/49", "query_stem": "49", "optional": 0, "union": 0}, {"x": 7.560000000000005, "height": 16, "fed_member": 3, "color_hex": "#ff7f0e", "label": "7", "abbr_label": "SwissLipids-7", "query": "https://sparql.swisslipids.org/.well-known/sparql-examples/7", "query_stem": "7", "optional": 0, "union": 0}, {"x": 7.680000000000005, "height": 17, "fed_member": 3, "color_hex": "#ff7f0e", "label": "50", "abbr_label": "UniProt-50", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/50", "query_stem": "50", "optional": 0, "union": 0}, {"x": 7.800000000000005, "height": 20, "fed_member": 3, "color_hex": "#ff7f0e", "label": "53", "abbr_label": "UniProt-53", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/53", "query_stem": "53", "optional": 0, "union": 0}, {"x": 7.920000000000005, "height": 20, "fed_member": 3, "color_hex": "#ff7f0e", "label": "19", "abbr_label": "OrthoDB-19", "query": "https://sparql.orthodb.org/.well-known/sparql-examples/19", "query_stem": "19", "optional": 0, "union": 0}, {"x": 8.040000000000004, "height": 20, "fed_member": 3, "color_hex": "#ff7f0e", "label": "117-glioblastoma-rat", "abbr_label": "UniProt-117...", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/117_biosodafrontend_glioblastoma_orthologs_rat", "query_stem": "117_biosodafrontend_glioblastoma_orthologs_rat", "optional": 0, "union": 0}, {"x": 8.160000000000004, "height": 22, "fed_member": 3, "color_hex": "#ff7f0e", "label": "118-rat-brain-cancer", "abbr_label": "UniProt-118...", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/118_biosodafrontend_rat_brain_human_cancer", "query_stem": "118_biosodafrontend_rat_brain_human_cancer", "optional": 0, "union": 0}, {"x": 8.280000000000003, "height": 23, "fed_member": 3, "color_hex": "#ff7f0e", "label": "016", "abbr_label": "Bgee-016", "query": "https://www.bgee.org/sparql/.well-known/sparql-examples/016", "query_stem": "016", "optional": 0, "union": 0}, {"x": 8.400000000000002, "height": 24, "fed_member": 3, "color_hex": "#ff7f0e", "label": "45", "abbr_label": "UniProt-45", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/45", "query_stem": "45", "optional": 0, "union": 1}, {"x": 8.520000000000001, "height": 32, "fed_member": 3, "color_hex": "#ff7f0e", "label": "52", "abbr_label": "UniProt-52", "query": "https://sparql.uniprot.org/.well-known/sparql-examples/52", "query_stem": "52", "optional": 0, "union": 1}], "bar_width": 0.12, "side_gap": 0.3};
+    const svg = document.getElementById("chart");
+    const tooltip = document.getElementById("tooltip");
+    const bars = data.bars;
+    const margin = { top: 20, right: 16, bottom: 165, left: 72 };
+    const rowHeight = 11.5;
+    const pxPerBar = 22;
+    const width = Math.max(1500, margin.left + margin.right + (bars.length * pxPerBar));
+    const height = 620;
+    const innerWidth = width - margin.left - margin.right;
+    const innerHeight = height - margin.top - margin.bottom;
+    const maxY = Math.max(...bars.map((b) => Number(b.height || 0)), 0) + 2;
+
+    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+    svg.setAttribute("width", width);
+    svg.setAttribute("height", height);
+
+    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+    defs.innerHTML = `
+      <pattern id="diagHatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+        <rect width="8" height="8" fill="transparent"></rect>
+        <line x1="0" y1="0" x2="0" y2="8" stroke="#6b7a8a" stroke-width="2"></line>
+      </pattern>
+      <mask id="hatchMask">
+        <rect x="0" y="0" width="100%" height="100%" fill="white"></rect>
+      </mask>
+    `;
+    svg.appendChild(defs);
+
+    function xScale(value) {
+      const minX = Math.min(...bars.map((b) => b.x)) - data.side_gap;
+      const maxX = Math.max(...bars.map((b) => b.x)) + data.side_gap;
+      return margin.left + ((value - minX) / (maxX - minX)) * innerWidth;
+    }
+
+    function yScale(value) {
+      return margin.top + innerHeight - (value / maxY) * innerHeight;
+    }
+
+    function createSvg(tag, attrs = {}) {
+      const node = document.createElementNS("http://www.w3.org/2000/svg", tag);
+      Object.entries(attrs).forEach(([key, val]) => node.setAttribute(key, String(val)));
+      return node;
+    }
+
+    // Y-grid and axis labels.
+    for (let tick = 0; tick <= maxY; tick += 5) {
+      const y = yScale(tick);
+      const grid = createSvg("line", {
+        x1: margin.left,
+        x2: width - margin.right,
+        y1: y,
+        y2: y,
+        class: "grid-line",
+      });
+      svg.appendChild(grid);
+
+      const tickText = createSvg("text", {
+        x: margin.left - 12,
+        y: y + 5,
+        class: "y-tick",
+        "text-anchor": "end",
+      });
+      tickText.textContent = String(tick);
+      svg.appendChild(tickText);
+    }
+
+    const yAxis = createSvg("line", {
+      x1: margin.left,
+      x2: margin.left,
+      y1: margin.top,
+      y2: margin.top + innerHeight,
+      stroke: "#4f6d88",
+      "stroke-width": 1.2,
+    });
+    svg.appendChild(yAxis);
+
+    const xAxis = createSvg("line", {
+      x1: margin.left,
+      x2: width - margin.right,
+      y1: margin.top + innerHeight,
+      y2: margin.top + innerHeight,
+      stroke: "#4f6d88",
+      "stroke-width": 1.2,
+    });
+    svg.appendChild(xAxis);
+
+    const yLabel = createSvg("text", {
+      x: 24,
+      y: margin.top + innerHeight / 2,
+      transform: `rotate(-90 24 ${margin.top + innerHeight / 2})`,
+      class: "axis-label",
+    });
+    yLabel.textContent = "Number of Triple Patterns";
+    svg.appendChild(yLabel);
+
+    const xLabel = createSvg("text", {
+      x: margin.left + innerWidth / 2,
+      y: height - 22,
+      class: "axis-label",
+      "text-anchor": "middle",
+    });
+    xLabel.textContent = "Query Name";
+    svg.appendChild(xLabel);
+
+    const barPixelWidth = Math.max(6, Math.min(18, innerWidth / (bars.length + 8)));
+
+    bars.forEach((bar) => {
+      const xCenter = xScale(bar.x);
+      const barHeight = yScale(0) - yScale(bar.height);
+      const rectY = yScale(bar.height);
+      const rectX = xCenter - barPixelWidth / 2;
+
+      const baseRect = createSvg("rect", {
+        x: rectX,
+        y: rectY,
+        width: barPixelWidth,
+        height: barHeight,
+        fill: bar.color_hex,
+        class: "bar",
+      });
+
+      const tooltipHtml = [
+        `<div class="head">${bar.label}</div>`,
+        `<div><strong>Triple patterns:</strong> ${bar.height}</div>`,
+        `<div><strong>Federation members:</strong> ${bar.fed_member}</div>`,
+        `<div><strong>Contains OPTIONAL:</strong> ${bar.optional >= 1 ? "Yes" : "No"}</div>`,
+        `<div><strong>Contains UNION:</strong> ${bar.union >= 1 ? "Yes" : "No"}</div>`,
+        `<div><strong>Source query:</strong> <span style="word-break: break-all;">${bar.query}</span></div>`,
+      ].join("");
+
+      baseRect.addEventListener("mousemove", (event) => {
+        tooltip.style.display = "block";
+        tooltip.innerHTML = tooltipHtml;
+        const offset = 16;
+        let left = event.clientX + offset;
+        let top = event.clientY + offset;
+        if (left + tooltip.offsetWidth > window.innerWidth - 8) {
+          left = event.clientX - tooltip.offsetWidth - offset;
+        }
+        if (top + tooltip.offsetHeight > window.innerHeight - 8) {
+          top = event.clientY - tooltip.offsetHeight - offset;
+        }
+        tooltip.style.left = `${left}px`;
+        tooltip.style.top = `${top}px`;
+      });
+      baseRect.addEventListener("mouseleave", () => {
+        tooltip.style.display = "none";
+      });
+      svg.appendChild(baseRect);
+
+      if (bar.fed_member === 3) {
+        const hatchRect = createSvg("rect", {
+          x: rectX,
+          y: rectY,
+          width: barPixelWidth,
+          height: barHeight,
+          fill: "url(#diagHatch)",
+          opacity: 0.7,
+          pointerEvents: "none",
+        });
+        svg.appendChild(hatchRect);
+      }
+
+      if (bar.optional >= 1) {
+        const text = createSvg("text", {
+          x: xCenter,
+          y: rectY - 3,
+          class: "symbol",
+        });
+        text.textContent = "O";
+        svg.appendChild(text);
+      }
+      if (bar.union >= 1) {
+        const text = createSvg("text", {
+          x: xCenter,
+          y: rectY - 3,
+          class: "symbol",
+        });
+        text.textContent = "U";
+        svg.appendChild(text);
+      }
+
+      const label = createSvg("text", {
+        x: xCenter - 2,
+        y: margin.top + innerHeight + 10,
+        class: "x-label",
+        transform: `rotate(-45 ${xCenter - 2} ${margin.top + innerHeight + 10})`,
+      });
+      label.textContent = bar.label;
+      svg.appendChild(label);
+    });
+
+    const fed2 = bars.find((b) => b.fed_member === 2);
+    const fed3 = bars.find((b) => b.fed_member === 3);
+    if (fed2) {
+      document.getElementById("fm2Swatch").style.background = fed2.color_hex;
+    }
+    if (fed3) {
+      document.getElementById("fm3Swatch").style.background = fed3.color_hex;
+      document.getElementById("fm3Swatch").style.backgroundImage = "repeating-linear-gradient(45deg, rgba(80,80,80,.45) 0 2px, transparent 2px 5px)";
+    }
+  </script>
+</body>
+</html>

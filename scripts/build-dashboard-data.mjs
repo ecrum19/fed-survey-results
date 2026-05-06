@@ -101,6 +101,26 @@ const queryStemAliasOverrides = new Map([
   ["117_biosodafrontend_glioblastoma_orthologs_rat", "117-glioblastoma-rat"],
   ["118_biosodafrontend_rat_brain_human_cancer", "118-rat-brain-cancer"],
 ]);
+const generalQueryStatsSourceUrl = "https://github.com/constraintAutomaton/query-analysis-sib-swiss-federated-query/blob/main/results/stat.json";
+const generalQueryStatsBucketColumns = ["0", "1-5", "6-10", "11-15", "16-20", "21-25", "26-30", "31-35"];
+const generalQuerySummaryFeatures = [
+  { key: "number_triple_patterns", label: "Number of Triple Patterns" },
+  { key: "number_optional", label: "Number of OGPs" },
+  { key: "number_union", label: "Number of UGPs" },
+  { key: "number_union_with_multiple_triple_triple_patterns", label: "Number of UGPs with Multiple Triple Patterns" },
+  { key: "number_federation_member", label: "Number of Federation Members" },
+];
+const generalQueryBucketFeatures = [
+  { key: "number_triple_patterns", label: "Triple Patterns per Query" },
+  { key: "number_bgp", label: "BGP per Query" },
+  { key: "number_optional", label: "OGP per Query" },
+  { key: "number_property_path", label: "Property Paths per Query" },
+  { key: "number_recursive_property_path", label: "Recursive Property Paths per Query" },
+  { key: "number_union", label: "UGP per Query" },
+  { key: "number_distinct", label: "Distinct Statement per Query" },
+  { key: "number_limit", label: "Limit Statement per Query" },
+  { key: "number_federation_member", label: "Federation Member per Query" },
+];
 
 function normalizeSourceUrl(url) {
   if (typeof url !== "string") {
@@ -1389,6 +1409,51 @@ function classifyError(errorValue, producedResults) {
   return text || "Other Error";
 }
 
+function classifyErrorGroup(errorCategory, errorRaw, producedResults) {
+  if (producedResults) {
+    return "No explicit error";
+  }
+
+  const categoryText = errorCategory === null || errorCategory === undefined
+    ? ""
+    : String(errorCategory).trim().toLowerCase();
+  const rawText = errorRaw === null || errorRaw === undefined
+    ? ""
+    : String(errorRaw).trim().toLowerCase();
+  const combined = `${categoryText} ${rawText}`.trim();
+
+  // Priority 1: timeout-related conditions.
+  if (
+    /\btimeout\b|\btimed out\b|\bdeadline\b|\blong runtime\b|\bterminated\b|\baborted\b/.test(combined)
+    || /\bhttp\s*408\b|\bhttp\s*504\b|\berror\s*408\b|\berror\s*504\b/.test(combined)
+  ) {
+    return "Timeout-related";
+  }
+
+  // Priority 2: client-side HTTP (4xx style).
+  if (
+    /\bclient-side\b|\bhttp\s*4\d\d\b|\berror\s*4\d\d\b|\bbad request\b|\bforbidden\b|\bnot found\b|\brate limited\b/.test(combined)
+  ) {
+    return "Client-side HTTP";
+  }
+
+  // Priority 3: server-side HTTP (5xx style and endpoint-fetch/server failures).
+  if (
+    /\bserver-side\b|\bhttp\s*5\d\d\b|\berror\s*5\d\d\b/.test(combined)
+  ) {
+    return "Server-side HTTP";
+  }
+
+  // Priority 4: transport-level connectivity/protocol failures.
+  if (
+    /\bfetch failure\b|\brequest failed\b|\bdereference failure\b|\binvalid endpoint response\b|\bnetwork\b|\bsocket\b|\beconnreset\b|\beconnrefused\b|\benotfound\b|\bconnection refused\b/.test(combined)
+  ) {
+    return "Transport-level";
+  }
+
+  return "Other";
+}
+
 function detectServiceDescription(queryName) {
   if (!queryName || typeof queryName !== "string") {
     return null;
@@ -1456,6 +1521,149 @@ function parseQueryStatMap() {
   }
 
   return map;
+}
+
+function parseRawQueryStatRows() {
+  const statPath = path.join(queriesRoot, "stat.json");
+  if (!fileExists(statPath)) {
+    return [];
+  }
+
+  let parsed;
+  try {
+    parsed = JSON.parse(fs.readFileSync(statPath, "utf8"));
+  } catch (error) {
+    console.warn(`[WARN] Failed to parse ${path.relative(repoRoot, statPath)}: ${error.message}`);
+    return [];
+  }
+
+  const data = parsed?.data;
+  if (!data || typeof data !== "object") {
+    return [];
+  }
+
+  const rows = [];
+  for (const [sourceUrl, stats] of Object.entries(data)) {
+    if (!stats || typeof stats !== "object") {
+      continue;
+    }
+    let queryTail = sourceUrl;
+    try {
+      queryTail = decodeURIComponent(new URL(sourceUrl).pathname.split("/").at(-1) || sourceUrl);
+    } catch {
+      queryTail = sourceUrl.split("/").at(-1) || sourceUrl;
+    }
+
+    const cleanedTail = String(queryTail || "").trim() || sourceUrl;
+    rows.push({
+      source_url: sourceUrl,
+      query_label: cleanedTail,
+      query_stem: normalizeQueryStem(cleanedTail) || cleanedTail,
+      number_bgp: toNumber(stats.number_bgp) ?? 0,
+      number_triple_patterns: toNumber(stats.number_triple_patterns) ?? 0,
+      number_optional: toNumber(stats.number_optional) ?? 0,
+      number_property_path: toNumber(stats.number_property_path) ?? 0,
+      number_recursive_property_path: toNumber(stats.number_recursive_property_path) ?? 0,
+      number_union: toNumber(stats.number_union) ?? 0,
+      number_union_with_multiple_triple_triple_patterns: toNumber(stats.number_union_with_multiple_triple_triple_patterns) ?? 0,
+      number_distinct: toNumber(stats.number_distinct) ?? 0,
+      number_limit: toNumber(stats.number_limit) ?? 0,
+      number_federation_member: toNumber(stats.number_federation_member) ?? 0,
+    });
+  }
+
+  return rows.sort((a, b) => a.query_label.localeCompare(b.query_label));
+}
+
+function populationStdDev(values) {
+  if (!values.length) {
+    return 0;
+  }
+  const avg = values.reduce((sum, value) => sum + value, 0) / values.length;
+  const variance = values.reduce((sum, value) => sum + ((value - avg) ** 2), 0) / values.length;
+  return Math.sqrt(variance);
+}
+
+function bucketLabelForValue(value) {
+  if (value <= 0) {
+    return "0";
+  }
+  if (value <= 5) {
+    return "1-5";
+  }
+  if (value <= 10) {
+    return "6-10";
+  }
+  if (value <= 15) {
+    return "11-15";
+  }
+  if (value <= 20) {
+    return "16-20";
+  }
+  if (value <= 25) {
+    return "21-25";
+  }
+  if (value <= 30) {
+    return "26-30";
+  }
+  return "31-35";
+}
+
+function buildGeneralQueryStatisticsDataset() {
+  const queryRows = parseRawQueryStatRows();
+  if (!queryRows.length) {
+    return {
+      generated_at: new Date().toISOString(),
+      source_url: generalQueryStatsSourceUrl,
+      query_count: 0,
+      summary_rows: [],
+      bucket_columns: generalQueryStatsBucketColumns,
+      bucket_rows: [],
+      query_rows: [],
+    };
+  }
+
+  const summaryRows = generalQuerySummaryFeatures.map((feature) => {
+    const values = queryRows.map((row) => Number(row[feature.key] || 0));
+    const average = values.reduce((sum, value) => sum + value, 0) / values.length;
+    return {
+      feature_key: feature.key,
+      feature_label: feature.label,
+      average,
+      maximum: Math.max(...values),
+      minimum: Math.min(...values),
+      std_dev: populationStdDev(values),
+    };
+  });
+
+  const bucketRows = generalQueryBucketFeatures.map((feature) => {
+    const counts = Object.fromEntries(generalQueryStatsBucketColumns.map((column) => [column, 0]));
+    queryRows.forEach((row) => {
+      const value = Number(row[feature.key] || 0);
+      const label = bucketLabelForValue(value);
+      counts[label] += 1;
+    });
+    return {
+      feature_key: feature.key,
+      feature_label: feature.label,
+      counts,
+    };
+  });
+
+  const queryRowsWithIndex = queryRows.map((row, index) => ({
+    ...row,
+    query_index: index + 1,
+  }));
+
+  return {
+    generated_at: new Date().toISOString(),
+    source_url: generalQueryStatsSourceUrl,
+    query_count: queryRows.length,
+    summary_rows: summaryRows,
+    bucket_columns: generalQueryStatsBucketColumns,
+    bucket_rows: bucketRows,
+    query_rows: queryRowsWithIndex,
+  };
 }
 
 function median(values) {
@@ -1992,6 +2200,9 @@ function normalizeRunSummary(runMeta, summary) {
     const startIso = safeIso(entry.start);
     const endIso = safeIso(entry.end);
 
+    const errorRawValue = entry.error === undefined ? null : entry.error;
+    const errorCategory = classifyError(errorRawValue, producedResults);
+
     const record = {
       run_id: runMeta.run_id,
       run_label: runMeta.run_label,
@@ -2021,8 +2232,9 @@ function normalizeRunSummary(runMeta, summary) {
       produced_results: producedResults,
       results_count: toNumber(entry.results_count) ?? 0,
 
-      error_raw: entry.error === undefined ? null : entry.error,
-      error_category: classifyError(entry.error, producedResults),
+      error_raw: errorRawValue,
+      error_category: errorCategory,
+      error_group: classifyErrorGroup(errorCategory, errorRawValue, producedResults),
 
       has_service_description: isRunSummaryRow
         ? null
@@ -2145,6 +2357,7 @@ function aggregateSummary(dataset) {
   let httpRequestsKnown = 0;
 
   const errorCounts = {};
+  const errorGroupCounts = {};
 
   for (const record of queryRecords) {
     const start = parseIsoTimestamp(record.start);
@@ -2167,6 +2380,8 @@ function aggregateSummary(dataset) {
 
     const key = record.error_category || "Unknown Error";
     errorCounts[key] = (errorCounts[key] || 0) + 1;
+    const errorGroupKey = record.error_group || "Other";
+    errorGroupCounts[errorGroupKey] = (errorGroupCounts[errorGroupKey] || 0) + 1;
   }
 
   durations.sort((a, b) => a - b);
@@ -2193,6 +2408,7 @@ function aggregateSummary(dataset) {
     earliest_query_start: earliest ? earliest.toISOString() : null,
     latest_query_end: latest ? latest.toISOString() : null,
     error_counts: errorCounts,
+    error_group_counts: errorGroupCounts,
   };
 }
 
@@ -2314,6 +2530,7 @@ function main() {
   const mainDataset = buildDataset("main", mainRunDirs, writeMissingSummaries);
   const oldDataset = buildDataset("old-results", oldRunDirs, writeMissingSummaries);
   const queriesDataset = buildQueriesDataset(mainDataset, oldDataset);
+  const generalQueryStatisticsDataset = buildGeneralQueryStatisticsDataset();
 
   const mainSummary = aggregateSummary(mainDataset);
   const oldSummary = aggregateSummary(oldDataset);
@@ -2325,11 +2542,13 @@ function main() {
   writeJson(path.join(docsDataDir, "summary.json"), mainSummary);
   writeJson(path.join(docsDataDir, "summary-old-results.json"), oldSummary);
   writeJson(path.join(docsDataDir, "queries.json"), queriesDataset);
+  writeJson(path.join(docsDataDir, "general-query-statistics.json"), generalQueryStatisticsDataset);
 
   console.log(`[OK] Wrote dashboard datasets to ${path.relative(repoRoot, docsDataDir)}`);
   console.log(`[INFO] Main runs: ${mainDataset.run_count}, query records: ${mainSummary.query_count}`);
   console.log(`[INFO] Old-result runs: ${oldDataset.run_count}, query records: ${oldSummary.query_count}`);
   console.log(`[INFO] Query files: ${queriesDataset.query_file_count}, canonical queries: ${queriesDataset.query_summary_count}`);
+  console.log(`[INFO] General query stats rows: ${generalQueryStatisticsDataset.query_count}`);
 }
 
 main();

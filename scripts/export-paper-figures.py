@@ -20,7 +20,9 @@ from typing import Dict, Iterable, List, Optional, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.patheffects as pe
 from matplotlib.colors import ListedColormap
+from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 
 
@@ -128,6 +130,9 @@ class QueryRunSummary:
     has_error: bool = False
     has_numeric_result: bool = False
     max_results: Optional[float] = None
+    # For variability markers, compare only non-error numeric results.
+    has_non_error_numeric_result: bool = False
+    max_non_error_results: Optional[float] = None
 
 
 def has_explicit_error(record: dict) -> bool:
@@ -171,7 +176,8 @@ def build_query_run_summaries(records: Iterable[dict]) -> Dict[Tuple[str, str], 
         key = (stem, run_id)
         summary = by_key.setdefault(key, QueryRunSummary())
         summary.attempts += 1
-        if has_explicit_error(record):
+        record_has_error = has_explicit_error(record)
+        if record_has_error:
             summary.has_error = True
         result = record.get("results_count")
         if result is not None:
@@ -183,6 +189,10 @@ def build_query_run_summaries(records: Iterable[dict]) -> Dict[Tuple[str, str], 
                 summary.has_numeric_result = True
                 if summary.max_results is None or value > summary.max_results:
                     summary.max_results = value
+                if not record_has_error:
+                    summary.has_non_error_numeric_result = True
+                    if summary.max_non_error_results is None or value > summary.max_non_error_results:
+                        summary.max_non_error_results = value
     return by_key
 
 
@@ -224,6 +234,17 @@ def export_heatmap(main_data: dict, query_aliases: Dict[str, str], out_path: Pat
         for col_idx, stem in enumerate(stems):
             matrix[row_idx, col_idx] = outcome_code(summaries.get((stem, run["run_id"])))
 
+    # Query-level variability: true when non-error numeric result counts differ across runs.
+    stems_with_non_error_variability = set()
+    for stem in stems:
+        non_error_values: List[float] = []
+        for run in sorted_runs:
+            summary = summaries.get((stem, run["run_id"]))
+            if summary and summary.has_non_error_numeric_result and summary.max_non_error_results is not None:
+                non_error_values.append(float(summary.max_non_error_results))
+        if len(non_error_values) >= 2 and not all(value == non_error_values[0] for value in non_error_values):
+            stems_with_non_error_variability.add(stem)
+
     # Color-blind friendly mapping (Okabe-Ito family):
     # 0 missing -> gray, 1 error -> reddish purple, 2 zero -> orange, 3 positive -> blue
     cmap = ListedColormap(["#999999", "#CC79A7", "#E69F00", "#0072B2"])
@@ -248,11 +269,56 @@ def export_heatmap(main_data: dict, query_aliases: Dict[str, str], out_path: Pat
     ax.grid(which="minor", color="white", linewidth=0.35)
     ax.tick_params(which="minor", bottom=False, left=False)
 
+    # In-cell "not equal" marker for non-error cells where that query's
+    # non-error result count varies across runs.
+    marker_points: List[Tuple[int, int]] = []
+    for row_idx, run in enumerate(sorted_runs):
+        for col_idx, stem in enumerate(stems):
+            if stem not in stems_with_non_error_variability:
+                continue
+            summary = summaries.get((stem, run["run_id"]))
+            # Decorate all non-error numeric cells (>0 and =0).
+            if summary is None or summary.has_error or not summary.has_non_error_numeric_result:
+                continue
+            if summary.max_non_error_results is None:
+                continue
+            marker_points.append((row_idx, col_idx))
+
+    for row_idx, col_idx in marker_points:
+        marker_text = ax.text(
+            col_idx,
+            row_idx,
+            "≠",
+            ha="center",
+            va="center",
+            fontsize=8.2,
+            color="#FFFFFF",
+            fontweight="bold",
+            zorder=5,
+        )
+        marker_text.set_path_effects(
+            [
+                pe.Stroke(linewidth=1.35, foreground="#0F172A"),
+                pe.Normal(),
+            ]
+        )
+
     legend_handles = [
         Patch(facecolor="#0072B2", edgecolor="none", label="Result count > 0"),
         Patch(facecolor="#E69F00", edgecolor="none", label="Result count = 0"),
         Patch(facecolor="#CC79A7", edgecolor="none", label="Explicit error encountered"),
-        Patch(facecolor="#999999", edgecolor="none", label="Missing"),
+        Patch(facecolor="#999999", edgecolor="none", label="No data"),
+        Line2D(
+            [0],
+            [0],
+            marker="$≠$",
+            color="none",
+            markerfacecolor="#0F172A",
+            markeredgecolor="#0F172A",
+            markeredgewidth=0.0,
+            markersize=7.0,
+            label="Query has result-count variation",
+        ),
     ]
     ax.legend(
         handles=legend_handles,
@@ -260,7 +326,7 @@ def export_heatmap(main_data: dict, query_aliases: Dict[str, str], out_path: Pat
         title_fontsize=10,
         fontsize=9,
         loc="upper left",
-        bbox_to_anchor=(-0.16, -0.07),
+        bbox_to_anchor=(-0.20, -0.07),
         ncol=2,
         frameon=True,
         framealpha=0.95,
