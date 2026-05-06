@@ -1337,6 +1337,16 @@ code {
   transition: transform 0.06s ease-out, box-shadow 0.06s ease-out, filter 0.06s ease-out;
 }
 
+.outcome-heatmap-table .heat-cell.heat-cell-highlighted {
+  box-shadow: inset 0 0 0 1px #111827, 0 0 0 1px #111827;
+  filter: saturate(1.08) brightness(1.06);
+  z-index: 3;
+}
+
+.outcome-heatmap-table .heat-cell.heat-cell-dimmed {
+  opacity: 0.22;
+}
+
 .outcome-heatmap-table .heat-cell:hover {
   box-shadow: inset 0 0 0 1px #172636, 0 0 0 1px #172636;
   filter: brightness(1.12) saturate(1.08);
@@ -1386,14 +1396,46 @@ code {
   color: #3f5a73;
 }
 
+.outcome-heatmap-legend.legend-large {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.34rem 0.6rem;
+  align-items: start;
+  max-height: 240px;
+  overflow: auto;
+  padding-right: 0.14rem;
+}
+
+.outcome-heatmap-legend .legend-title {
+  grid-column: 1 / -1;
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: #2d4a66;
+}
+
 .outcome-heatmap-legend .legend-item {
   display: inline-flex;
   align-items: center;
   gap: 0.26rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.outcome-heatmap-legend .heatmap-legend-item.legend-active {
+  background: #eaf2f9;
+  border-radius: 6px;
+  outline: 1px solid #8fb3cf;
+  outline-offset: 1px;
+  padding: 0.06rem 0.22rem;
+}
+
+.outcome-heatmap-legend .error-legend-item {
+  cursor: help;
 }
 
 .outcome-heatmap-legend .legend-swatch {
   width: 0.72rem;
+  min-width: 0.72rem;
   height: 0.72rem;
   border-radius: 2px;
   border: 1px solid rgba(23, 45, 76, 0.2);
@@ -1744,6 +1786,11 @@ body.modal-open {
 }
 
 #queryResultsByRunOverviewChart {
+  height: auto;
+  min-height: 0;
+}
+
+#queryErrorTypeHeatmapChart {
   height: auto;
   min-height: 0;
 }

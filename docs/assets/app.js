@@ -26,6 +26,7 @@ const state = {
 };
 
 let isApplyingUrlState = false;
+let activeHeatmapLegendItem = null;
 
 const dom = {
   dataMeta: document.getElementById("dataMeta"),
@@ -50,6 +51,7 @@ const dom = {
   runMedianChart: document.getElementById("runMedianChart"),
   runPositiveResultCountChart: document.getElementById("runPositiveResultCountChart"),
   queryResultsByRunOverviewChart: document.getElementById("queryResultsByRunOverviewChart"),
+  queryErrorTypeHeatmapChart: document.getElementById("queryErrorTypeHeatmapChart"),
 
   monthPills: document.getElementById("monthPills"),
   monthSuccessChart: document.getElementById("monthSuccessChart"),
@@ -123,6 +125,7 @@ const CHART_CAPTIONS = Object.freeze({
   runMedianChart: "Bars show median runtime per run in seconds. This helps compare typical execution cost between runs without over-weighting extreme outliers.",
   runPositiveResultCountChart: "Bars show the number of query attempts per run with non-empty result sets (>0). This highlights runs that produced useful, non-empty outputs.",
   queryResultsByRunOverviewChart: "Heatmap cells show per-query outcomes by run with distinct states for >0 results, 0 results, explicit errors, and missing data. A ≠ marker flags queries whose non-error raw result counts differ between runs, highlighting cross-run result instability.",
+  queryErrorTypeHeatmapChart: "Heatmap cells show whether each query-run pair had explicit errors. Non-error outcomes (both 0 and >0 results) share one color, while explicit errors are colored by observed error category.",
   monthSuccessChart: "Each bar is success rate within one user-defined testing period. It indicates whether robustness improved, declined, or stayed stable across study phases.",
   monthVolumeChart: "Bars show how many query records were executed in each user-defined testing period. This gives workload context for interpreting period-level outcome trends.",
   queryDurationChart: "For the selected query, bars show runtime per experiment run in seconds. This reveals run-to-run execution variability for the same query logic.",
@@ -800,6 +803,27 @@ const CHART_COLORS = Object.freeze({
   neutral: "#8A94A6",
 });
 
+const ERROR_HEATMAP_BASE_COLORS = Object.freeze({
+  noError: "#2A9D8F",
+  missing: "#94A3B8",
+  fallbackError: "#7E3AF2",
+});
+
+const ERROR_HEATMAP_CATEGORY_PALETTE = Object.freeze([
+  "#CC79A7",
+  "#D55E00",
+  "#0072B2",
+  "#E69F00",
+  "#56B4E9",
+  "#882255",
+  "#332288",
+  "#117733",
+  "#AA4499",
+  "#999933",
+  "#661100",
+  "#44AA99",
+]);
+
 const SERVICE_MODE_COLOR = Object.freeze({
   "with-service": CHART_COLORS.primary,
   "no-service": CHART_COLORS.success,
@@ -812,6 +836,74 @@ function normalizeServiceModeValue(mode) {
     return mode;
   }
   return "unknown";
+}
+
+function normalizeErrorCategoryLabel(value) {
+  const label = typeof value === "string" ? value.trim() : "";
+  return label || "Uncategorized explicit error";
+}
+
+function normalizeErrorMessageLabel(rawValue, fallbackCategory = null) {
+  const text = rawValue === null || rawValue === undefined ? "" : String(rawValue).trim();
+  const normalized = text.toLowerCase();
+  const nonMessageMarkers = new Set([
+    "",
+    "-",
+    "none",
+    "null",
+    "n/a",
+    "no results",
+    "no comunica results",
+    "- (no results)",
+    "general: no results",
+  ]);
+  if (!nonMessageMarkers.has(normalized)) {
+    return text.replace(/\s+/g, " ").trim();
+  }
+  return normalizeErrorCategoryLabel(fallbackCategory);
+}
+
+function summarizeErrorMessages(errorMessageCounts, limit = 3) {
+  if (!(errorMessageCounts instanceof Map) || errorMessageCounts.size === 0) {
+    return "No explicit error message text recorded.";
+  }
+  const ranked = [...errorMessageCounts.entries()].sort((a, b) => {
+    if (b[1] !== a[1]) {
+      return b[1] - a[1];
+    }
+    return a[0].localeCompare(b[0]);
+  });
+  return ranked
+    .slice(0, limit)
+    .map(([message, count]) => `${truncateLabel(message, 190)} (${formatNumber(count, 0)})`)
+    .join(" | ");
+}
+
+function selectDominantErrorCategory(errorCategoryCounts) {
+  if (!(errorCategoryCounts instanceof Map) || errorCategoryCounts.size === 0) {
+    return null;
+  }
+  const ranked = [...errorCategoryCounts.entries()].sort((a, b) => {
+    if (b[1] !== a[1]) {
+      return b[1] - a[1];
+    }
+    return a[0].localeCompare(b[0]);
+  });
+  return ranked[0][0] || null;
+}
+
+function buildErrorCategoryColorMap(errorCategories) {
+  const sortedCategories = [...new Set(errorCategories.filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  const colorMap = new Map();
+  sortedCategories.forEach((category, index) => {
+    if (index < ERROR_HEATMAP_CATEGORY_PALETTE.length) {
+      colorMap.set(category, ERROR_HEATMAP_CATEGORY_PALETTE[index]);
+      return;
+    }
+    const hue = (index * 137) % 360;
+    colorMap.set(category, `hsl(${hue} 62% 44%)`);
+  });
+  return colorMap;
 }
 
 function parseRunLabelDate(runLabel) {
@@ -1817,12 +1909,14 @@ function renderQueryOutcomeHeatmap(chartEl, groups, series) {
         <td
           class="heat-cell ${stateClass}"
           data-outcome="${escapeHtmlAttr(cellMeta.outcomeState)}"
+          data-has-variance="${isDifferentAcrossRuns ? "true" : "false"}"
           data-tooltip-query="${escapeHtmlAttr(group.label)}"
           data-tooltip-run="${escapeHtmlAttr(runLabel)}"
           data-tooltip-outcome="${escapeHtmlAttr(cellMeta.outcomeLabel)}"
           data-tooltip-results="${escapeHtmlAttr(formatNullableNumber(rawCount, 0))}"
-          data-tooltip-attempts="${escapeHtmlAttr(formatNumber(cellMeta.attempts, 0))}"
           data-tooltip-errors="${escapeHtmlAttr(cellMeta.errorCategories.length ? cellMeta.errorCategories.join("; ") : "None")}"
+          data-tooltip-details-title="Consistency"
+          data-tooltip-details="${escapeHtmlAttr(consistencyLabel)}"
           data-tooltip-consistency="${escapeHtmlAttr(consistencyLabel)}"
           aria-label="${escapeHtmlAttr(cellTitle)}"
         >
@@ -1868,11 +1962,165 @@ function renderQueryOutcomeHeatmap(chartEl, groups, series) {
     </div>
     <div class="outcome-heatmap-tooltip hidden" role="tooltip"></div>
     <div class="outcome-heatmap-legend" aria-label="Heatmap legend">
-      <span class="legend-item"><span class="legend-swatch swatch-positive"></span>Result count &gt; 0</span>
-      <span class="legend-item"><span class="legend-swatch swatch-zero"></span>Result count = 0</span>
-      <span class="legend-item"><span class="legend-swatch swatch-error"></span>Explicit error encountered</span>
-      <span class="legend-item"><span class="legend-swatch swatch-missing"></span>Missing</span>
-      <span class="legend-item"><span class="legend-badge">≠</span>Non-error raw result count differs across runs for that query</span>
+      <span class="legend-item heatmap-legend-item" data-highlight-key="state:positive"><span class="legend-swatch swatch-positive"></span>Result count &gt; 0</span>
+      <span class="legend-item heatmap-legend-item" data-highlight-key="state:zero"><span class="legend-swatch swatch-zero"></span>Result count = 0</span>
+      <span class="legend-item heatmap-legend-item" data-highlight-key="state:error"><span class="legend-swatch swatch-error"></span>Explicit error encountered</span>
+      <span class="legend-item heatmap-legend-item" data-highlight-key="state:missing"><span class="legend-swatch swatch-missing"></span>Missing</span>
+      <span class="legend-item heatmap-legend-item" data-highlight-key="variance"><span class="legend-badge">≠</span>Non-error raw result count differs across runs for that query</span>
+    </div>
+  `;
+}
+
+function renderQueryErrorTypeHeatmap(chartEl, groups, series, errorCategoryTotals, errorCategoryMessageTotals) {
+  clearChartElement(chartEl);
+  const xLabel = "Query";
+  const yLabel = "Experiment Run";
+
+  if (!groups.length || !series.length) {
+    renderNoDataPlot(chartEl, "No data for current selection", xLabel, yLabel);
+    return;
+  }
+
+  const compactRunColSize = 64;
+  const compactHeaderSize = 44;
+  const queryColumnWidth = groups.length
+    ? `calc((100% - var(--heatmap-run-col-size)) / ${groups.length})`
+    : "auto";
+  const columnDefs = `
+    <col class="run-label-col">
+    ${groups.map(() => `<col class="query-heat-col" style="width:${queryColumnWidth};">`).join("")}
+  `;
+
+  const observedErrorCategories = [...errorCategoryTotals.keys()];
+  const errorColorMap = buildErrorCategoryColorMap(observedErrorCategories);
+
+  const headerCells = groups.map((group) => `
+    <th scope="col" class="query-col-head" title="${escapeHtmlAttr(`Query: ${group.label}`)}">
+      <div class="query-col-head-text">
+        <span class="heatmap-label-compact">${escapeHtml(abbreviateQueryLabelForHeatmap(group.label))}</span>
+        <span class="heatmap-label-full">${escapeHtml(truncateLabel(group.label, 32))}</span>
+      </div>
+    </th>
+  `).join("");
+
+  const bodyRows = series.map((run) => {
+    const runLabel = getRunDisplayLabel(run.run_id, run.run_label);
+    const cells = groups.map((group) => {
+      const cellMeta = group.cellMeta.get(run.run_id) || {
+        attempts: 0,
+        state: "missing",
+        outcomeLabel: "Missing",
+        dominantErrorCategory: null,
+        errorCategories: [],
+        errorMessages: [],
+        rawResultCount: null,
+      };
+      const cellColor = cellMeta.state === "error"
+        ? (errorColorMap.get(cellMeta.dominantErrorCategory) || ERROR_HEATMAP_BASE_COLORS.fallbackError)
+        : cellMeta.state === "no-error"
+          ? ERROR_HEATMAP_BASE_COLORS.noError
+          : ERROR_HEATMAP_BASE_COLORS.missing;
+      const detailText = cellMeta.state === "error"
+        ? `Error message text: ${cellMeta.errorMessages.length ? cellMeta.errorMessages.map((message) => truncateLabel(message, 180)).join(" | ") : "No explicit error message text recorded."}`
+        : cellMeta.state === "no-error"
+          ? "No explicit error encountered (includes 0 and >0 results)."
+          : "Missing query-run record for current scope.";
+
+      const cellTitle = [
+        `Query: ${group.label}`,
+        `Run: ${runLabel}`,
+        `Outcome: ${cellMeta.outcomeLabel}`,
+        `Dominant explicit error: ${cellMeta.dominantErrorCategory || "None"}`,
+        `Error messages: ${cellMeta.errorMessages.length ? cellMeta.errorMessages.join(" ; ") : "None"}`,
+        `Raw result count: ${formatNullableNumber(cellMeta.rawResultCount, 0)}`,
+        `Attempts represented: ${formatNumber(cellMeta.attempts, 0)}`,
+        `Explicit error categories observed: ${cellMeta.errorCategories.length ? cellMeta.errorCategories.join("; ") : "None"}`,
+      ].join("\n");
+
+      return `
+        <td
+          class="heat-cell heat-cell-dynamic"
+          style="background:${escapeHtmlAttr(cellColor)};"
+          data-outcome="${escapeHtmlAttr(cellMeta.state)}"
+          data-error-category="${escapeHtmlAttr(cellMeta.dominantErrorCategory || "")}"
+          data-tooltip-query="${escapeHtmlAttr(group.label)}"
+          data-tooltip-run="${escapeHtmlAttr(runLabel)}"
+          data-tooltip-outcome="${escapeHtmlAttr(cellMeta.outcomeLabel)}"
+          data-tooltip-results="${escapeHtmlAttr(formatNullableNumber(cellMeta.rawResultCount, 0))}"
+          data-tooltip-errors="${escapeHtmlAttr(cellMeta.errorCategories.length ? cellMeta.errorCategories.join("; ") : "None")}"
+          data-tooltip-details-title="Details"
+          data-tooltip-details="${escapeHtmlAttr(detailText)}"
+          data-tooltip-consistency="${escapeHtmlAttr(cellMeta.dominantErrorCategory || "No explicit error category")}"
+          aria-label="${escapeHtmlAttr(cellTitle)}"
+        ></td>
+      `;
+    }).join("");
+
+    const runLabelShort = truncateLabel(abbreviateRunLabelForAxis(runLabel), 11);
+    return `
+      <tr>
+        <th scope="row" class="run-row-head" title="${escapeHtmlAttr(runLabel)}">
+          <span class="heatmap-label-compact">${escapeHtml(runLabelShort)}</span>
+          <span class="heatmap-label-full">${escapeHtml(truncateLabel(runLabel, 38))}</span>
+        </th>
+        ${cells}
+      </tr>
+    `;
+  }).join("");
+
+  const sortedLegendErrors = [...errorCategoryTotals.entries()].sort((a, b) => {
+    if (b[1] !== a[1]) {
+      return b[1] - a[1];
+    }
+    return a[0].localeCompare(b[0]);
+  });
+  const errorLegendItems = sortedLegendErrors.map(([category, count]) => {
+    const messageSummary = summarizeErrorMessages(errorCategoryMessageTotals?.get(category), 4);
+    const detailText = [
+      `Observed query-run cells: ${formatNumber(count, 0)}`,
+      `Top message text examples: ${messageSummary}`,
+    ].join(" | ");
+    return `
+    <span class="legend-item heatmap-legend-item error-legend-item"
+      data-legend-title="${escapeHtmlAttr(category)}"
+      data-legend-details="${escapeHtmlAttr(detailText)}"
+      data-highlight-key="${escapeHtmlAttr(`error-category:${category}`)}"
+    >
+      <span class="legend-swatch" style="background:${escapeHtmlAttr(errorColorMap.get(category) || ERROR_HEATMAP_BASE_COLORS.fallbackError)};"></span>
+      ${escapeHtml(category)} (${formatNumber(count, 0)})
+    </span>
+  `;
+  }).join("");
+
+  chartEl.innerHTML = `
+    <div
+      class="outcome-heatmap-wrap"
+      style="--heatmap-run-col-size:${compactRunColSize}px; --heatmap-header-size:${compactHeaderSize}px;"
+      role="img"
+      aria-label="Heatmap of query error categories by run"
+    >
+      <table class="outcome-heatmap-table">
+        <colgroup>${columnDefs}</colgroup>
+        <thead>
+          <tr>
+            <th scope="col" class="run-col-head">
+              <span class="heatmap-label-compact">Run \\ Query</span>
+              <span class="heatmap-label-full">${escapeHtml(yLabel)} \\ ${escapeHtml(xLabel)}</span>
+            </th>
+            ${headerCells}
+          </tr>
+        </thead>
+        <tbody>
+          ${bodyRows}
+        </tbody>
+      </table>
+    </div>
+    <div class="outcome-heatmap-tooltip hidden" role="tooltip"></div>
+    <div class="outcome-heatmap-legend legend-large" aria-label="Error category heatmap legend">
+      <span class="legend-title">Explicit Error Categories (Current Scope)</span>
+      <span class="legend-item heatmap-legend-item error-legend-item" data-highlight-key="state:no-error" data-legend-title="No explicit error" data-legend-details="Includes cells with result count = 0 and result count > 0, as long as no explicit error was recorded."><span class="legend-swatch" style="background:${ERROR_HEATMAP_BASE_COLORS.noError};"></span>No explicit error (includes 0 and &gt;0 results)</span>
+      <span class="legend-item heatmap-legend-item error-legend-item" data-highlight-key="state:missing" data-legend-title="Missing" data-legend-details="No query-run record is available for this cell under the current filter scope."><span class="legend-swatch" style="background:${ERROR_HEATMAP_BASE_COLORS.missing};"></span>Missing</span>
+      ${errorLegendItems}
     </div>
   `;
 }
@@ -1910,22 +2158,114 @@ function showHeatmapTooltip(cell, event) {
     return;
   }
 
+  const detailsTitle = cell.dataset.tooltipDetailsTitle || "Consistency";
+  const detailsValue = cell.dataset.tooltipDetails || cell.dataset.tooltipConsistency || "-";
+
   tooltip.innerHTML = `
     <div class="heatmap-tooltip-kicker">${escapeHtml(cell.dataset.tooltipOutcome || "Outcome")}</div>
     <div class="heatmap-tooltip-title">${escapeHtml(cell.dataset.tooltipQuery || "Query")}</div>
     <dl>
       <div><dt>Run</dt><dd>${escapeHtml(cell.dataset.tooltipRun || "-")}</dd></div>
       <div><dt>Results</dt><dd>${escapeHtml(cell.dataset.tooltipResults || "-")}</dd></div>
-      <div><dt>Attempts</dt><dd>${escapeHtml(cell.dataset.tooltipAttempts || "-")}</dd></div>
       <div><dt>Errors</dt><dd>${escapeHtml(cell.dataset.tooltipErrors || "None")}</dd></div>
-      <div><dt>Consistency</dt><dd>${escapeHtml(cell.dataset.tooltipConsistency || "-")}</dd></div>
+      <div><dt>${escapeHtml(detailsTitle)}</dt><dd>${escapeHtml(detailsValue)}</dd></div>
     </dl>
   `;
   tooltip.classList.remove("hidden");
   positionHeatmapTooltip(tooltip, event);
 }
 
+function showHeatmapLegendTooltip(legendItem, event) {
+  const chartEl = legendItem.closest(".plot-chart");
+  const tooltip = chartEl?.querySelector(".outcome-heatmap-tooltip");
+  if (!(tooltip instanceof HTMLElement)) {
+    return;
+  }
+
+  const title = legendItem.dataset.legendTitle || "Legend item";
+  const details = legendItem.dataset.legendDetails || "No additional details available.";
+  tooltip.innerHTML = `
+    <div class="heatmap-tooltip-kicker">Legend definition</div>
+    <div class="heatmap-tooltip-title">${escapeHtml(title)}</div>
+    <dl>
+      <div><dt>Details</dt><dd>${escapeHtml(details)}</dd></div>
+    </dl>
+  `;
+  tooltip.classList.remove("hidden");
+  positionHeatmapTooltip(tooltip, event);
+}
+
+function clearHeatmapLegendHighlights() {
+  activeHeatmapLegendItem = null;
+  document.querySelectorAll(".outcome-heatmap-wrap .heat-cell").forEach((cell) => {
+    cell.classList.remove("heat-cell-highlighted", "heat-cell-dimmed");
+  });
+  document.querySelectorAll(".outcome-heatmap-legend .heatmap-legend-item.legend-active").forEach((item) => {
+    item.classList.remove("legend-active");
+  });
+}
+
+function applyHeatmapLegendHighlight(legendItem) {
+  const chartEl = legendItem.closest(".plot-chart");
+  if (!(chartEl instanceof HTMLElement)) {
+    return;
+  }
+  const key = String(legendItem.dataset.highlightKey || "").trim();
+  if (!key) {
+    return;
+  }
+
+  const allLegendItems = chartEl.querySelectorAll(".outcome-heatmap-legend .heatmap-legend-item");
+  allLegendItems.forEach((item) => item.classList.remove("legend-active"));
+  legendItem.classList.add("legend-active");
+
+  const cells = [...chartEl.querySelectorAll(".outcome-heatmap-wrap .heat-cell")];
+  if (!cells.length) {
+    return;
+  }
+
+  const matchingCells = cells.filter((cell) => {
+    if (!(cell instanceof HTMLElement)) {
+      return false;
+    }
+    if (key === "variance") {
+      return cell.dataset.hasVariance === "true";
+    }
+    if (key.startsWith("state:")) {
+      return String(cell.dataset.outcome || "") === key.slice("state:".length);
+    }
+    if (key.startsWith("error-category:")) {
+      return String(cell.dataset.errorCategory || "") === key.slice("error-category:".length);
+    }
+    return false;
+  });
+
+  cells.forEach((cell) => {
+    cell.classList.remove("heat-cell-highlighted", "heat-cell-dimmed");
+    if (matchingCells.length) {
+      cell.classList.add(matchingCells.includes(cell) ? "heat-cell-highlighted" : "heat-cell-dimmed");
+    }
+  });
+}
+
 function handleHeatmapPointerMove(event) {
+  const legendHighlightItem = event.target.closest(".heatmap-legend-item");
+  if (legendHighlightItem instanceof HTMLElement) {
+    if (activeHeatmapLegendItem !== legendHighlightItem) {
+      clearHeatmapLegendHighlights();
+      applyHeatmapLegendHighlight(legendHighlightItem);
+      activeHeatmapLegendItem = legendHighlightItem;
+    }
+  } else if (activeHeatmapLegendItem) {
+    clearHeatmapLegendHighlights();
+  }
+
+  const legendItem = event.target.closest(".error-legend-item");
+  if (legendItem instanceof HTMLElement) {
+    showHeatmapLegendTooltip(legendItem, event);
+    return;
+  }
+
   const cell = event.target.closest(".heat-cell");
   if (!(cell instanceof HTMLElement)) {
     hideHeatmapTooltip();
@@ -2489,6 +2829,8 @@ function renderOverviewCharts(records) {
           attempts: 0,
           hasError: false,
           errorCategories: new Set(),
+          errorCategoryCounts: new Map(),
+          errorRawCounts: new Map(),
           hasNumericResult: false,
           maxResults: null,
           // Used for heatmap variance markers: compare only non-error outcomes.
@@ -2501,9 +2843,11 @@ function renderOverviewCharts(records) {
       const recordHasExplicitError = hasExplicitError(record);
       if (recordHasExplicitError) {
         summary.hasError = true;
-        if (record.error_category) {
-          summary.errorCategories.add(record.error_category);
-        }
+        const errorCategory = normalizeErrorCategoryLabel(record.error_category);
+        const errorMessage = normalizeErrorMessageLabel(record.error_raw, errorCategory);
+        summary.errorCategories.add(errorCategory);
+        summary.errorCategoryCounts.set(errorCategory, (summary.errorCategoryCounts.get(errorCategory) || 0) + 1);
+        summary.errorRawCounts.set(errorMessage, (summary.errorRawCounts.get(errorMessage) || 0) + 1);
       }
       if (hasNumericValue(record.results_count)) {
         const numericCount = Number(record.results_count);
@@ -2663,6 +3007,73 @@ function renderOverviewCharts(records) {
     };
   });
 
+  const errorCategoryTotals = new Map();
+  const errorCategoryMessageTotals = new Map();
+  const errorOverviewGroups = queryStems.map((stem) => {
+    const cellMeta = new Map();
+    sortedRuns.forEach((run) => {
+      const summary = queryRunSummaryMap.get(`${stem}::${run.runId}`) || null;
+      if (!summary) {
+        cellMeta.set(run.runId, {
+          attempts: 0,
+          state: "missing",
+          outcomeLabel: "Missing",
+          dominantErrorCategory: null,
+          errorCategories: [],
+          errorMessages: [],
+          rawResultCount: null,
+        });
+        return;
+      }
+
+      if (summary.hasError) {
+        const dominantErrorCategory = selectDominantErrorCategory(summary.errorCategoryCounts)
+          || normalizeErrorCategoryLabel(null);
+        errorCategoryTotals.set(dominantErrorCategory, (errorCategoryTotals.get(dominantErrorCategory) || 0) + 1);
+        if (!errorCategoryMessageTotals.has(dominantErrorCategory)) {
+          errorCategoryMessageTotals.set(dominantErrorCategory, new Map());
+        }
+        const messageTotals = errorCategoryMessageTotals.get(dominantErrorCategory);
+        summary.errorRawCounts.forEach((count, message) => {
+          messageTotals.set(message, (messageTotals.get(message) || 0) + count);
+        });
+        const rankedMessages = [...summary.errorRawCounts.entries()]
+          .sort((a, b) => {
+            if (b[1] !== a[1]) {
+              return b[1] - a[1];
+            }
+            return a[0].localeCompare(b[0]);
+          })
+          .map(([message]) => message);
+        cellMeta.set(run.runId, {
+          attempts: summary.attempts || 0,
+          state: "error",
+          outcomeLabel: `Explicit error: ${dominantErrorCategory}`,
+          dominantErrorCategory,
+          errorCategories: [...summary.errorCategories].sort((a, b) => a.localeCompare(b)),
+          errorMessages: rankedMessages,
+          rawResultCount: summary.hasNumericResult ? summary.maxResults : null,
+        });
+        return;
+      }
+
+      cellMeta.set(run.runId, {
+        attempts: summary.attempts || 0,
+        state: "no-error",
+        outcomeLabel: "No explicit error (0 or >0 results)",
+        dominantErrorCategory: null,
+        errorCategories: [],
+        errorMessages: [],
+        rawResultCount: summary.hasNumericResult ? summary.maxResults : null,
+      });
+    });
+
+    return {
+      label: getQueryDisplayName(stem),
+      cellMeta,
+    };
+  });
+
   const runSeries = sortedRuns.map((run) => (runsById.get(run.runId) || {
     run_id: run.runId,
     run_label: run.runLabel,
@@ -2671,6 +3082,14 @@ function renderOverviewCharts(records) {
 
   setChartCardTitle(dom.queryResultsByRunOverviewChart, "Query outcome heatmap by experiment run");
   renderQueryOutcomeHeatmap(dom.queryResultsByRunOverviewChart, overviewGroups, runSeries);
+  setChartCardTitle(dom.queryErrorTypeHeatmapChart, "Query error-type heatmap by experiment run");
+  renderQueryErrorTypeHeatmap(
+    dom.queryErrorTypeHeatmapChart,
+    errorOverviewGroups,
+    runSeries,
+    errorCategoryTotals,
+    errorCategoryMessageTotals,
+  );
 }
 
 function getMonthlyStats(records) {
@@ -3766,10 +4185,17 @@ function bindEvents() {
   document.addEventListener("click", handleExpandableClick);
   document.addEventListener("keydown", handleExpandableKeydown);
   document.addEventListener("pointermove", handleHeatmapPointerMove);
-  document.addEventListener("pointerleave", hideHeatmapTooltip);
-  document.addEventListener("scroll", hideHeatmapTooltip, true);
+  document.addEventListener("pointerleave", () => {
+    hideHeatmapTooltip();
+    clearHeatmapLegendHighlights();
+  });
+  document.addEventListener("scroll", () => {
+    hideHeatmapTooltip();
+    clearHeatmapLegendHighlights();
+  }, true);
   window.addEventListener("resize", () => {
     hideHeatmapTooltip();
+    clearHeatmapLegendHighlights();
     scheduleExplorerListHeightSync();
     resizeAllCharts();
   });
