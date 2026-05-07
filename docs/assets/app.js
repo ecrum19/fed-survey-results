@@ -24,6 +24,7 @@ const state = {
   selectedQueryVariantByStem: new Map(),
   selectedExperimentIds: new Set(),
   experimentSelectionInitialized: false,
+  pendingFocusTarget: null,
 };
 
 let isApplyingUrlState = false;
@@ -1234,6 +1235,7 @@ function closeFocusView() {
   window.requestAnimationFrame(() => {
     resizeAllCharts();
   });
+  syncUrlDashboardState();
 }
 
 function openFocusView(node) {
@@ -1263,6 +1265,7 @@ function openFocusView(node) {
   });
 
   dom.focusModalClose.focus({ preventScroll: true });
+  syncUrlDashboardState();
 }
 
 function handleExpandableClick(event) {
@@ -2762,6 +2765,154 @@ function parseCsvParam(value) {
     .filter(Boolean);
 }
 
+function getAllKnownRuns() {
+  const mainRuns = state.mainDataset?.runs || [];
+  const oldRuns = state.oldDataset?.runs || [];
+  return [...mainRuns, ...oldRuns];
+}
+
+function buildRunIndexMaps() {
+  const runs = getAllKnownRuns()
+    .map((run) => run?.run_id)
+    .filter((runId) => typeof runId === "string" && runId.trim());
+  const uniqueRunIds = [...new Set(runs)];
+  const runIdToIndex = new Map(uniqueRunIds.map((runId, index) => [runId, index]));
+  const runIndexToId = new Map(uniqueRunIds.map((runId, index) => [index, runId]));
+  return { runIdToIndex, runIndexToId };
+}
+
+function encodeExperimentSelection(selectedRunIds) {
+  const ids = [...(selectedRunIds || [])];
+  if (!ids.length) {
+    return "";
+  }
+  const { runIdToIndex } = buildRunIndexMaps();
+  const indexes = ids
+    .map((runId) => runIdToIndex.get(runId))
+    .filter((index) => Number.isInteger(index))
+    .sort((a, b) => a - b);
+  if (!indexes.length) {
+    return "";
+  }
+  return indexes.map((index) => index.toString(36)).join(".");
+}
+
+function decodeExperimentSelection(encoded) {
+  if (!encoded) {
+    return [];
+  }
+  const parts = String(encoded)
+    .split(".")
+    .map((part) => part.trim())
+    .filter(Boolean);
+  if (!parts.length) {
+    return [];
+  }
+  const { runIndexToId } = buildRunIndexMaps();
+  return parts
+    .map((part) => Number.parseInt(part, 36))
+    .filter((index) => Number.isInteger(index))
+    .map((index) => runIndexToId.get(index))
+    .filter((runId) => typeof runId === "string" && runId.trim());
+}
+
+function parseCompactStateParam(encoded) {
+  const compact = {
+    includeOldResults: false,
+    monthFocus: null,
+    explorerMode: "query",
+    runFilter: "",
+    outcomeFilter: "all",
+    errorFilter: "",
+    serviceFilter: "all",
+    minSourcesFilter: "",
+    maxDurationFilter: "",
+    startDateFilter: "",
+    endDateFilter: "",
+    searchFilter: "",
+    queryListSearch: "",
+    selectedQueryStem: null,
+    selectedQueryVariant: null,
+    selectedExperimentIds: [],
+    httpDisplayMode: "matrix",
+    httpAggregateMode: "median",
+    httpQueryFilter: "",
+    httpTopN: "35",
+    focusTarget: null,
+  };
+
+  if (!encoded) {
+    return compact;
+  }
+
+  const fields = String(encoded)
+    .split("~")
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  for (const field of fields) {
+    const sep = field.indexOf(":");
+    if (sep < 0) {
+      continue;
+    }
+    const key = field.slice(0, sep);
+    const value = decodeURIComponent(field.slice(sep + 1));
+    if (!value && key !== "o") {
+      continue;
+    }
+    if (key === "o") compact.includeOldResults = value === "1";
+    else if (key === "p") compact.monthFocus = value || null;
+    else if (key === "m") compact.explorerMode = value === "e" ? "experiment" : "query";
+    else if (key === "r") compact.runFilter = value;
+    else if (key === "u") compact.outcomeFilter = value;
+    else if (key === "e") compact.errorFilter = value;
+    else if (key === "v") compact.serviceFilter = value;
+    else if (key === "i") compact.minSourcesFilter = value;
+    else if (key === "x") compact.maxDurationFilter = value;
+    else if (key === "a") compact.startDateFilter = value;
+    else if (key === "b") compact.endDateFilter = value;
+    else if (key === "t") compact.searchFilter = value;
+    else if (key === "qs") compact.queryListSearch = value;
+    else if (key === "q") compact.selectedQueryStem = value;
+    else if (key === "qv") compact.selectedQueryVariant = value;
+    else if (key === "ex") compact.selectedExperimentIds = decodeExperimentSelection(value);
+    else if (key === "hv") compact.httpDisplayMode = value;
+    else if (key === "ha") compact.httpAggregateMode = value;
+    else if (key === "hq") compact.httpQueryFilter = value;
+    else if (key === "hn") compact.httpTopN = value;
+    else if (key === "f") compact.focusTarget = value || null;
+  }
+
+  return compact;
+}
+
+function resolveFocusTargetElement(targetToken) {
+  if (!targetToken) {
+    return null;
+  }
+  if (targetToken === "fig2" || targetToken === "generalStatsInteractiveFigureChart") {
+    return document.getElementById("generalStatsInteractiveFigureChart");
+  }
+  return document.getElementById(targetToken);
+}
+
+function applyPendingFocusTarget() {
+  if (!state.pendingFocusTarget || focusView.isOpen) {
+    return;
+  }
+  const targetElement = resolveFocusTargetElement(state.pendingFocusTarget);
+  state.pendingFocusTarget = null;
+  if (!(targetElement instanceof HTMLElement)) {
+    return;
+  }
+  const section = document.getElementById("generalQueryStatsSection");
+  if (section instanceof HTMLElement) {
+    section.scrollIntoView({ block: "center" });
+  }
+  openFocusView(targetElement);
+  syncUrlDashboardState();
+}
+
 function setSelectValueIfPresent(selectEl, value) {
   if (!(selectEl instanceof HTMLSelectElement) || value === null || value === undefined || value === "") {
     return;
@@ -2774,27 +2925,34 @@ function setSelectValueIfPresent(selectEl, value) {
 
 function parseUrlDashboardState() {
   const params = new URLSearchParams(window.location.search);
+  const compactParam = params.get("s");
+  if (compactParam) {
+    return parseCompactStateParam(compactParam);
+  }
+  const shortExperimentSelection = decodeExperimentSelection(params.get("ex"));
+  const longExperimentSelection = parseCsvParam(params.get("experiments"));
   return {
-    includeOldResults: params.get("old") === "1",
-    monthFocus: params.get("period") || null,
-    explorerMode: params.get("mode") === "experiment" ? "experiment" : "query",
-    runFilter: params.get("run") || "",
-    outcomeFilter: params.get("outcome") || "all",
-    errorFilter: params.get("error") || "",
-    serviceFilter: params.get("service") || "all",
-    minSourcesFilter: params.get("minSources") || "",
-    maxDurationFilter: params.get("maxDuration") || "",
-    startDateFilter: params.get("startDate") || "",
-    endDateFilter: params.get("endDate") || "",
-    searchFilter: params.get("search") || "",
-    queryListSearch: params.get("qSearch") || "",
-    selectedQueryStem: params.get("query") || null,
-    selectedQueryVariant: params.get("queryVariant") || null,
-    selectedExperimentIds: parseCsvParam(params.get("experiments")),
-    httpDisplayMode: params.get("httpView") || "matrix",
-    httpAggregateMode: params.get("httpAgg") || "median",
-    httpQueryFilter: params.get("httpQuery") || "",
-    httpTopN: params.get("httpTopN") || "35",
+    includeOldResults: params.get("o") === "1" || params.get("old") === "1",
+    monthFocus: params.get("p") || params.get("period") || null,
+    explorerMode: (params.get("m") === "e" || params.get("mode") === "experiment") ? "experiment" : "query",
+    runFilter: params.get("r") || params.get("run") || "",
+    outcomeFilter: params.get("u") || params.get("outcome") || "all",
+    errorFilter: params.get("e") || params.get("error") || "",
+    serviceFilter: params.get("v") || params.get("service") || "all",
+    minSourcesFilter: params.get("i") || params.get("minSources") || "",
+    maxDurationFilter: params.get("x") || params.get("maxDuration") || "",
+    startDateFilter: params.get("a") || params.get("startDate") || "",
+    endDateFilter: params.get("b") || params.get("endDate") || "",
+    searchFilter: params.get("t") || params.get("search") || "",
+    queryListSearch: params.get("qs") || params.get("qSearch") || "",
+    selectedQueryStem: params.get("q") || params.get("query") || null,
+    selectedQueryVariant: params.get("qv") || params.get("queryVariant") || null,
+    selectedExperimentIds: shortExperimentSelection.length ? shortExperimentSelection : longExperimentSelection,
+    httpDisplayMode: params.get("hv") || params.get("httpView") || "matrix",
+    httpAggregateMode: params.get("ha") || params.get("httpAgg") || "median",
+    httpQueryFilter: params.get("hq") || params.get("httpQuery") || "",
+    httpTopN: params.get("hn") || params.get("httpTopN") || "35",
+    focusTarget: params.get("f") || params.get("focus") || null,
   };
 }
 
@@ -2814,6 +2972,7 @@ function applyUrlDashboardState(urlState) {
 
     state.selectedExperimentIds = new Set(urlState.selectedExperimentIds || []);
     state.experimentSelectionInitialized = state.selectedExperimentIds.size > 0;
+    state.pendingFocusTarget = urlState.focusTarget || null;
 
     dom.queryListSearch.value = urlState.queryListSearch || "";
     dom.searchFilter.value = urlState.searchFilter || "";
@@ -2841,50 +3000,53 @@ function syncUrlDashboardState() {
   if (isApplyingUrlState) {
     return;
   }
-  const params = new URLSearchParams();
+  const compactParts = [];
+  const addPart = (key, value) => {
+    if (value === null || value === undefined || value === "") {
+      return;
+    }
+    compactParts.push(`${key}:${encodeURIComponent(String(value))}`);
+  };
 
-  if (state.includeOldResults) {
-    params.set("old", "1");
-  }
-  if (state.monthFocus) {
-    params.set("period", state.monthFocus);
-  }
-  params.set("mode", state.explorerMode);
+  if (state.includeOldResults) addPart("o", "1");
+  if (state.monthFocus) addPart("p", state.monthFocus);
+  if (state.explorerMode !== "query") addPart("m", state.explorerMode === "experiment" ? "e" : "q");
 
-  if (dom.runFilter.value) params.set("run", dom.runFilter.value);
-  if (dom.outcomeFilter.value && dom.outcomeFilter.value !== "all") params.set("outcome", dom.outcomeFilter.value);
-  if (dom.errorFilter.value) params.set("error", dom.errorFilter.value);
-  if (dom.serviceFilter.value && dom.serviceFilter.value !== "all") params.set("service", dom.serviceFilter.value);
-  if (dom.minSourcesFilter.value) params.set("minSources", dom.minSourcesFilter.value);
-  if (dom.maxDurationFilter.value) params.set("maxDuration", dom.maxDurationFilter.value);
-  if (dom.startDateFilter.value) params.set("startDate", dom.startDateFilter.value);
-  if (dom.endDateFilter.value) params.set("endDate", dom.endDateFilter.value);
-  if (dom.searchFilter.value.trim()) params.set("search", dom.searchFilter.value.trim());
-  if (dom.queryListSearch.value.trim()) params.set("qSearch", dom.queryListSearch.value.trim());
+  if (dom.runFilter.value) addPart("r", dom.runFilter.value);
+  if (dom.outcomeFilter.value && dom.outcomeFilter.value !== "all") addPart("u", dom.outcomeFilter.value);
+  if (dom.errorFilter.value) addPart("e", dom.errorFilter.value);
+  if (dom.serviceFilter.value && dom.serviceFilter.value !== "all") addPart("v", dom.serviceFilter.value);
+  if (dom.minSourcesFilter.value) addPart("i", dom.minSourcesFilter.value);
+  if (dom.maxDurationFilter.value) addPart("x", dom.maxDurationFilter.value);
+  if (dom.startDateFilter.value) addPart("a", dom.startDateFilter.value);
+  if (dom.endDateFilter.value) addPart("b", dom.endDateFilter.value);
+  if (dom.searchFilter.value.trim()) addPart("t", dom.searchFilter.value.trim());
+  if (dom.queryListSearch.value.trim()) addPart("qs", dom.queryListSearch.value.trim());
 
   if (state.selectedQueryStem) {
-    params.set("query", state.selectedQueryStem);
+    addPart("q", state.selectedQueryStem);
     const queryVariant = state.selectedQueryVariantByStem.get(state.selectedQueryStem);
     if (queryVariant) {
-      params.set("queryVariant", queryVariant);
+      addPart("qv", queryVariant);
     }
   }
 
   if (state.selectedExperimentIds.size) {
-    params.set("experiments", [...state.selectedExperimentIds].sort().join(","));
+    const encodedSelection = encodeExperimentSelection(state.selectedExperimentIds);
+    if (encodedSelection) {
+      addPart("ex", encodedSelection);
+    }
   }
 
-  if (dom.httpDisplayMode.value && dom.httpDisplayMode.value !== "matrix") {
-    params.set("httpView", dom.httpDisplayMode.value);
-  }
-  if (dom.httpAggregateMode.value && dom.httpAggregateMode.value !== "median") {
-    params.set("httpAgg", dom.httpAggregateMode.value);
-  }
-  if (dom.httpQueryFilter.value.trim()) {
-    params.set("httpQuery", dom.httpQueryFilter.value.trim());
-  }
-  if (dom.httpTopN.value && dom.httpTopN.value !== "35") {
-    params.set("httpTopN", dom.httpTopN.value);
+  if (dom.httpDisplayMode.value && dom.httpDisplayMode.value !== "matrix") addPart("hv", dom.httpDisplayMode.value);
+  if (dom.httpAggregateMode.value && dom.httpAggregateMode.value !== "median") addPart("ha", dom.httpAggregateMode.value);
+  if (dom.httpQueryFilter.value.trim()) addPart("hq", dom.httpQueryFilter.value.trim());
+  if (dom.httpTopN.value && dom.httpTopN.value !== "35") addPart("hn", dom.httpTopN.value);
+  if (focusView.isOpen && focusView.movedNode?.id === "generalStatsInteractiveFigureChart") addPart("f", "fig2");
+
+  const params = new URLSearchParams();
+  if (compactParts.length) {
+    params.set("s", compactParts.join("~"));
   }
 
   const url = new URL(window.location.href);
@@ -4460,6 +4622,7 @@ function renderAll() {
   markExpandableSurfaces();
   scheduleExplorerListHeightSync();
   syncUrlDashboardState();
+  applyPendingFocusTarget();
 }
 
 function resetScopeAndFilters() {
