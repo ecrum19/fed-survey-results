@@ -267,6 +267,161 @@
         </details>
       </section>
 
+      <section class="panel endpoint-reference-panel" id="endpointReferenceSection">
+        <h2>SPARQL Endpoint Reference</h2>
+        <p class="section-intro">
+          Endpoint inventory used by the study workload and its federated targets. This table is reproduced from
+          <code>endpoints_table.tex</code> without altering the underlying endpoint data.
+        </p>
+        <p class="table-caption">
+          <strong>Table caption:</strong> SPARQL endpoints represented in the real-world query workload.
+          Triple-store was assessed through endpoint literature, server response, and endpoint service description data.
+        </p>
+        <details class="table-collapsible" open>
+          <summary>Show Endpoint Table</summary>
+          <div class="table-wrap endpoint-reference-wrap">
+            <table class="endpoint-reference-table">
+              <thead>
+                <tr>
+                  <th>Endpoint</th>
+                  <th>Description</th>
+                  <th>Triple-store</th>
+                  <th>Endpoint URL</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>UniProt</td>
+                  <td>Protein sequence and functional annotations</td>
+                  <td>Virtuoso (past) / QLever (current)</td>
+                  <td><a href="https://sparql.uniprot.org/sparql" target="_blank" rel="noopener noreferrer">sparql.uniprot.org/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>Rhea</td>
+                  <td>Biochemical and transport reactions</td>
+                  <td>Virtuoso</td>
+                  <td><a href="https://sparql.rhea-db.org/sparql" target="_blank" rel="noopener noreferrer">sparql.rhea-db.org/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>SwissLipids</td>
+                  <td>Lipid structures</td>
+                  <td>unknown</td>
+                  <td><a href="https://beta.sparql.swisslipids.org/sparql" target="_blank" rel="noopener noreferrer">beta.sparql.swisslipids.org/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>Bgee</td>
+                  <td>Gene expression for comparative analysis</td>
+                  <td>Virtuoso</td>
+                  <td><a href="https://www.bgee.org/sparql" target="_blank" rel="noopener noreferrer">bgee.org/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>OrthoDB</td>
+                  <td>Orthologous genes</td>
+                  <td>Virtuoso</td>
+                  <td><a href="https://sparql.orthodb.org/sparql" target="_blank" rel="noopener noreferrer">sparql.orthodb.org/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>OMA</td>
+                  <td>Orthology and protein families</td>
+                  <td>Virtuoso</td>
+                  <td><a href="https://sparql.omabrowser.org/sparql" target="_blank" rel="noopener noreferrer">sparql.omabrowser.org/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>biosoda</td>
+                  <td>SPARQL federation server</td>
+                  <td>N/A</td>
+                  <td><a href="https://biosoda.unil.ch/emi/sparql" target="_blank" rel="noopener noreferrer">biosoda.unil.ch/emi/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>Wikidata</td>
+                  <td>General-purpose knowledge graph</td>
+                  <td>Blazegraph</td>
+                  <td><a href="https://query.wikidata.org/sparql" target="_blank" rel="noopener noreferrer">query.wikidata.org/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>Wikidata--QLever</td>
+                  <td>Alternative Wikidata endpoint</td>
+                  <td>QLever</td>
+                  <td><a href="https://qlever.cs.uni-freiburg.de/api/wikidata" target="_blank" rel="noopener noreferrer">qlever.cs.uni-freiburg.de/api/wikidata</a></td>
+                </tr>
+                <tr>
+                  <td>METRIN-KG</td>
+                  <td>Plant metabolome and traits</td>
+                  <td>QLever</td>
+                  <td><a href="https://kg.earthmetabolome.org/metrin/api" target="_blank" rel="noopener noreferrer">kg.earthmetabolome.org/metrin/api</a></td>
+                </tr>
+                <tr>
+                  <td>IDSM</td>
+                  <td>Small molecule database</td>
+                  <td>PostgreSQL</td>
+                  <td><a href="https://idsm.elixir-czech.cz/sparql" target="_blank" rel="noopener noreferrer">idsm.elixir-czech.cz/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>MBGD</td>
+                  <td>Microbial genomes</td>
+                  <td>Virtuoso</td>
+                  <td><a href="http://sparql.nibb.ac.jp/sparql" target="_blank" rel="noopener noreferrer">sparql.nibb.ac.jp/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>STRING-DB</td>
+                  <td>Functional protein association networks</td>
+                  <td>Virtuoso</td>
+                  <td><a href="https://string-db.org/sparql" target="_blank" rel="noopener noreferrer">string-db.org/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>Allie</td>
+                  <td>Abbreviation and long-form searches</td>
+                  <td>Virtuoso</td>
+                  <td><a href="http://data.allie.dbcls.jp/sparql" target="_blank" rel="noopener noreferrer">data.allie.dbcls.jp/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>EPO</td>
+                  <td>Linked patent data</td>
+                  <td>unknown</td>
+                  <td><a href="https://data.epo.org/linked-data/query" target="_blank" rel="noopener noreferrer">data.epo.org/linked-data/query</a></td>
+                </tr>
+                <tr>
+                  <td>EUNIS</td>
+                  <td>Biodiversity and species data</td>
+                  <td>unknown</td>
+                  <td><a href="https://semantic.eea.europa.eu/sparql" target="_blank" rel="noopener noreferrer">semantic.eea.europa.eu/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>data.europa.eu</td>
+                  <td>European open data</td>
+                  <td>Virtuoso</td>
+                  <td><a href="https://data.europa.eu/sparql" target="_blank" rel="noopener noreferrer">data.europa.eu/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>GlyConnect</td>
+                  <td>Glycoproteomics data</td>
+                  <td>GraphDB</td>
+                  <td><a href="https://glyconnect.expasy.org/sparql" target="_blank" rel="noopener noreferrer">glyconnect.expasy.org/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>MeSH</td>
+                  <td>Medical Subject Headings (MeSH)</td>
+                  <td>unknown</td>
+                  <td><a href="https://id.nlm.nih.gov/mesh/sparql" target="_blank" rel="noopener noreferrer">id.nlm.nih.gov/mesh/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>Bioregistry</td>
+                  <td>Registry of biomedical identifiers</td>
+                  <td>RDFLib endpoint</td>
+                  <td><a href="https://bioregistry.io/sparql" target="_blank" rel="noopener noreferrer">bioregistry.io/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>Identifiers.org</td>
+                  <td>Persistent identifier registry</td>
+                  <td>unknown</td>
+                  <td><a href="https://sparql.api.identifiers.org/sparql" target="_blank" rel="noopener noreferrer">sparql.api.identifiers.org/sparql</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+
       <section class="panel explorer-panel">
         <h2>Data Explorer</h2>
         <p class="section-intro">
