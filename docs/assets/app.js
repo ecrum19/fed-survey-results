@@ -18,6 +18,7 @@ const state = {
 
   includeOldResults: false,
   monthFocus: null,
+  selectedOverviewEndpoint: "uniprot",
 
   explorerMode: "query",
   selectedQueryStem: null,
@@ -53,6 +54,8 @@ const dom = {
   runMedianChart: document.getElementById("runMedianChart"),
   runPositiveResultCountChart: document.getElementById("runPositiveResultCountChart"),
   noServiceAlgorithmChart: document.getElementById("noServiceAlgorithmChart"),
+  endpointOutcomeToggleRow: document.getElementById("endpointOutcomeToggleRow"),
+  endpointOutcomeChart: document.getElementById("endpointOutcomeChart"),
   queryResultsByRunOverviewChart: document.getElementById("queryResultsByRunOverviewChart"),
   queryErrorTypeHeatmapChart: document.getElementById("queryErrorTypeHeatmapChart"),
 
@@ -128,21 +131,22 @@ const EXPANDABLE_SURFACE_SELECTOR = ".chart-card, .table-wrap, .http-matrix-wrap
 const INTERACTIVE_BLOCK_SELECTOR = "button, a, input, select, textarea, label, summary, [role='button']";
 const URL_MATCH_RE = /https?:\/\/[^\s<>"']+/gi;
 const CHART_CAPTIONS = Object.freeze({
-  runSuccessChart: "Each bar shows the percentage of query attempts in a run that produced results. This is the clearest high-level reliability signal when comparing run configurations.",
+  runSuccessChart: "Each bar shows execution success rate: the percentage of query attempts in a run with result set count > 0. This is the clearest high-level reliability signal when comparing run configurations.",
   errorCategoryChart: "Bars count failed query attempts by high-level error group (Client-side HTTP, Server-side HTTP, Transport-level, Timeout-related, Other) in the current scope.",
   runMedianChart: "Bars show median runtime per run in seconds. This helps compare typical execution cost between runs without over-weighting extreme outliers.",
   runPositiveResultCountChart: "Bars show the number of query attempts per run with non-empty result sets (>0). This highlights runs that produced useful, non-empty outputs.",
   noServiceAlgorithmChart: "This chart compares only NO-SERVICE algorithm families using direct experimental outcomes: explicit-error-free rate, >0-result rate, and median HTTP requests among successful (no-explicit-error) query attempts.",
+  endpointOutcomeChart: "For the selected endpoint, stacked bars show counts of >0 results, =0 results without explicit error, and explicit errors per run. The line overlays execution success rate (>0 results only).",
   queryResultsByRunOverviewChart: "Heatmap cells show per-query outcomes by run with distinct states for >0 results, 0 results, explicit errors, and missing data. A ≠ marker flags queries whose non-error raw result counts differ between runs, highlighting cross-run result instability.",
   queryErrorTypeHeatmapChart: "Heatmap cells show whether each query-run pair had explicit errors. Non-error outcomes (both 0 and >0 results) share one color, while explicit errors are colored by high-level error group with raw messages available on hover.",
-  monthSuccessChart: "Each bar is success rate within one user-defined testing period. It indicates whether robustness improved, declined, or stayed stable across study phases.",
+  monthSuccessChart: "Each bar is execution success rate within one user-defined testing period, where success means result set count > 0. It indicates whether robustness improved, declined, or stayed stable across study phases.",
   monthVolumeChart: "Bars show how many query records were executed in each user-defined testing period. This gives workload context for interpreting period-level outcome trends.",
   generalStatsInteractiveFigureChart: "This interactive figure shows query complexity by triple-pattern count, grouped by federation-member cardinality, with OPTIONAL and UNION markers to highlight structural query features.",
   queryDurationChart: "For the selected query, bars show runtime per experiment run in seconds. This reveals run-to-run execution variability for the same query logic.",
   queryResultsChart: "For the selected query, bars show result count per run. This is useful for spotting consistency issues, empty-result behavior, or large output shifts across runs.",
   queryHttpOutcomeChart: "Each point is one query attempt for the selected query. The x-axis is HTTP requests and the y-axis indicates success (no explicit error) vs failure (explicit error), enabling direct inspection of request-load vs reliability.",
   queryResultVariabilityChart: "This timeline highlights result-count shifts for the selected query across chronological runs. Red bars indicate explicit changes between adjacent time points, making instability easy to spot.",
-  selectedRunSuccessChart: "Each bar is success rate for one selected experiment. This allows direct side-by-side comparison of reliability among the chosen runs.",
+  selectedRunSuccessChart: "Each bar is execution success rate for one selected experiment, where success means result set count > 0. This allows direct side-by-side comparison of reliability among the chosen runs.",
   selectedRunDurationChart: "Bars show median runtime (seconds) for each selected experiment. It summarizes typical cost per run for the current selection.",
   selectedRunErrorChart: "Bars count failed queries by high-level error group within selected experiments.",
   httpRequestBarChart: "Grouped bars show per-query HTTP request load across selected experiments using the chosen aggregation. This highlights high-cost queries and cross-run request amplification.",
@@ -150,6 +154,21 @@ const CHART_CAPTIONS = Object.freeze({
   successOnlyDurationChart: "Bars show median runtime of only successful queries by experiment. This reveals efficiency of successful executions independent of failure overhead.",
   failureErrorChart: "Bars count failed queries by high-level error group (failed attempts only). Raw error text remains available in detailed views and heatmap tooltips.",
   httpByRunChart: "Bars show median HTTP requests per selected experiment. This helps quantify network/API pressure and compare request efficiency across runs.",
+});
+const METRIC_DEFINITIONS = Object.freeze({
+  executionSuccessRate: "Execution success rate is the percentage of query attempts with result set count > 0. Result count = 0 and explicit errors are not counted as execution success.",
+  queryRecords: "Query records are individual query-attempt rows in the filtered dataset.",
+  nonZeroResults: "Non-zero results count query attempts where result set size is strictly greater than zero.",
+  producedResults: "Produced results counts query attempts where result set size is strictly greater than zero.",
+  attempts: "Attempts are the number of query records represented in the current scope.",
+  medianDuration: "Median duration is the 50th percentile of observed runtimes in seconds for the current scope.",
+  maxResults: "Max results is the largest result-set size observed in the current scope.",
+  runsInView: "Runs in view is the number of unique experiment runs represented by the current filters.",
+  experiments: "Experiments is the number of selected runs included in this view.",
+  successfulRecords: "Successful records are query attempts with result set count > 0.",
+  avgResultsOnSuccess: "Average results on success is the mean result-set size over successful records (result set count > 0).",
+  knownHttpRecords: "Known HTTP records are query attempts with a non-null HTTP request count.",
+  queries: "Queries is the number of query records represented in this section.",
 });
 const LEGACY_QUERY_STEM_MAP = Object.freeze({
   Q00000004: "117_biosodafrontend_glioblastoma_orthologs_rat",
@@ -160,32 +179,32 @@ const LEGACY_QUERY_STEM_MAP = Object.freeze({
   Q00000011: "15-rat-TP53-biosodafrontend",
 });
 const EXPERIMENT_LABEL_REPLACEMENTS = Object.freeze([
-  ["EX1-NRL", "NOINDEX-ASK-NRL"],
-  ["EX2-NRL", "NOINDEX-COUNT-NRL"],
+  ["EX1-NRL", "NOMETA-ASK-NRL"],
+  ["EX2-NRL", "NOMETA-COUNT-NRL"],
   ["EX3-NRL", "VOID-TRIPLE-NRL"],
   ["EX4-NRL", "VOID-BLOCK-NRL"],
-  ["EX1", "NOINDEX-ASK"],
-  ["EX2", "NOINDEX-COUNT"],
+  ["EX1", "NOMETA-ASK"],
+  ["EX2", "NOMETA-COUNT"],
   ["EX3", "VOID-TRIPLE"],
   ["EX4", "VOID-BLOCK"],
 ]);
 const CONTROL_RUN_DISPLAY_CONFIG = Object.freeze({
-  // Clear display names for WITH-SERVICE control runs used across charts, tables, and filters.
+  // Clear display names for WITH-SERVICE runs used across charts, tables, and filters.
   "experiments/old-results/default-service-test-1": {
-    displayLabel: "SERVICE-CONTROL-COMUNICA-2025-03-31",
-    tagLabel: "With-SERVICE control run",
+    displayLabel: "SERVICE-COMUNICA-2025-03-31",
+    tagLabel: "With-SERVICE run",
   },
   "experiments/service-control-31-03-25-comunica": {
-    displayLabel: "SERVICE-CONTROL-COMUNICA-2025-03-25",
-    tagLabel: "With-SERVICE control run",
+    displayLabel: "SERVICE-COMUNICA-2025-03-25",
+    tagLabel: "With-SERVICE run",
   },
   "experiments/service-control-31-03-25-endpoint": {
-    displayLabel: "SERVICE-CONTROL-MANUAL-ENDPOINT-2025-03-25",
-    tagLabel: "With-SERVICE control run",
+    displayLabel: "SERVICE-MANUAL-ENDPOINT-2025-03-25",
+    tagLabel: "With-SERVICE run",
   },
   "experiments/service-control-20-4-26": {
-    displayLabel: "SERVICE-CONTROL-COMUNICA-2026-04-26",
-    tagLabel: "With-SERVICE control run",
+    displayLabel: "SERVICE-COMUNICA-2026-04-26",
+    tagLabel: "With-SERVICE run",
   },
 });
 const TEMPORAL_GROUP_META = Object.freeze({
@@ -201,10 +220,19 @@ const TEMPORAL_GROUP_ORDER = Object.freeze([
   "spring-2026",
 ]);
 const NO_SERVICE_ALGORITHM_META = Object.freeze([
-  { key: "NOINDEX-ASK", label: "NOINDEX-ASK", color: "#0072B2" },
-  { key: "NOINDEX-COUNT", label: "NOINDEX-COUNT", color: "#56B4E9" },
+  { key: "NOMETA-ASK", label: "NOMETA-ASK", color: "#0072B2" },
+  { key: "NOMETA-COUNT", label: "NOMETA-COUNT", color: "#56B4E9" },
   { key: "VOID-TRIPLE", label: "VOID-TRIPLE", color: "#009E73" },
   { key: "VOID-BLOCK", label: "VOID-BLOCK", color: "#E69F00" },
+]);
+const OVERVIEW_ENDPOINT_META = Object.freeze([
+  { key: "uniprot", label: "UniProt", endpointUrl: "https://sparql.uniprot.org/sparql/" },
+  { key: "rhea", label: "Rhea", endpointUrl: "https://sparql.rhea-db.org/sparql" },
+  { key: "bgee", label: "Bgee", endpointUrl: "https://www.bgee.org/sparql" },
+  { key: "oma", label: "OMA", endpointUrl: "https://sparql.omabrowser.org/sparql" },
+  { key: "orthodb", label: "OrthoDB", endpointUrl: "https://sparql.orthodb.org/sparql" },
+  { key: "swisslipids", label: "SwissLipids", endpointUrl: "https://sparql.swisslipids.org/sparql/" },
+  { key: "emi", label: "EMI/DBGI", endpointUrl: "https://biosoda.unil.ch/emi/sparql" },
 ]);
 const RUN_TEMPORAL_GROUP_OVERRIDES = Object.freeze({
   // Spring 2025 controls
@@ -262,6 +290,25 @@ function formatAxisNumber(value) {
     return formatCompactNumber(value, 1);
   }
   return formatNumber(value, 1);
+}
+
+function metricLabel(label, metricKey) {
+  const definition = METRIC_DEFINITIONS[metricKey];
+  if (!definition) {
+    return label;
+  }
+  return `
+    <span class="metric-label-wrap">
+      ${label}
+      <span
+        class="metric-help"
+        tabindex="0"
+        role="note"
+        title="${escapeHtmlAttr(definition)}"
+        aria-label="${escapeHtmlAttr(`Metric definition: ${definition}`)}"
+      >ⓘ</span>
+    </span>
+  `;
 }
 
 function formatDateTime(value) {
@@ -1125,7 +1172,11 @@ function hasExplicitError(record) {
 }
 
 function hasPositiveResultSet(record) {
-  // Query-level success is defined as NOT having an explicit error.
+  // Execution success for reporting is strictly a non-empty result set.
+  return Number(record?.results_count || 0) > 0;
+}
+
+function hasNoExplicitError(record) {
   return !hasExplicitError(record);
 }
 
@@ -1431,8 +1482,8 @@ function abbreviateRunLabelForAxis(label) {
   const source = String(label);
 
   const mappedPatterns = [
-    { key: "NOINDEX-ASK", short: "NA" },
-    { key: "NOINDEX-COUNT", short: "NC" },
+    { key: "NOMETA-ASK", short: "NMA" },
+    { key: "NOMETA-COUNT", short: "NMC" },
     { key: "VOID-TRIPLE", short: "VT" },
     { key: "VOID-BLOCK", short: "VB" },
   ];
@@ -1447,11 +1498,11 @@ function abbreviateRunLabelForAxis(label) {
     }
   }
 
-  const controlComunica = source.match(/^SERVICE-CONTROL-COMUNICA-(\d{4})-(\d{2})-(\d{2})$/);
+  const controlComunica = source.match(/^SERVICE(?:-CONTROL)?-COMUNICA-(\d{4})-(\d{2})-(\d{2})$/);
   if (controlComunica) {
     return `SC-C ${controlComunica[1]}-${controlComunica[2]}-${controlComunica[3]}`;
   }
-  const controlEndpoint = source.match(/^SERVICE-CONTROL-MANUAL-ENDPOINT-(\d{4})-(\d{2})-(\d{2})$/);
+  const controlEndpoint = source.match(/^SERVICE(?:-CONTROL)?-MANUAL-ENDPOINT-(\d{4})-(\d{2})-(\d{2})$/);
   if (controlEndpoint) {
     return `SC-E ${controlEndpoint[1]}-${controlEndpoint[2]}-${controlEndpoint[3]}`;
   }
@@ -1498,7 +1549,7 @@ function setChartCardTitle(chartEl, title) {
   }
   const heading = chartEl.closest(".chart-card")?.querySelector("h3");
   if (heading) {
-    heading.textContent = title;
+    heading.innerHTML = title;
   }
 }
 
@@ -2061,6 +2112,141 @@ function renderNoServiceAlgorithmEfficacyChart(chartEl, algorithmRows, periodLab
   chartRegistry.set(chartEl.id, instance);
 }
 
+function renderEndpointOutcomeChart(chartEl, endpointMeta, runRows, periodLabel = null) {
+  clearChartElement(chartEl);
+  const xLabel = "Experiment Run";
+  const yLabel = "Query Attempts (count)";
+
+  if (!(chartEl instanceof HTMLElement)) {
+    return;
+  }
+  if (!endpointMeta) {
+    renderNoDataPlot(chartEl, "No endpoint selected", xLabel, yLabel);
+    return;
+  }
+  if (!Array.isArray(runRows) || !runRows.length) {
+    renderNoDataPlot(chartEl, `No data for ${endpointMeta.label} in current scope`, xLabel, yLabel);
+    return;
+  }
+
+  const ChartJs = getChartJs();
+  if (!ChartJs) {
+    chartEl.innerHTML = "<div class='chart-empty'>Interactive chart library not available.</div>";
+    return;
+  }
+
+  const labels = runRows.map((row) => row.label);
+  const valuesPositive = runRows.map((row) => row.positiveCount);
+  const valuesZeroNoError = runRows.map((row) => row.zeroNoErrorCount);
+  const valuesError = runRows.map((row) => row.errorCount);
+  const rates = runRows.map((row) => row.executionSuccessRate * 100);
+
+  const canvas = buildChartCanvas(chartEl);
+  const chartOptions = chartBaseOptions(xLabel, yLabel, labels);
+  chartOptions.scales.y.stacked = true;
+  chartOptions.scales.x.stacked = true;
+  chartOptions.scales.y1 = {
+    beginAtZero: true,
+    position: "right",
+    max: 100,
+    title: {
+      display: true,
+      text: "Execution Success Rate (%)",
+      color: "#345a79",
+      font: { size: 12, weight: "600" },
+    },
+    ticks: {
+      color: "#4d6980",
+      callback: (value) => `${Number(value).toFixed(0)}%`,
+    },
+    grid: {
+      drawOnChartArea: false,
+    },
+  };
+  chartOptions.plugins.legend.display = true;
+  chartOptions.plugins.legend.position = "top";
+  chartOptions.plugins.tooltip.callbacks = {
+    title: (items) => {
+      const idx = items[0]?.dataIndex ?? 0;
+      return `${xLabel}: ${labels[idx]}`;
+    },
+    label: (context) => {
+      const label = context.dataset.label || "Value";
+      if (context.dataset.yAxisID === "y1") {
+        return `${label}: ${Number(context.raw).toFixed(1)}%`;
+      }
+      return `${label}: ${formatNumber(Number(context.raw), 0)}`;
+    },
+    afterBody: (items) => {
+      const idx = items[0]?.dataIndex ?? 0;
+      const row = runRows[idx];
+      const lines = [
+        `Run ID: ${row.runIdDisplay}`,
+        `Endpoint: ${endpointMeta.label} (${endpointMeta.endpointUrl})`,
+        `Execution success (>0): ${formatNumber(row.positiveCount, 0)}/${formatNumber(row.totalCount, 0)}`,
+        `=0 and no explicit error: ${formatNumber(row.zeroNoErrorCount, 0)}/${formatNumber(row.totalCount, 0)}`,
+        `Explicit error: ${formatNumber(row.errorCount, 0)}/${formatNumber(row.totalCount, 0)}`,
+      ];
+      if (periodLabel) {
+        lines.push(`Period: ${periodLabel}`);
+      }
+      return lines;
+    },
+  };
+
+  const instance = new ChartJs(canvas.getContext("2d"), {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [
+        {
+          label: ">0 results",
+          data: valuesPositive,
+          backgroundColor: "#009E73",
+          borderColor: "#009E73",
+          borderWidth: 1,
+          borderRadius: 3,
+          stack: "outcomes",
+        },
+        {
+          label: "=0, no explicit error",
+          data: valuesZeroNoError,
+          backgroundColor: "#56B4E9",
+          borderColor: "#56B4E9",
+          borderWidth: 1,
+          borderRadius: 3,
+          stack: "outcomes",
+        },
+        {
+          label: "Explicit error",
+          data: valuesError,
+          backgroundColor: "#D55E00",
+          borderColor: "#D55E00",
+          borderWidth: 1,
+          borderRadius: 3,
+          stack: "outcomes",
+        },
+        {
+          type: "line",
+          label: "Execution success rate",
+          data: rates,
+          yAxisID: "y1",
+          borderColor: "#332288",
+          backgroundColor: "#332288",
+          pointBackgroundColor: "#332288",
+          pointBorderColor: "#f8fbff",
+          pointBorderWidth: 1,
+          pointRadius: 3.2,
+          pointHoverRadius: 4.4,
+          tension: 0.22,
+        },
+      ],
+    },
+    options: chartOptions,
+  });
+  chartRegistry.set(chartEl.id, instance);
+}
+
 function renderQueryOutcomeHeatmap(chartEl, groups, series) {
   clearChartElement(chartEl);
   const xLabel = "Query";
@@ -2519,7 +2705,7 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
     .map((record) => {
       const httpValue = record.http_requests;
       const run = runsById.get(record.run_id) || { run_id: record.run_id, run_label: record.run_label };
-      const outcomePositive = hasPositiveResultSet(record);
+      const outcomeNoExplicitError = hasNoExplicitError(record);
       const httpIsMissing = !hasNumericValue(httpValue);
       return {
         xBase: httpIsMissing ? null : Number(httpValue),
@@ -2528,7 +2714,7 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
         start: record.start,
         duration: record.duration_seconds,
         resultsCount: record.results_count,
-        producedResults: outcomePositive,
+        producedResults: outcomeNoExplicitError,
         httpIsMissing,
         errorCategory: record.error_category || "N/A",
       };
@@ -2736,6 +2922,40 @@ function getQueryVariants() {
   return state.queriesDataset?.variants || [];
 }
 
+function getOverviewEndpointMeta(key) {
+  if (!key) {
+    return null;
+  }
+  return OVERVIEW_ENDPOINT_META.find((item) => item.key === key) || null;
+}
+
+function summaryImplicatesEndpoint(summary, endpointUrl) {
+  if (!summary || !endpointUrl) {
+    return false;
+  }
+  const hasMatch = (rawValue) => String(rawValue || "").includes(endpointUrl);
+  const variantMatch = (summary.variants || []).some((variant) => hasMatch(variant.query_text));
+  if (variantMatch) {
+    return true;
+  }
+  const sibMatch = (summary.sib_rows || []).some((row) => Object.values(row || {}).some((value) => hasMatch(value)));
+  if (sibMatch) {
+    return true;
+  }
+  return (summary.parsed_stats?.service_iris || []).some((iri) => hasMatch(iri));
+}
+
+function getEndpointQueryStemSet(endpointMeta) {
+  if (!endpointMeta) {
+    return new Set();
+  }
+  const stems = (getQuerySummaries() || [])
+    .filter((summary) => summaryImplicatesEndpoint(summary, endpointMeta.endpointUrl))
+    .map((summary) => summary.query_stem)
+    .filter(Boolean);
+  return new Set(stems);
+}
+
 function getQueryAlias(stem) {
   if (!stem) {
     return null;
@@ -2838,6 +3058,7 @@ function parseCompactStateParam(encoded) {
     httpAggregateMode: "median",
     httpQueryFilter: "",
     httpTopN: "35",
+    selectedOverviewEndpoint: "uniprot",
     focusTarget: null,
   };
 
@@ -2880,6 +3101,7 @@ function parseCompactStateParam(encoded) {
     else if (key === "ha") compact.httpAggregateMode = value;
     else if (key === "hq") compact.httpQueryFilter = value;
     else if (key === "hn") compact.httpTopN = value;
+    else if (key === "oe") compact.selectedOverviewEndpoint = value;
     else if (key === "f") compact.focusTarget = value || null;
   }
 
@@ -2952,6 +3174,7 @@ function parseUrlDashboardState() {
     httpAggregateMode: params.get("ha") || params.get("httpAgg") || "median",
     httpQueryFilter: params.get("hq") || params.get("httpQuery") || "",
     httpTopN: params.get("hn") || params.get("httpTopN") || "35",
+    selectedOverviewEndpoint: params.get("oe") || params.get("overviewEndpoint") || "uniprot",
     focusTarget: params.get("f") || params.get("focus") || null,
   };
 }
@@ -2972,6 +3195,7 @@ function applyUrlDashboardState(urlState) {
 
     state.selectedExperimentIds = new Set(urlState.selectedExperimentIds || []);
     state.experimentSelectionInitialized = state.selectedExperimentIds.size > 0;
+    state.selectedOverviewEndpoint = urlState.selectedOverviewEndpoint || "uniprot";
     state.pendingFocusTarget = urlState.focusTarget || null;
 
     dom.queryListSearch.value = urlState.queryListSearch || "";
@@ -3042,6 +3266,7 @@ function syncUrlDashboardState() {
   if (dom.httpAggregateMode.value && dom.httpAggregateMode.value !== "median") addPart("ha", dom.httpAggregateMode.value);
   if (dom.httpQueryFilter.value.trim()) addPart("hq", dom.httpQueryFilter.value.trim());
   if (dom.httpTopN.value && dom.httpTopN.value !== "35") addPart("hn", dom.httpTopN.value);
+  if (state.selectedOverviewEndpoint && state.selectedOverviewEndpoint !== "uniprot") addPart("oe", state.selectedOverviewEndpoint);
   if (focusView.isOpen && focusView.movedNode?.id === "generalStatsInteractiveFigureChart") addPart("f", "fig2");
 
   const params = new URLSearchParams();
@@ -3116,10 +3341,10 @@ function filterOverviewRecords({ applyMonthFocus = true } = {}) {
     if (runFilter && record.run_id !== runFilter) {
       return false;
     }
-    if (outcomeFilter === "success" && !record.produced_results) {
+    if (outcomeFilter === "success" && !hasPositiveResultSet(record)) {
       return false;
     }
-    if (outcomeFilter === "failure" && record.produced_results) {
+    if (outcomeFilter === "failure" && hasPositiveResultSet(record)) {
       return false;
     }
     if (outcomeFilter === "nonzero" && !(record.results_count > 0)) {
@@ -3181,19 +3406,19 @@ function filterOverviewRecords({ applyMonthFocus = true } = {}) {
 
 function renderOverviewKpis(records) {
   const runIds = new Set(records.map((record) => record.run_id));
-  const succeeded = records.filter((record) => record.produced_results).length;
+  const succeeded = records.filter((record) => hasPositiveResultSet(record)).length;
   const nonZero = records.filter((record) => record.results_count > 0).length;
   const durations = records
     .map((record) => record.duration_seconds)
     .filter((value) => value !== null && value !== undefined);
 
   const kpis = [
-    { label: "Runs in view", value: formatNumber(runIds.size, 0) },
-    { label: "Query records", value: formatNumber(records.length, 0) },
-    { label: "Produced results", value: formatNumber(succeeded, 0) },
-    { label: "Success rate", value: formatPercent(records.length ? succeeded / records.length : null) },
-    { label: "Non-zero results", value: formatNumber(nonZero, 0) },
-    { label: "Median duration (s)", value: formatNullableNumber(median(durations)) },
+    { label: metricLabel("Runs in view", "runsInView"), value: formatNumber(runIds.size, 0) },
+    { label: metricLabel("Query records", "queryRecords"), value: formatNumber(records.length, 0) },
+    { label: metricLabel("Produced results (&gt; 0)", "producedResults"), value: formatNumber(succeeded, 0) },
+    { label: metricLabel("<strong>execution success rate</strong>", "executionSuccessRate"), value: formatPercent(records.length ? succeeded / records.length : null) },
+    { label: metricLabel("Non-zero results", "nonZeroResults"), value: formatNumber(nonZero, 0) },
+    { label: metricLabel("Median duration (s)", "medianDuration"), value: formatNullableNumber(median(durations)) },
   ];
 
   dom.kpiGrid.innerHTML = kpis.map((kpi) => `
@@ -3227,7 +3452,7 @@ function renderOverviewCharts(records) {
     }
     const run = runMap.get(record.run_id);
     run.total += 1;
-    if (record.produced_results) {
+    if (hasPositiveResultSet(record)) {
       run.success += 1;
     }
     if (!hasExplicitError(record)) {
@@ -3318,8 +3543,8 @@ function renderOverviewCharts(records) {
     setChartCardTitle(dom.runSuccessChart, `Results obtained by run (${activePeriodLabel})`);
     renderBarChart(dom.runSuccessChart, totalResultsBars, (value) => formatNumber(value, 0), { xLabel: "Experiment Run", yLabel: "Results Obtained (count)" });
   } else {
-    setChartCardTitle(dom.runSuccessChart, "Success rate by run");
-    renderBarChart(dom.runSuccessChart, successBars, (value) => `${value.toFixed(1)}%`, { xLabel: "Experiment Run", yLabel: "Success Rate (%)" });
+    setChartCardTitle(dom.runSuccessChart, "<strong>execution success rate</strong> by run");
+    renderBarChart(dom.runSuccessChart, successBars, (value) => `${value.toFixed(1)}%`, { xLabel: "Experiment Run", yLabel: "Execution Success Rate (%)" });
   }
 
   const errorCounts = new Map();
@@ -3435,6 +3660,53 @@ function renderOverviewCharts(records) {
     setChartCardTitle(dom.noServiceAlgorithmChart, "NO-SERVICE algorithm efficacy comparison");
   }
   renderNoServiceAlgorithmEfficacyChart(dom.noServiceAlgorithmChart, algorithmRows, activePeriodLabel);
+
+  const endpointChoices = OVERVIEW_ENDPOINT_META;
+  if (!endpointChoices.some((item) => item.key === state.selectedOverviewEndpoint)) {
+    state.selectedOverviewEndpoint = endpointChoices[0]?.key || "uniprot";
+  }
+  const selectedEndpointMeta = getOverviewEndpointMeta(state.selectedOverviewEndpoint);
+  const endpointQueryStems = getEndpointQueryStemSet(selectedEndpointMeta);
+
+  if (dom.endpointOutcomeToggleRow) {
+    dom.endpointOutcomeToggleRow.innerHTML = endpointChoices.map((item) => `
+      <button
+        type="button"
+        class="endpoint-toggle-btn ${item.key === state.selectedOverviewEndpoint ? "active" : ""}"
+        data-endpoint-key="${escapeHtmlAttr(item.key)}"
+        title="${escapeHtmlAttr(item.endpointUrl)}"
+      >${escapeHtml(item.label)}</button>
+    `).join("");
+  }
+
+  const endpointRunRows = sortedRuns
+    .map((run) => {
+      const endpointRecords = (run.records || []).filter((record) => {
+        const stem = normalizeQueryStem(record.query_name);
+        return stem && endpointQueryStems.has(stem);
+      });
+      const positiveCount = endpointRecords.filter((record) => hasPositiveResultSet(record)).length;
+      const errorCount = endpointRecords.filter((record) => hasExplicitError(record)).length;
+      const zeroNoErrorCount = endpointRecords.length - positiveCount - errorCount;
+      const totalCount = endpointRecords.length;
+      return {
+        label: run.label,
+        runIdDisplay: getRunDisplayLabel(run.runId, run.runLabel),
+        positiveCount,
+        zeroNoErrorCount,
+        errorCount,
+        totalCount,
+        executionSuccessRate: totalCount > 0 ? positiveCount / totalCount : 0,
+      };
+    })
+    .filter((row) => row.totalCount > 0);
+
+  if (activePeriodLabel) {
+    setChartCardTitle(dom.endpointOutcomeChart, `${escapeHtml(selectedEndpointMeta?.label || "Endpoint")} outcomes by run (${escapeHtml(activePeriodLabel)})`);
+  } else {
+    setChartCardTitle(dom.endpointOutcomeChart, `${escapeHtml(selectedEndpointMeta?.label || "Endpoint")} outcomes by run`);
+  }
+  renderEndpointOutcomeChart(dom.endpointOutcomeChart, selectedEndpointMeta, endpointRunRows, activePeriodLabel);
 
   const queryStems = [...new Set(
     records
@@ -3609,7 +3881,7 @@ function getMonthlyStats(records) {
     }
     const month = map.get(monthKey);
     month.total += 1;
-    if (record.produced_results) {
+    if (hasPositiveResultSet(record)) {
       month.success += 1;
     }
     if (record.duration_seconds !== null && record.duration_seconds !== undefined) {
@@ -3682,7 +3954,7 @@ function renderMonthlyViews(recordsBeforeMonthFocus) {
 
     const periodRunSuccessBars = activeRuns.map((run) => {
       const runRecords = runRecordMap.get(run.run_id) || [];
-      const successes = runRecords.filter((record) => record.produced_results).length;
+      const successes = runRecords.filter((record) => hasPositiveResultSet(record)).length;
       return {
         label: getRunDisplayLabel(run.run_id, run.run_label),
         run_id: run.run_id,
@@ -3706,10 +3978,10 @@ function renderMonthlyViews(recordsBeforeMonthFocus) {
       .sort((a, b) => b.value - a.value)
       .slice(0, 12);
 
-    setChartCardTitle(dom.monthSuccessChart, `Experiment success rates (${focusMonth.label})`);
+    setChartCardTitle(dom.monthSuccessChart, `Experiment <strong>execution success rates</strong> (${escapeHtml(focusMonth.label)})`);
     renderBarChart(dom.monthSuccessChart, periodRunSuccessBars, (value) => `${value.toFixed(1)}%`, {
       xLabel: "Experiment Run",
-      yLabel: "Success Rate (%)",
+      yLabel: "Execution Success Rate (%)",
     });
 
     setChartCardTitle(
@@ -3732,8 +4004,8 @@ function renderMonthlyViews(recordsBeforeMonthFocus) {
       color: CHART_COLORS.primary,
     }));
 
-    setChartCardTitle(dom.monthSuccessChart, "Success rate by period");
-    renderBarChart(dom.monthSuccessChart, successBars, (value) => `${value.toFixed(1)}%`, { xLabel: "Testing Period", yLabel: "Success Rate (%)" });
+    setChartCardTitle(dom.monthSuccessChart, "<strong>execution success rate</strong> by period");
+    renderBarChart(dom.monthSuccessChart, successBars, (value) => `${value.toFixed(1)}%`, { xLabel: "Testing Period", yLabel: "Execution Success Rate (%)" });
 
     setChartCardTitle(dom.monthVolumeChart, "Query volume by period");
     renderBarChart(dom.monthVolumeChart, volumeBars, (value) => formatNumber(value, 0), { xLabel: "Testing Period", yLabel: "Query Records (count)" });
@@ -3749,13 +4021,13 @@ function renderMonthlyViews(recordsBeforeMonthFocus) {
       .map((runId) => runsById.get(runId))
       .filter(Boolean)
       .sort((a, b) => (b.query_count || 0) - (a.query_count || 0))
-      .map((run) => `<li><code>${getRunDisplayLabel(run.run_id, run.run_label)}</code> · ${formatPercent(run.success_rate)} success · ${run.query_count} queries</li>`)
+      .map((run) => `<li><code>${getRunDisplayLabel(run.run_id, run.run_label)}</code> · ${formatPercent(run.success_rate)} execution success rate · ${run.query_count} queries</li>`)
       .join("");
 
     return `
       <article class="month-card">
         <h4>${month.label}</h4>
-        <div class="kpi-label">Queries: ${month.total} · Success: ${formatPercent(month.successRate)} · Median runtime: ${formatNullableNumber(month.medianDuration)} s</div>
+        <div class="kpi-label">${metricLabel("Queries", "queries")}: ${month.total} · ${metricLabel("<strong>execution success rate</strong>", "executionSuccessRate")}: ${formatPercent(month.successRate)} · ${metricLabel("Median runtime", "medianDuration")}: ${formatNullableNumber(month.medianDuration)} s</div>
         <ul class="month-card-list">${runItems}</ul>
       </article>
     `;
@@ -3914,7 +4186,7 @@ function renderQueryList(records) {
     const attempts = observed?.attempts || 0;
     const successRate = attempts ? observed.successes / attempts : null;
     const displayName = getQueryDisplayName(summary.query_stem);
-    const subtitle = `Variants: ${summary.variant_count} · Main attempts: ${attempts} · Success: ${formatPercent(successRate)}`;
+    const subtitle = `Variants: ${summary.variant_count} · Main attempts: ${attempts} · Execution success rate: ${formatPercent(successRate)}`;
 
     return `
       <div class="query-item ${state.selectedQueryStem === summary.query_stem ? "active" : ""}">
@@ -3987,10 +4259,10 @@ function renderQueryDetail(records) {
   dom.querySelectedTitle.textContent = `Query: ${displayName}`;
 
   const chips = [];
-  chips.push(`<span class="stat-chip">Attempts: ${queryRecords.length}</span>`);
-  chips.push(`<span class="stat-chip">Success: ${formatPercent(queryRecords.length ? succeeded / queryRecords.length : null)}</span>`);
-  chips.push(`<span class="stat-chip">Median duration: ${formatNullableNumber(median(durations))} s</span>`);
-  chips.push(`<span class="stat-chip">Max results: ${formatNumber(resultsMax, 0)}</span>`);
+  chips.push(`<span class="stat-chip">${metricLabel("Attempts", "attempts")}: ${queryRecords.length}</span>`);
+  chips.push(`<span class="stat-chip">${metricLabel("<strong>execution success rate</strong>", "executionSuccessRate")}: ${formatPercent(queryRecords.length ? succeeded / queryRecords.length : null)}</span>`);
+  chips.push(`<span class="stat-chip">${metricLabel("Median duration", "medianDuration")}: ${formatNullableNumber(median(durations))} s</span>`);
+  chips.push(`<span class="stat-chip">${metricLabel("Max results", "maxResults")}: ${formatNumber(resultsMax, 0)}</span>`);
 
   if (summary?.complexity_stats?.number_triple_patterns !== undefined) {
     chips.push(`<span class="stat-chip">Triple patterns: ${summary.complexity_stats.number_triple_patterns}</span>`);
@@ -4068,8 +4340,9 @@ function renderQueryDetail(records) {
 
   dom.queryRunTableMeta.textContent = `Showing ${queryRecords.length} run records for this query.`;
   dom.queryRunsTableBody.innerHTML = queryRecords.map((record) => {
-    const badgeClass = hasPositiveResultSet(record) ? "success" : "failure";
-    const badgeText = hasPositiveResultSet(record) ? "No explicit error" : "Explicit error";
+    const noExplicitError = hasNoExplicitError(record);
+    const badgeClass = noExplicitError ? "success" : "failure";
+    const badgeText = noExplicitError ? "No explicit error" : "Explicit error";
 
     const runDisplayLabel = getRunDisplayLabel(record.run_id, record.run_label);
     const runAbbrevLabel = abbreviateRunLabelForAxis(runDisplayLabel);
@@ -4190,7 +4463,7 @@ function renderExperimentList(activeRuns) {
         <div class="item-title item-title-experiment">
           <code class="experiment-run-name" title="${escapeHtmlAttr(runDisplayLabel)}">${escapeHtml(runDisplayLabel)}</code>
         </div>
-        <div class="item-meta">${formatDateTime(run.run_start)} · ${run.query_count} queries · ${formatPercent(run.success_rate)} success · ${modeLabel} ${runControlTag}</div>
+        <div class="item-meta">${formatDateTime(run.run_start)} · ${run.query_count} queries · ${formatPercent(run.success_rate)} execution success rate · ${modeLabel} ${runControlTag}</div>
       </label>
     `;
   }).join("");
@@ -4209,13 +4482,13 @@ function renderExperimentList(activeRuns) {
 }
 
 function renderExperimentSelectionMeta(selectedRuns, selectedRecords) {
-  const successes = selectedRecords.filter((record) => record.produced_results).length;
+  const successes = selectedRecords.filter((record) => hasPositiveResultSet(record)).length;
   const successRate = selectedRecords.length ? successes / selectedRecords.length : null;
   const chips = [
-    `<span class="stat-chip">Experiments: ${selectedRuns.length}</span>`,
-    `<span class="stat-chip">Query records: ${selectedRecords.length}</span>`,
-    `<span class="stat-chip">Success rate: ${formatPercent(successRate)}</span>`,
-    `<span class="stat-chip">Median duration: ${formatNullableNumber(median(selectedRecords.map((r) => r.duration_seconds).filter((v) => v !== null && v !== undefined)))} s</span>`,
+    `<span class="stat-chip">${metricLabel("Experiments", "experiments")}: ${selectedRuns.length}</span>`,
+    `<span class="stat-chip">${metricLabel("Query records", "queryRecords")}: ${selectedRecords.length}</span>`,
+    `<span class="stat-chip">${metricLabel("<strong>execution success rate</strong>", "executionSuccessRate")}: ${formatPercent(successRate)}</span>`,
+    `<span class="stat-chip">${metricLabel("Median duration", "medianDuration")}: ${formatNullableNumber(median(selectedRecords.map((r) => r.duration_seconds).filter((v) => v !== null && v !== undefined)))} s</span>`,
   ];
   dom.experimentSelectedMeta.innerHTML = chips.join("");
 }
@@ -4230,7 +4503,7 @@ function renderExperimentCharts(selectedRuns, selectedRecords) {
 
   const successBars = selectedRuns.map((run) => {
     const records = runRecordMap.get(run.run_id) || [];
-    const successes = records.filter((record) => record.produced_results).length;
+    const successes = records.filter((record) => hasPositiveResultSet(record)).length;
     return {
       label: getRunDisplayLabel(run.run_id, run.run_label),
       run_id: run.run_id,
@@ -4266,7 +4539,7 @@ function renderExperimentCharts(selectedRuns, selectedRecords) {
     .sort((a, b) => b.value - a.value)
     .slice(0, 12);
 
-  renderBarChart(dom.selectedRunSuccessChart, successBars, (value) => `${value.toFixed(1)}%`, { xLabel: "Experiment Run", yLabel: "Success Rate (%)" });
+  renderBarChart(dom.selectedRunSuccessChart, successBars, (value) => `${value.toFixed(1)}%`, { xLabel: "Experiment Run", yLabel: "Execution Success Rate (%)" });
   renderBarChart(dom.selectedRunDurationChart, durationBars, (value) => formatNumber(value, 1), { xLabel: "Experiment Run", yLabel: "Median Runtime (seconds)" });
   renderBarChart(dom.selectedRunErrorChart, errorBars, (value) => formatNumber(value, 0), { xLabel: "Error Group", yLabel: "Failed Queries (count)" });
 }
@@ -4447,8 +4720,8 @@ function renderOptionalInsights(selectedRuns, selectedRecords) {
     return;
   }
 
-  const successRecords = selectedRecords.filter((record) => record.produced_results);
-  const failureRecords = selectedRecords.filter((record) => !record.produced_results);
+  const successRecords = selectedRecords.filter((record) => hasPositiveResultSet(record));
+  const failureRecords = selectedRecords.filter((record) => !hasPositiveResultSet(record));
   const knownHttpRecords = selectedRecords.filter(
     (record) => record.http_requests !== null && record.http_requests !== undefined,
   );
@@ -4463,10 +4736,10 @@ function renderOptionalInsights(selectedRuns, selectedRecords) {
     : null;
 
   dom.successOnlyMeta.innerHTML = [
-    `<span class="stat-chip">Successful records: ${formatNumber(successRecords.length, 0)}</span>`,
-    `<span class="stat-chip">Median successful runtime: ${formatNullableNumber(median(successDurations))} s</span>`,
-    `<span class="stat-chip">Avg results on success: ${formatNumber(avgResults)}</span>`,
-    `<span class="stat-chip">Known HTTP records: ${formatNumber(knownHttpRecords.length, 0)}</span>`,
+    `<span class="stat-chip">${metricLabel("Successful records (&gt; 0 results)", "successfulRecords")}: ${formatNumber(successRecords.length, 0)}</span>`,
+    `<span class="stat-chip">${metricLabel("Median successful runtime", "medianDuration")}: ${formatNullableNumber(median(successDurations))} s</span>`,
+    `<span class="stat-chip">${metricLabel("Avg results on success", "avgResultsOnSuccess")}: ${formatNumber(avgResults)}</span>`,
+    `<span class="stat-chip">${metricLabel("Known HTTP records", "knownHttpRecords")}: ${formatNumber(knownHttpRecords.length, 0)}</span>`,
   ].join("");
 
   const successResultsBars = selectedRuns.map((run) => {
@@ -4546,7 +4819,7 @@ function renderExperimentQueryTable(selectedRecords) {
     }
     const item = map.get(stem);
     item.attempts += 1;
-    if (record.produced_results) {
+    if (hasPositiveResultSet(record)) {
       item.successes += 1;
     }
     if (record.duration_seconds !== null && record.duration_seconds !== undefined) {
@@ -4569,7 +4842,7 @@ function renderExperimentQueryTable(selectedRecords) {
       <tr>
         <td data-label="Query"><code class="truncate-scroll" title="${escapeHtmlAttr(displayName)}">${escapeHtml(displayName)}</code></td>
         <td data-label="Attempts">${formatNumber(row.attempts, 0)}</td>
-        <td data-label="Success rate">${formatPercent(successRate)}</td>
+        <td data-label="Execution success rate">${formatPercent(successRate)}</td>
         <td data-label="Median duration (s)">${formatNullableNumber(median(row.durations))}</td>
         <td data-label="Max results">${formatNumber(row.maxResults, 0)}</td>
       </tr>
@@ -4727,6 +5000,21 @@ function bindEvents() {
 
   if (dom.resetFilters) {
     dom.resetFilters.addEventListener("click", resetScopeAndFilters);
+  }
+
+  if (dom.endpointOutcomeToggleRow) {
+    dom.endpointOutcomeToggleRow.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-endpoint-key]");
+      if (!(button instanceof HTMLButtonElement)) {
+        return;
+      }
+      const endpointKey = button.dataset.endpointKey;
+      if (!endpointKey || endpointKey === state.selectedOverviewEndpoint) {
+        return;
+      }
+      state.selectedOverviewEndpoint = endpointKey;
+      renderAll();
+    });
   }
 
   document.addEventListener("click", (event) => {

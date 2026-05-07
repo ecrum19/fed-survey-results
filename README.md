@@ -76,11 +76,11 @@ The site entrypoint is `docs/index.html`.
 - Main summary metrics exclude `old-results` by design; users can opt in via UI toggle.
 - Dashboard state is encoded into URL query params (filters, selected view, selected query/experiments, period focus), so shared links reopen the same data display.
 - Experiment family labels are remapped in webpage display for readability:
-  - `EX1` -> `NOINDEX-ASK`
-  - `EX2` -> `NOINDEX-COUNT`
+  - `EX1` -> `NOMETA-ASK`
+  - `EX2` -> `NOMETA-COUNT`
   - `EX3` -> `VOID-TRIPLE`
   - `EX4` -> `VOID-BLOCK`
-  - `EX1-NRL` -> `NOINDEX-ASK-NRL`
-  - `EX2-NRL` -> `NOINDEX-COUNT-NRL`
+  - `EX1-NRL` -> `NOMETA-ASK-NRL`
+  - `EX2-NRL` -> `NOMETA-COUNT-NRL`
   - `EX3-NRL` -> `VOID-TRIPLE-NRL`
   - `EX4-NRL` -> `VOID-BLOCK-NRL`

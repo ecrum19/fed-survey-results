@@ -37,12 +37,12 @@ matplotlib.use("Agg", force=True)
 
 
 EXPERIMENT_LABEL_REPLACEMENTS: List[Tuple[str, str]] = [
-    ("EX1-NRL", "NOINDEX-ASK-NRL"),
-    ("EX2-NRL", "NOINDEX-COUNT-NRL"),
+    ("EX1-NRL", "NOMETA-ASK-NRL"),
+    ("EX2-NRL", "NOMETA-COUNT-NRL"),
     ("EX3-NRL", "VOID-TRIPLE-NRL"),
     ("EX4-NRL", "VOID-BLOCK-NRL"),
-    ("EX1", "NOINDEX-ASK"),
-    ("EX2", "NOINDEX-COUNT"),
+    ("EX1", "NOMETA-ASK"),
+    ("EX2", "NOMETA-COUNT"),
     ("EX3", "VOID-TRIPLE"),
     ("EX4", "VOID-BLOCK"),
 ]

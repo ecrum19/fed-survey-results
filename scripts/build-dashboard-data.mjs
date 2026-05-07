@@ -1704,7 +1704,7 @@ function summarizeObservedQueryStats(dataset) {
     const item = map.get(stem);
     item.run_ids.add(record.run_id);
     item.attempts += 1;
-    if (record.produced_results) {
+    if ((record.results_count || 0) > 0) {
       item.successes += 1;
     }
     if ((record.results_count || 0) > 0) {
@@ -2131,8 +2131,8 @@ function buildQueriesDataset(mainDataset, oldDataset) {
 
 function summarizeRunRecords(runRecords) {
   const queryRecords = runRecords.filter((record) => !record.is_run_summary_row);
-  const succeeded = queryRecords.filter((record) => record.produced_results).length;
   const nonZero = queryRecords.filter((record) => (record.results_count || 0) > 0).length;
+  const succeeded = nonZero;
 
   return {
     query_count: queryRecords.length,
@@ -2391,8 +2391,8 @@ function aggregateSummary(dataset) {
       ? (durations[durations.length / 2 - 1] + durations[durations.length / 2]) / 2
       : durations[Math.floor(durations.length / 2)];
 
-  const succeeded = queryRecords.filter((record) => record.produced_results).length;
   const nonZero = queryRecords.filter((record) => (record.results_count || 0) > 0).length;
+  const succeeded = nonZero;
 
   return {
     generated_at: dataset.generated_at,

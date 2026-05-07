@@ -378,6 +378,34 @@ code {
   font-size: 0.83rem;
 }
 
+.metric-label-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.26rem;
+}
+
+.metric-help {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.96rem;
+  height: 0.96rem;
+  border-radius: 50%;
+  border: 1px solid #b9cde2;
+  background: #f2f8ff;
+  color: #1f5f95;
+  font-size: 0.64rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: help;
+  flex-shrink: 0;
+}
+
+.metric-help:focus-visible {
+  outline: 2px solid #7ea9d4;
+  outline-offset: 1px;
+}
+
 .kpi-value {
   font-size: 1.32rem;
   margin-top: 0.2rem;
@@ -490,6 +518,34 @@ code {
 /* Keep standard chart height, but let this card span two columns for a wider comparison view. */
 .no-service-efficacy-card {
   grid-column: span 2;
+}
+
+.endpoint-outcome-card {
+  grid-column: span 2;
+}
+
+.endpoint-toggle-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.32rem;
+  margin: 0.12rem 0 0.45rem;
+}
+
+.endpoint-toggle-btn {
+  border: 1px solid #c8dbed;
+  border-radius: 999px;
+  background: #f6fbff;
+  color: #2b4c68;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+}
+
+.endpoint-toggle-btn.active {
+  background: #d9ebfb;
+  border-color: #6fa8d9;
+  color: #1f4f77;
 }
 
 .month-pill-row {
@@ -2073,6 +2129,10 @@ body.modal-open {
   }
 
   .no-service-efficacy-card {
+    grid-column: span 1;
+  }
+
+  .endpoint-outcome-card {
     grid-column: span 1;
   }
 

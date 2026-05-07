@@ -30,7 +30,7 @@
         <div class="quickstart-grid">
           <article class="quickstart-step">
             <h3>1. Read the big picture</h3>
-            <p>Check success rates, runtime distributions, and error composition across runs and months.</p>
+            <p>Check <strong>execution success rates</strong>, runtime distributions, and error composition across runs and months.</p>
           </article>
           <article class="quickstart-step">
             <h3>2. Drill into specifics</h3>
@@ -78,8 +78,8 @@
             Outcome
             <select id="outcomeFilter">
               <option value="all">All</option>
-              <option value="success">Produced results</option>
-              <option value="failure">Did not produce results</option>
+              <option value="success">Result set &gt; 0 (execution success)</option>
+              <option value="failure">Result set = 0 or explicit error</option>
               <option value="nonzero">Non-zero result count</option>
             </select>
           </label>
@@ -142,7 +142,7 @@
         </div>
         <div class="chart-grid">
           <div class="chart-card">
-            <h3>Success rate by run</h3>
+            <h3><strong>execution success rate</strong> by run <span class="metric-help" tabindex="0" title="Execution success rate = percentage of query attempts with result set count > 0.">ⓘ</span></h3>
             <div id="runSuccessChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
           <div class="chart-card">
@@ -160,6 +160,11 @@
           <div class="chart-card no-service-efficacy-card">
             <h3>NO-SERVICE algorithm efficacy comparison</h3>
             <div id="noServiceAlgorithmChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
+          </div>
+          <div class="chart-card endpoint-outcome-card">
+            <h3>Endpoint-specific outcomes by run</h3>
+            <div class="endpoint-toggle-row" id="endpointOutcomeToggleRow" aria-label="Endpoint selector"></div>
+            <div id="endpointOutcomeChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
           <div class="chart-card query-overview-card">
             <h3>Query outcome heatmap by experiment run</h3>
@@ -180,7 +185,7 @@
         <div class="month-pill-row" id="monthPills"></div>
         <div class="chart-grid">
           <div class="chart-card">
-            <h3>Success rate by month</h3>
+            <h3><strong>execution success rate</strong> by month <span class="metric-help" tabindex="0" title="Execution success rate = percentage of query attempts with result set count > 0.">ⓘ</span></h3>
             <div id="monthSuccessChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
           <div class="chart-card">
@@ -315,10 +320,10 @@
                       <tr>
                         <th>Run</th>
                         <th>Start</th>
-                        <th>Duration (s)</th>
+                        <th>Duration (s) <span class="metric-help" tabindex="0" title="Duration is per-query runtime in seconds from start to end.">ⓘ</span></th>
                         <th>Outcome</th>
-                        <th>Results</th>
-                        <th>HTTP Requests</th>
+                        <th>Results <span class="metric-help" tabindex="0" title="Results is the raw result-set count returned by the query attempt.">ⓘ</span></th>
+                        <th>HTTP Requests <span class="metric-help" tabindex="0" title="HTTP Requests is the number of network requests issued during the query attempt.">ⓘ</span></th>
                         <th>Error</th>
                       </tr>
                     </thead>
@@ -374,7 +379,7 @@
 
               <div class="chart-grid">
                 <div class="chart-card">
-                  <h3>Success rate by selected experiment</h3>
+                  <h3><strong>execution success rate</strong> by selected experiment <span class="metric-help" tabindex="0" title="Execution success rate = percentage of query attempts with result set count > 0.">ⓘ</span></h3>
                   <div id="selectedRunSuccessChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                 </div>
                 <div class="chart-card">
@@ -454,10 +459,10 @@
                     <thead>
                       <tr>
                         <th>Query</th>
-                        <th>Attempts</th>
-                        <th>Success rate</th>
-                        <th>Median duration (s)</th>
-                        <th>Max results</th>
+                        <th>Attempts <span class="metric-help" tabindex="0" title="Attempts = number of query records represented in the selected experiment scope.">ⓘ</span></th>
+                        <th><strong>execution success rate</strong> <span class="metric-help" tabindex="0" title="Execution success rate = percentage of query attempts with result set count > 0.">ⓘ</span></th>
+                        <th>Median duration (s) <span class="metric-help" tabindex="0" title="Median duration is the 50th percentile runtime across attempts.">ⓘ</span></th>
+                        <th>Max results <span class="metric-help" tabindex="0" title="Max results is the largest result-set count observed across attempts.">ⓘ</span></th>
                       </tr>
                     </thead>
                     <tbody id="experimentQueryTableBody"></tbody>
@@ -479,8 +484,8 @@
           <li>Main summary metrics exclude <code>old-results</code> by default.</li>
           <li><code>_ns</code> and <code>no-service</code> query identifiers are treated as "no service descriptions".</li>
           <li>
-            Experiment-family display mapping: <code>EX1</code> -> <code>NOINDEX-ASK</code>,
-            <code>EX2</code> -> <code>NOINDEX-COUNT</code>, <code>EX3</code> -> <code>VOID-TRIPLE</code>,
+            Experiment-family display mapping: <code>EX1</code> -> <code>NOMETA-ASK</code>,
+            <code>EX2</code> -> <code>NOMETA-COUNT</code>, <code>EX3</code> -> <code>VOID-TRIPLE</code>,
             <code>EX4</code> -> <code>VOID-BLOCK</code>, and matching <code>-NRL</code> variants.
           </li>
           <li>Overview and Monthly sections are collapsible.</li>
