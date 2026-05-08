@@ -1,0 +1,116 @@
+\begin{table}[t]
+    \centering
+    \small
+    \caption{
+        Distribution of query-structure features across the test set ($n=67$ queries).
+    }
+    \label{tab:binQueryStat}
+
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.12}
+
+    \begin{tabular}{lrrrrrrrr}
+        \hline
+        \textbf{SPARQL query feature}
+            & \textbf{0}
+            & \textbf{1--5}
+            & \textbf{6--10}
+            & \textbf{11--15}
+            & \textbf{16--20}
+            & \textbf{21--25}
+            & \textbf{26--30}
+            & \textbf{31--35} \\
+        \hline
+
+        Triple patterns
+            & --
+            & 7
+            & 15
+            & 15
+            & 14
+            & 12
+            & 1
+            & 3 \\
+
+        Basic graph patterns
+            & --
+            & 65
+            & 2
+            & --
+            & --
+            & --
+            & --
+            & -- \\
+
+        Optional graph patterns
+            & 60
+            & 7
+            & --
+            & --
+            & --
+            & --
+            & --
+            & -- \\
+
+        Property paths
+            & 31
+            & 35
+            & 1
+            & --
+            & --
+            & --
+            & --
+            & -- \\
+
+        Recursive property paths
+            & 40
+            & 27
+            & --
+            & --
+            & --
+            & --
+            & --
+            & -- \\
+
+        Union graph patterns
+            & 57
+            & 10
+            & --
+            & --
+            & --
+            & --
+            & --
+            & -- \\
+
+        \texttt{DISTINCT} statements
+            & 36
+            & 31
+            & --
+            & --
+            & --
+            & --
+            & --
+            & -- \\
+
+        \texttt{LIMIT} statements
+            & 55
+            & 12
+            & --
+            & --
+            & --
+            & --
+            & --
+            & -- \\
+
+        Federation members
+            & --
+            & 67
+            & --
+            & --
+            & --
+            & --
+            & --
+            & -- \\
+        \hline
+    \end{tabular}
+\end{table}

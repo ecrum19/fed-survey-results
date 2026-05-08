@@ -1,15 +1,15 @@
 :root {
-  --bg: #f2f6fa;
+  --bg: #f4f4f4;
   --panel: #ffffff;
-  --panel-alt: #f7fbff;
-  --text: #1d2a37;
-  --muted: #5a6b7d;
-  --accent: #0072b2;
-  --accent-soft: #e7f2f9;
-  --success: #009e73;
-  --danger: #d55e00;
-  --border: #d6e0ea;
-  --shadow: 0 8px 30px rgba(23, 45, 76, 0.08);
+  --panel-alt: #f7f7f7;
+  --text: #191919;
+  --muted: #545454;
+  --accent: #151515;
+  --accent-soft: #eeeeee;
+  --success: #2b2b2b;
+  --danger: #4a4a4a;
+  --border: #d4d4d4;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 * {
@@ -26,8 +26,8 @@ body {
   font-family: "Source Sans 3", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color: var(--text);
   background:
-    radial-gradient(circle at 0 0, #d8eaf8 0%, transparent 35%),
-    radial-gradient(circle at 95% 10%, #ddf2ec 0%, transparent 30%),
+    radial-gradient(circle at 0 0, #ffffff 0%, transparent 42%),
+    radial-gradient(circle at 95% 10%, #ececec 0%, transparent 32%),
     var(--bg);
 }
 
@@ -46,7 +46,7 @@ code {
 }
 
 .hero {
-  background: linear-gradient(120deg, var(--accent) 0%, var(--success) 100%);
+  background: linear-gradient(120deg, #0f0f0f 0%, #2d2d2d 100%);
   color: #fff;
   border-radius: 14px;
   padding: 1.2rem 1.4rem;
@@ -64,7 +64,7 @@ code {
 }
 
 .hero .meta {
-  color: #e5f2fb;
+  color: #d7d7d7;
   font-size: 0.95rem;
 }
 
@@ -83,7 +83,7 @@ code {
 
 .section-intro {
   margin: 0 0 0.65rem;
-  color: #47627a;
+  color: #525252;
   font-size: 0.88rem;
   line-height: 1.4;
 }
@@ -95,7 +95,7 @@ code {
   gap: 0.36rem 0.55rem;
   margin: 0 0 0.75rem;
   padding: 0.44rem 0.55rem;
-  border: 1px solid #c9deef;
+  border: 1px solid #d3d3d3;
   border-radius: 8px;
   background: var(--panel-alt);
 }
@@ -103,7 +103,7 @@ code {
 .service-mode-legend-title {
   font-size: 0.78rem;
   font-weight: 700;
-  color: #2e4c68;
+  color: #303030;
   margin-right: 0.22rem;
 }
 
@@ -112,7 +112,7 @@ code {
   align-items: center;
   gap: 0.28rem;
   font-size: 0.77rem;
-  color: #3f5a73;
+  color: #444444;
   white-space: nowrap;
 }
 
@@ -125,11 +125,11 @@ code {
 }
 
 .service-chip.with-service .swatch {
-  background: #0072b2;
+  background: #1f1f1f;
 }
 
 .service-chip.no-service .swatch {
-  background: #009e73;
+  background: #7a7a7a;
 }
 
 .collapsible {
@@ -196,21 +196,21 @@ code {
 .quickstart-step {
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: #f8fbff;
+  background: #fafafa;
   padding: 0.6rem 0.68rem;
 }
 
 .quickstart-step h3 {
   margin: 0 0 0.28rem;
   font-size: 0.88rem;
-  color: #214362;
+  color: #222222;
 }
 
 .quickstart-step p {
   margin: 0;
   font-size: 0.83rem;
   line-height: 1.35;
-  color: #496076;
+  color: #4d4d4d;
 }
 
 .notes-panel > summary {
@@ -391,9 +391,9 @@ code {
   width: 0.96rem;
   height: 0.96rem;
   border-radius: 50%;
-  border: 1px solid #b9cde2;
-  background: #f2f8ff;
-  color: #1f5f95;
+  border: 1px solid #bdbdbd;
+  background: #f5f5f5;
+  color: #333333;
   font-size: 0.64rem;
   font-weight: 700;
   line-height: 1;
@@ -402,8 +402,27 @@ code {
 }
 
 .metric-help:focus-visible {
-  outline: 2px solid #7ea9d4;
+  outline: 2px solid #6f6f6f;
   outline-offset: 1px;
+}
+
+.metric-help-tooltip {
+  position: fixed;
+  z-index: 2200;
+  max-width: min(420px, calc(100vw - 24px));
+  padding: 0.48rem 0.56rem;
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #2b2b2b;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  font-size: 0.8rem;
+  line-height: 1.36;
+  pointer-events: none;
+}
+
+.metric-help-tooltip.hidden {
+  display: none;
 }
 
 .kpi-value {
@@ -428,7 +447,7 @@ code {
 .chart-card h3 {
   margin: 0 0 0.34rem;
   font-size: 0.94rem;
-  color: var(--muted);
+  color: #3f3f3f;
 }
 
 .chart-frame {
@@ -446,9 +465,9 @@ code {
   bottom: 0.5rem;
   z-index: 12;
   border-radius: 50%;
-  border: 1px solid #b9cde2;
-  background: #f4f9ff;
-  color: #1e5f96;
+  border: 1px solid #bdbdbd;
+  background: #f5f5f5;
+  color: #343434;
   font-size: 0.72rem;
   font-weight: 700;
   line-height: 1;
@@ -460,8 +479,8 @@ code {
 }
 
 .chart-info-btn[aria-expanded="true"] {
-  background: #dcecff;
-  border-color: #7ea9d4;
+  background: #e8e8e8;
+  border-color: #9a9a9a;
 }
 
 .chart-caption {
@@ -472,17 +491,17 @@ code {
   width: min(420px, calc(100% - 2.6rem));
   margin: 0;
   padding: 0.46rem 0.52rem;
-  border: 1px solid #d7e5f3;
+  border: 1px solid #d0d0d0;
   border-radius: 8px;
-  background: #f8fbff;
-  color: #3e5b75;
+  background: #ffffff;
+  color: #424242;
   font-size: 0.8rem;
   line-height: 1.35;
   box-shadow: 0 4px 14px rgba(23, 45, 76, 0.12);
 }
 
 .chart-caption strong {
-  color: #244461;
+  color: #222222;
 }
 
 .chart-caption.hidden {
@@ -566,7 +585,7 @@ code {
 }
 
 .month-pill.active {
-  border-color: var(--accent);
+  border-color: #7a7a7a;
   background: var(--accent-soft);
 }
 
@@ -1810,7 +1829,7 @@ body.modal-open {
   z-index: 3200;
   display: grid;
   padding: clamp(0.6rem, 2vw, 1.35rem);
-  background: rgba(13, 24, 37, 0.62);
+  background: rgba(0, 0, 0, 0.56);
   backdrop-filter: blur(4px);
 }
 
@@ -1824,7 +1843,7 @@ body.modal-open {
   border: 1px solid var(--border);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 26px 58px rgba(13, 25, 40, 0.33);
+  box-shadow: 0 26px 58px rgba(0, 0, 0, 0.33);
 }
 
 .focus-modal-head {
@@ -1834,7 +1853,7 @@ body.modal-open {
   gap: 0.7rem;
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--border);
-  background: linear-gradient(180deg, #f7fbff 0%, #eef5fd 100%);
+  background: linear-gradient(180deg, #f9f9f9 0%, #f1f1f1 100%);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -1843,14 +1862,14 @@ body.modal-open {
 .focus-modal-head h2 {
   margin: 0;
   font-size: 1rem;
-  color: #1f3f5d;
+  color: #262626;
 }
 
 .focus-modal-close {
   border: 1px solid var(--border);
   border-radius: 8px;
   background: #fff;
-  color: #234360;
+  color: #2d2d2d;
   padding: 0.34rem 0.64rem;
   font-size: 0.84rem;
   font-weight: 700;
@@ -1861,7 +1880,7 @@ body.modal-open {
   min-height: 0;
   overflow: auto;
   padding: 0.95rem 1rem 1.05rem;
-  background: #f8fbff;
+  background: #f7f7f7;
 }
 
 .focus-modal-hint {
@@ -1870,13 +1889,13 @@ body.modal-open {
   margin-bottom: 0.65rem;
   display: inline-block;
   padding: 0.2rem 0.42rem;
-  border: 1px solid #d4e3f3;
+  border: 1px solid #d3d3d3;
   border-radius: 999px;
   background: #ffffff;
 }
 
 .focus-modal-hint kbd {
-  border: 1px solid #c8d9eb;
+  border: 1px solid #c5c5c5;
   border-bottom-width: 2px;
   border-radius: 5px;
   padding: 0 0.25rem;

@@ -30,6 +30,8 @@ const state = {
 
 let isApplyingUrlState = false;
 let activeHeatmapLegendItem = null;
+let metricTooltipEl = null;
+let activeMetricHelpEl = null;
 
 const dom = {
   dataMeta: document.getElementById("dataMeta"),
@@ -304,11 +306,172 @@ function metricLabel(label, metricKey) {
         class="metric-help"
         tabindex="0"
         role="note"
-        title="${escapeHtmlAttr(definition)}"
+        data-metric-definition="${escapeHtmlAttr(definition)}"
         aria-label="${escapeHtmlAttr(`Metric definition: ${definition}`)}"
       >ⓘ</span>
     </span>
   `;
+}
+
+function ensureMetricTooltipElement() {
+  if (metricTooltipEl instanceof HTMLElement) {
+    return metricTooltipEl;
+  }
+  const tooltip = document.createElement("div");
+  tooltip.className = "metric-help-tooltip hidden";
+  tooltip.setAttribute("role", "tooltip");
+  document.body.appendChild(tooltip);
+  metricTooltipEl = tooltip;
+  return metricTooltipEl;
+}
+
+function metricHelpText(element) {
+  if (!(element instanceof HTMLElement)) {
+    return "";
+  }
+  const direct = element.dataset.metricDefinition || element.getAttribute("data-metric-definition");
+  if (direct) {
+    return String(direct);
+  }
+  const title = element.getAttribute("title");
+  if (title) {
+    return String(title);
+  }
+  const aria = element.getAttribute("aria-label") || "";
+  const prefix = "Metric definition:";
+  if (aria.startsWith(prefix)) {
+    return aria.slice(prefix.length).trim();
+  }
+  return "";
+}
+
+function hydrateMetricHelpAnchors() {
+  document.querySelectorAll(".metric-help").forEach((node) => {
+    if (!(node instanceof HTMLElement)) {
+      return;
+    }
+    const title = node.getAttribute("title");
+    if (title && !node.dataset.metricDefinition) {
+      node.dataset.metricDefinition = title;
+    }
+    // Use a custom tooltip layer instead of relying on native title behavior.
+    node.removeAttribute("title");
+  });
+}
+
+function hideMetricTooltip() {
+  if (!(metricTooltipEl instanceof HTMLElement)) {
+    return;
+  }
+  metricTooltipEl.classList.add("hidden");
+  metricTooltipEl.removeAttribute("style");
+  metricTooltipEl.textContent = "";
+  activeMetricHelpEl = null;
+}
+
+function positionMetricTooltip(anchorEl, pointerEvent = null) {
+  if (!(metricTooltipEl instanceof HTMLElement) || !(anchorEl instanceof HTMLElement)) {
+    return;
+  }
+  const padding = 12;
+  const offset = 12;
+  const tooltipRect = metricTooltipEl.getBoundingClientRect();
+  let left;
+  let top;
+  if (pointerEvent && Number.isFinite(pointerEvent.clientX) && Number.isFinite(pointerEvent.clientY)) {
+    left = pointerEvent.clientX + offset;
+    top = pointerEvent.clientY + offset;
+  } else {
+    const anchorRect = anchorEl.getBoundingClientRect();
+    left = anchorRect.left + anchorRect.width + 8;
+    top = anchorRect.top + (anchorRect.height / 2);
+  }
+  if (left + tooltipRect.width + padding > window.innerWidth) {
+    left = Math.max(padding, window.innerWidth - tooltipRect.width - padding);
+  }
+  if (top + tooltipRect.height + padding > window.innerHeight) {
+    top = Math.max(padding, window.innerHeight - tooltipRect.height - padding);
+  }
+  if (top < padding) {
+    top = padding;
+  }
+  metricTooltipEl.style.left = `${left}px`;
+  metricTooltipEl.style.top = `${top}px`;
+}
+
+function showMetricTooltip(anchorEl, pointerEvent = null) {
+  if (!(anchorEl instanceof HTMLElement)) {
+    return;
+  }
+  const text = metricHelpText(anchorEl);
+  if (!text) {
+    hideMetricTooltip();
+    return;
+  }
+  const tooltip = ensureMetricTooltipElement();
+  tooltip.textContent = text;
+  tooltip.classList.remove("hidden");
+  positionMetricTooltip(anchorEl, pointerEvent);
+  activeMetricHelpEl = anchorEl;
+}
+
+function handleMetricHelpPointerOver(event) {
+  if (!(event.target instanceof Element)) {
+    return;
+  }
+  const target = event.target.closest(".metric-help");
+  if (!(target instanceof HTMLElement)) {
+    return;
+  }
+  showMetricTooltip(target, event);
+}
+
+function handleMetricHelpPointerMove(event) {
+  if (!(activeMetricHelpEl instanceof HTMLElement)) {
+    return;
+  }
+  positionMetricTooltip(activeMetricHelpEl, event);
+}
+
+function handleMetricHelpPointerOut(event) {
+  if (!(event.target instanceof Element)) {
+    return;
+  }
+  const target = event.target.closest(".metric-help");
+  if (!(target instanceof HTMLElement)) {
+    return;
+  }
+  const related = event.relatedTarget;
+  if (related instanceof Node && target.contains(related)) {
+    return;
+  }
+  hideMetricTooltip();
+}
+
+function handleMetricHelpFocusIn(event) {
+  if (!(event.target instanceof Element)) {
+    return;
+  }
+  const target = event.target.closest(".metric-help");
+  if (!(target instanceof HTMLElement)) {
+    return;
+  }
+  showMetricTooltip(target);
+}
+
+function handleMetricHelpFocusOut(event) {
+  if (!(event.target instanceof Element)) {
+    return;
+  }
+  const target = event.target.closest(".metric-help");
+  if (!(target instanceof HTMLElement)) {
+    return;
+  }
+  const related = event.relatedTarget;
+  if (related instanceof Node && target.contains(related)) {
+    return;
+  }
+  hideMetricTooltip();
 }
 
 function formatDateTime(value) {
@@ -4893,6 +5056,7 @@ function renderAll() {
   renderNotesSection();
   ensureChartInfoCards();
   markExpandableSurfaces();
+  hydrateMetricHelpAnchors();
   scheduleExplorerListHeightSync();
   syncUrlDashboardState();
   applyPendingFocusTarget();
@@ -5046,19 +5210,32 @@ function bindEvents() {
   document.addEventListener("click", handleExpandableClick);
   document.addEventListener("keydown", handleExpandableKeydown);
   document.addEventListener("pointermove", handleHeatmapPointerMove);
+  document.addEventListener("pointerover", handleMetricHelpPointerOver);
+  document.addEventListener("pointermove", handleMetricHelpPointerMove);
+  document.addEventListener("pointerout", handleMetricHelpPointerOut);
+  document.addEventListener("focusin", handleMetricHelpFocusIn);
+  document.addEventListener("focusout", handleMetricHelpFocusOut);
   document.addEventListener("pointerleave", () => {
     hideHeatmapTooltip();
     clearHeatmapLegendHighlights();
+    hideMetricTooltip();
   });
   document.addEventListener("scroll", () => {
     hideHeatmapTooltip();
     clearHeatmapLegendHighlights();
+    hideMetricTooltip();
   }, true);
   window.addEventListener("resize", () => {
     hideHeatmapTooltip();
     clearHeatmapLegendHighlights();
+    hideMetricTooltip();
     scheduleExplorerListHeightSync();
     resizeAllCharts();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      hideMetricTooltip();
+    }
   });
 }
 

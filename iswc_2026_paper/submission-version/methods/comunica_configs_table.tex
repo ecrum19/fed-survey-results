@@ -1,0 +1,32 @@
+\begin{table}[t]
+    \centering
+    \scriptsize
+    \caption{
+        Comunica federation configurations used in our server-side automated federation experiments.
+        A checkmark indicates the presence, while a dash indicates the absence of an approach within a configuration.
+        \texttt{-NRL} variants disable client-side request rate limiting while leaving other configuration choices unchanged.
+    }
+    \label{tab:comunicaConfigs}
+
+    \setlength{\tabcolsep}{3pt}
+    \renewcommand{\arraystretch}{1.08}
+
+    \begin{tabularx}{\linewidth}{Xccccc}
+        \hline
+        \textbf{Configuration}
+            & \textbf{ASK}
+            & \textbf{COUNT}
+            & \textbf{VoID}
+            & \textbf{Large est.}
+            & \textbf{Rate limit} \\
+        \hline
+
+        \texttt{NOMETA-ASK}        & \checkmark & --         & --         & --         & \checkmark \\
+        \texttt{NOMETA-COUNT}      & --         & \checkmark & --         & --         & \checkmark \\
+        \texttt{VOID-TRIPLE}       & \checkmark & --         & \checkmark & --         & \checkmark \\
+        \texttt{VOID-BLOCK}        & \checkmark & --         & \checkmark & \checkmark & \checkmark \\
+        \texttt{-NRL}              & --         & --         & --         & --         & -- \\
+
+        \hline
+    \end{tabularx}
+\end{table}
