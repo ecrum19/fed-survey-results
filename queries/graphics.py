@@ -39,6 +39,19 @@ BASE_URL_MAP = {
     "https://purl.org/emi#examples": "DGBI",
 }
 
+QUERY_FEATURE_FIELDS = [
+    ("number_triple_patterns", "Triple patterns"),
+    ("number_bgp", "BGP count"),
+    ("number_federation_member", "Federation members"),
+    ("number_optional", "OPTIONAL count"),
+    ("number_union", "UNION count"),
+    ("number_union_with_multiple_triple_triple_patterns", "UNION (multi-TP branch) count"),
+    ("number_property_path", "Property path count"),
+    ("number_recursive_property_path", "Recursive property path count"),
+    ("number_distinct", "DISTINCT count"),
+    ("number_limit", "LIMIT count"),
+]
+
 
 def normalize_query_stem(raw_name):
     """Normalize query names the same way dashboard processing does."""
@@ -73,8 +86,9 @@ def extract_query_tail(query_reference):
 
 def build_query_alias_map(csv_path):
     """
-    Build {query_stem -> alias} using SIB_queries.csv.
-    Keeps only explicit aliases (not '-' / blank).
+    Build {query_stem -> alias} using SIB_queries.csv / SIB query context data.
+    Uses explicit aliases where provided, then derives compact fallback aliases
+    from query identifiers for rows where alias is missing.
     """
     try:
         handle = open(csv_path, "r", encoding="utf-8", newline="")
@@ -87,13 +101,37 @@ def build_query_alias_map(csv_path):
         for row in reader:
             query_ref = row.get("Query", "")
             alias = str(row.get("Query alias", "")).strip()
-            if not alias or alias == "-":
-                continue
             tail = extract_query_tail(query_ref)
             stem = normalize_query_stem(tail)
-            if stem and stem not in alias_map:
-                alias_map[stem] = alias
+            if not stem:
+                continue
+            if alias and alias != "-":
+                if stem not in alias_map:
+                    alias_map[stem] = alias
+                continue
+            fallback = derive_fallback_alias(stem)
+            if fallback and stem not in alias_map:
+                alias_map[stem] = fallback
     return alias_map
+
+
+def derive_fallback_alias(stem):
+    """
+    Create compact fallback aliases when SIB Query alias is blank.
+    """
+    source = str(stem or "").strip()
+    if not source:
+        return None
+
+    examples_match = re.match(r"^examples(\d+[a-z]?)$", source, flags=re.IGNORECASE)
+    if examples_match:
+        return f"E{examples_match.group(1)}"
+
+    lead_match = re.match(r"^(\d+[a-z]?)(?:[_-].*)?$", source, flags=re.IGNORECASE)
+    if lead_match:
+        return lead_match.group(1)
+
+    return source
 
 
 def abbreviate_query_name(query_url):
@@ -152,13 +190,7 @@ def load_query_data(stat_path, sib_queries_path):
     query_data = []
 
     for query_url, values in stat.get("data", {}).items():
-        needed = (
-            "number_recursive_property_path",
-            "number_triple_patterns",
-            "number_federation_member",
-            "number_optional",
-            "number_union",
-        )
+        needed = ("number_triple_patterns", "number_federation_member")
         if not all(key in values for key in needed):
             continue
 
@@ -172,11 +204,12 @@ def load_query_data(stat_path, sib_queries_path):
                 "query": query_url,
                 "query_stem": query_stem,
                 "display_name": display_name,
-                "number_triple_patterns": values["number_triple_patterns"],
-                "number_recursive_property_path": values["number_recursive_property_path"],
-                "number_federation_member": values["number_federation_member"],
-                "number_optional": values["number_optional"],
-                "number_union": values["number_union"],
+                "number_triple_patterns": values.get("number_triple_patterns", 0),
+                "number_recursive_property_path": values.get("number_recursive_property_path", 0),
+                "number_federation_member": values.get("number_federation_member", 0),
+                "number_optional": values.get("number_optional", 0),
+                "number_union": values.get("number_union", 0),
+                "feature_values": {field: values.get(field, 0) for field, _ in QUERY_FEATURE_FIELDS},
                 "abbr_query": abbreviate_query_name(query_url),
             }
         )
@@ -218,6 +251,7 @@ def build_layout(query_data):
                     "query_stem": item["query_stem"],
                     "optional": item["number_optional"],
                     "union": item["number_union"],
+                    "feature_values": item["feature_values"],
                 }
             )
             current_x += bar_width
@@ -408,6 +442,7 @@ def build_interactive_html(layout, output_path):
                 "query_stem": item["query_stem"],
                 "optional": item["optional"],
                 "union": item["union"],
+                "feature_values": item["feature_values"],
             }
         )
 
@@ -416,6 +451,7 @@ def build_interactive_html(layout, output_path):
             "bars": bar_payload,
             "bar_width": layout["bar_width"],
             "side_gap": layout["side_gap"],
+            "feature_fields": QUERY_FEATURE_FIELDS,
         }
     )
 
@@ -501,7 +537,7 @@ def build_interactive_html(layout, output_path):
     }}
     .axis-label {{
       fill: #20384f;
-      font-size: 20px;
+      font-size: 17px;
       font-weight: 700;
     }}
     .tick-label {{
@@ -526,6 +562,9 @@ def build_interactive_html(layout, output_path):
       opacity: 0.82;
       stroke: #1d2c3b;
       stroke-width: 1.1;
+    }}
+    .bar-hitbox {{
+      cursor: pointer;
     }}
     .symbol {{
       font-size: 16px;
@@ -595,7 +634,7 @@ def build_interactive_html(layout, output_path):
     const svg = document.getElementById("chart");
     const tooltip = document.getElementById("tooltip");
     const bars = data.bars;
-    const margin = {{ top: 20, right: 16, bottom: 165, left: 72 }};
+    const margin = {{ top: 20, right: 16, bottom: 165, left: 92 }};
     const rowHeight = 11.5;
     const pxPerBar = 22;
     const width = Math.max(1500, margin.left + margin.right + (bars.length * pxPerBar));
@@ -679,9 +718,9 @@ def build_interactive_html(layout, output_path):
     svg.appendChild(xAxis);
 
     const yLabel = createSvg("text", {{
-      x: 24,
+      x: 34,
       y: margin.top + innerHeight / 2,
-      transform: `rotate(-90 24 ${{margin.top + innerHeight / 2}})`,
+      transform: `rotate(-90 34 ${{margin.top + innerHeight / 2}})`,
       class: "axis-label",
     }});
     yLabel.textContent = "Number of Triple Patterns";
@@ -713,16 +752,22 @@ def build_interactive_html(layout, output_path):
         class: "bar",
       }});
 
+      const featureLines = (data.feature_fields || []).map((entry) => {{
+        const [fieldKey, fieldLabel] = entry;
+        const featureValue = bar.feature_values && Object.prototype.hasOwnProperty.call(bar.feature_values, fieldKey)
+          ? bar.feature_values[fieldKey]
+          : "-";
+        return `<div><strong>${{fieldLabel}}:</strong> ${{featureValue}}</div>`;
+      }});
+
       const tooltipHtml = [
         `<div class="head">${{bar.label}}</div>`,
-        `<div><strong>Triple patterns:</strong> ${{bar.height}}</div>`,
-        `<div><strong>Federation members:</strong> ${{bar.fed_member}}</div>`,
-        `<div><strong>Contains OPTIONAL:</strong> ${{bar.optional >= 1 ? "Yes" : "No"}}</div>`,
-        `<div><strong>Contains UNION:</strong> ${{bar.union >= 1 ? "Yes" : "No"}}</div>`,
+        `<div><strong>Query stem:</strong> ${{bar.query_stem || "-"}}</div>`,
+        ...featureLines,
         `<div><strong>Source query:</strong> <span style="word-break: break-all;">${{bar.query}}</span></div>`,
       ].join("");
 
-      baseRect.addEventListener("mousemove", (event) => {{
+      const showTooltip = (event) => {{
         tooltip.style.display = "block";
         tooltip.innerHTML = tooltipHtml;
         const offset = 16;
@@ -736,10 +781,12 @@ def build_interactive_html(layout, output_path):
         }}
         tooltip.style.left = `${{left}}px`;
         tooltip.style.top = `${{top}}px`;
-      }});
-      baseRect.addEventListener("mouseleave", () => {{
+      }};
+      const hideTooltip = () => {{
         tooltip.style.display = "none";
-      }});
+      }};
+      baseRect.addEventListener("mousemove", showTooltip);
+      baseRect.addEventListener("mouseleave", hideTooltip);
       svg.appendChild(baseRect);
 
       if (bar.fed_member === 3) {{
@@ -754,6 +801,21 @@ def build_interactive_html(layout, output_path):
         }});
         svg.appendChild(hatchRect);
       }}
+
+      // Dedicated transparent hitbox keeps hover interaction reliable for narrow bars
+      // (especially hatched 3-source bars) and on dense regions.
+      const hitboxWidth = Math.max(barPixelWidth, 14);
+      const hitRect = createSvg("rect", {{
+        x: xCenter - hitboxWidth / 2,
+        y: rectY,
+        width: hitboxWidth,
+        height: barHeight,
+        fill: "transparent",
+        class: "bar-hitbox",
+      }});
+      hitRect.addEventListener("mousemove", showTooltip);
+      hitRect.addEventListener("mouseleave", hideTooltip);
+      svg.appendChild(hitRect);
 
       if (bar.optional >= 1) {{
         const text = createSvg("text", {{

@@ -14,44 +14,19 @@
       <header class="hero">
         <h1>Does SPARQL federation work in the real world?</h1>
         <p>
-          Interactive data visualization companion for the ISWC submission titled: 
+          Interactive data visualization companion for the ISWC In-Use submission titled: 
           "Does SPARQL federation work in the real world? A case study over large biological SPARQL endpoints".
         </p>
         <p class="meta" id="dataMeta">Loading dataset metadata...</p>
       </header>
 
       <section class="panel quickstart-panel">
-        <h2>Start Here</h2>
         <p class="quickstart-lead">
-          This site presents real, run-level outcomes from federated query experiments. Start with
-          <strong>Overview Charts</strong> and <strong>Monthly Views</strong> for global trends, then use
-          <strong>Data Explorer</strong> to inspect individual queries or experiments in detail.
+          This site presents the experiment-level outcomes of federated query executions. For general interpretation, start with
+          <strong>Overview Charts</strong> and <strong>Monthly Views</strong> for global trends, then dig into the
+          <strong>Data Explorer</strong> to inspect individual queries or experiments in more detail.
         </p>
-        <div class="quickstart-grid">
-          <article class="quickstart-step">
-            <h3>1. Read the big picture</h3>
-            <p>Check <strong>execution success rates</strong>, runtime distributions, and error composition across runs and months.</p>
-          </article>
-          <article class="quickstart-step">
-            <h3>2. Drill into specifics</h3>
-            <p>Switch explorer mode to compare per-query behavior or per-experiment behavior interactively.</p>
-          </article>
-          <article class="quickstart-step">
-            <h3>3. Use filters when needed</h3>
-            <p>Open the optional Scope &amp; Filters panel only when you want to subset or narrow the data.</p>
-          </article>
-        </div>
       </section>
-
-      <details class="panel collapsible notes-panel" id="notesPanel">
-        <summary>Interesting Findings &amp; Outcome Notes</summary>
-        <p class="notes-intro">
-          This section shows curated field notes exactly as documented in
-          <code>Experiment Outcomes (notes).txt</code>. It is presented as contextual narrative and troubleshooting evidence alongside the structured dashboard metrics.
-        </p>
-        <p class="notes-meta" id="notesMeta">Loading notes...</p>
-        <div class="notes-content" id="notesContent"></div>
-      </details>
 
       <details class="panel collapsible controls-panel" id="filtersPanel">
         <summary>Scope &amp; Filters (Optional)</summary>
@@ -62,11 +37,6 @@
           <button type="button" id="resetFilters">Reset Filters</button>
         </div>
         <div class="controls-grid">
-          <label class="toggle-row">
-            <input type="checkbox" id="includeOldResults" />
-            Include <code>experiments/old-results/</code>
-          </label>
-
           <label>
             Run
             <select id="runFilter">
@@ -185,7 +155,7 @@
         <div class="month-pill-row" id="monthPills"></div>
         <div class="chart-grid">
           <div class="chart-card">
-            <h3><strong>execution success rate</strong> by month <span class="metric-help" tabindex="0" title="Execution success rate = percentage of query attempts with result set count > 0.">ⓘ</span></h3>
+            <h3><strong>Execution success rate</strong> by month <span class="metric-help" tabindex="0" title="Execution success rate = percentage of query attempts with result set count > 0.">ⓘ</span></h3>
             <div id="monthSuccessChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
           <div class="chart-card">
@@ -206,7 +176,7 @@
         <p class="meta" id="generalQueryStatsMeta">Loading general query statistics...</p>
 
         <details class="table-collapsible">
-          <summary>Show Feature Summary Table</summary>
+          <summary>Feature Summary Table</summary>
           <div class="table-wrap">
             <table id="generalStatsSummaryTable">
               <thead>
@@ -224,7 +194,7 @@
         </details>
 
         <details class="table-collapsible">
-          <summary>Show Feature Bucket Table</summary>
+          <summary>Feature Bucket Table</summary>
           <div class="table-wrap" id="generalStatsBucketTableWrap">
             <table id="generalStatsBucketTable">
               <thead id="generalStatsBucketTableHead"></thead>
@@ -234,7 +204,7 @@
         </details>
 
         <details class="table-collapsible">
-          <summary>Show Per-Query Feature Table</summary>
+          <summary>Per-Query Feature Table</summary>
           <div class="table-wrap" id="generalStatsDetailTableWrap">
             <table id="generalStatsDetailTable">
               <thead>
@@ -253,7 +223,7 @@
         </details>
 
         <details class="table-collapsible" open>
-          <summary>Show Interactive Query Complexity Figure</summary>
+          <summary>Interactive Query Complexity Figure</summary>
           <div class="interactive-figure-wrap chart plot-chart" id="generalStatsInteractiveFigureChart">
             <button type="button" class="figure-expand-btn" aria-label="Open interactive figure fullscreen">⤢</button>
             <iframe
@@ -273,12 +243,18 @@
           Endpoint inventory used by the study workload and its federated targets. This table is reproduced from
           <code>endpoints_table.tex</code> without altering the underlying endpoint data.
         </p>
+        <p class="section-intro">
+          Endpoints listed <strong>above</strong> the separator are <strong>targets</strong> in at least one query
+          (the endpoint that receives the full query WITH <code>SERVICE</code> descriptions). Endpoints listed
+          <strong>below</strong> the separator are <strong>federatesWith</strong> sources that are only invoked through
+          remote <code>SERVICE</code> calls.
+        </p>
         <p class="table-caption">
           <strong>Table caption:</strong> SPARQL endpoints represented in the real-world query workload.
           Triple-store was assessed through endpoint literature, server response, and endpoint service description data.
         </p>
         <details class="table-collapsible" open>
-          <summary>Show Endpoint Table</summary>
+          <summary>Endpoint Table</summary>
           <div class="table-wrap endpoint-reference-wrap">
             <table class="endpoint-reference-table">
               <thead>
@@ -331,6 +307,10 @@
                   <td>SPARQL federation server</td>
                   <td>N/A</td>
                   <td><a href="https://biosoda.unil.ch/emi/sparql" target="_blank" rel="noopener noreferrer">biosoda.unil.ch/emi/sparql</a></td>
+                </tr>
+                <!-- line here -->
+                <tr class="endpoint-divider-row" aria-hidden="true">
+                  <td colspan="4"></td>
                 </tr>
                 <tr>
                   <td>Wikidata</td>
@@ -468,7 +448,7 @@
 
               <div class="table-meta" id="queryRunTableMeta"></div>
               <details class="table-collapsible">
-                <summary>Show Query Run Records Table</summary>
+                <summary>Query Run Records Table</summary>
                 <div class="table-wrap">
                   <table id="queryRunsTable">
                     <thead>
@@ -502,7 +482,7 @@
                 <h3>SIB Query Context</h3>
                 <div class="table-meta" id="querySibMeta">No SIB metadata loaded.</div>
                 <details class="table-collapsible">
-                  <summary>Show SIB Query Context Table</summary>
+                  <summary>SIB Query Context Table</summary>
                   <div class="table-wrap" id="querySibTableWrap">
                     <table id="querySibTable">
                       <thead id="querySibTableHead"></thead>
@@ -608,7 +588,7 @@
 
               <div class="table-meta" id="experimentQueryTableMeta"></div>
               <details class="table-collapsible">
-                <summary>Show Query Summary Table (Selected Experiments)</summary>
+                <summary>Query Summary Table (Selected Experiments)</summary>
                 <div class="table-wrap">
                   <table id="experimentQueryTable">
                     <thead>
@@ -629,6 +609,16 @@
         </div>
       </section>
 
+      <details class="panel collapsible notes-panel" id="notesPanel">
+        <summary>Interesting Findings &amp; Outcome Notes</summary>
+        <p class="notes-intro">
+          This section shows curated field notes documented in
+          <code>Experiment Outcomes (notes).txt</code>.
+        </p>
+        <p class="notes-meta" id="notesMeta">Loading notes...</p>
+        <div class="notes-content" id="notesContent"></div>
+      </details>
+
       <section class="panel note-panel">
         <h2>Notes</h2>
         <p class="section-intro">
@@ -636,7 +626,7 @@
         </p>
         <ul>
           <li>Only values present in source files are displayed; unknown values remain blank.</li>
-          <li>Main summary metrics exclude <code>old-results</code> by default.</li>
+          <li>Archived <code>old-results</code> data is kept in-repo for provenance and is excluded from all displays.</li>
           <li><code>_ns</code> and <code>no-service</code> query identifiers are treated as "no service descriptions".</li>
           <li>
             Experiment-family display mapping: <code>EX1</code> -> <code>NOMETA-ASK</code>,

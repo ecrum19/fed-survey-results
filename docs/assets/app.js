@@ -10,13 +10,10 @@
 
 const state = {
   mainDataset: null,
-  oldDataset: null,
   queriesDataset: null,
   generalQueryStats: null,
   summary: null,
   notesText: null,
-
-  includeOldResults: false,
   monthFocus: null,
   selectedOverviewEndpoint: "uniprot",
 
@@ -37,8 +34,6 @@ const dom = {
   dataMeta: document.getElementById("dataMeta"),
   notesMeta: document.getElementById("notesMeta"),
   notesContent: document.getElementById("notesContent"),
-
-  includeOldResults: document.getElementById("includeOldResults"),
   runFilter: document.getElementById("runFilter"),
   outcomeFilter: document.getElementById("outcomeFilter"),
   errorFilter: document.getElementById("errorFilter"),
@@ -146,7 +141,7 @@ const CHART_CAPTIONS = Object.freeze({
   generalStatsInteractiveFigureChart: "This interactive figure shows query complexity by triple-pattern count, grouped by federation-member cardinality, with OPTIONAL and UNION markers to highlight structural query features.",
   queryDurationChart: "For the selected query, bars show runtime per experiment run in seconds. This reveals run-to-run execution variability for the same query logic.",
   queryResultsChart: "For the selected query, bars show result count per run. This is useful for spotting consistency issues, empty-result behavior, or large output shifts across runs.",
-  queryHttpOutcomeChart: "Each point is one query attempt for the selected query. The x-axis is HTTP requests and the y-axis indicates success (no explicit error) vs failure (explicit error), enabling direct inspection of request-load vs reliability.",
+  queryHttpOutcomeChart: "Each point is one query attempt with a recorded HTTP request count. Experiments without HTTP request numbers are not represented in this figure. The x-axis uses raw HTTP request count, and duplicate x/outcome points are lightly dodged within their outcome band for visibility.",
   queryResultVariabilityChart: "This timeline highlights result-count shifts for the selected query across chronological runs. Red bars indicate explicit changes between adjacent time points, making instability easy to spot.",
   selectedRunSuccessChart: "Each bar is execution success rate for one selected experiment, where success means result set count > 0. This allows direct side-by-side comparison of reliability among the chosen runs.",
   selectedRunDurationChart: "Bars show median runtime (seconds) for each selected experiment. It summarizes typical cost per run for the current selection.",
@@ -160,7 +155,7 @@ const CHART_CAPTIONS = Object.freeze({
 const METRIC_DEFINITIONS = Object.freeze({
   executionSuccessRate: "Execution success rate is the percentage of query attempts with result set count > 0. Result count = 0 and explicit errors are not counted as execution success.",
   queryRecords: "Query records are individual query-attempt rows in the filtered dataset.",
-  nonZeroResults: "Non-zero results count query attempts where result set size is strictly greater than zero.",
+  emptyResults: "Empty results count parseable query attempts where result set size equals 0 and no explicit error was recorded.",
   producedResults: "Produced results counts query attempts where result set size is strictly greater than zero.",
   attempts: "Attempts are the number of query records represented in the current scope.",
   medianDuration: "Median duration is the 50th percentile of observed runtimes in seconds for the current scope.",
@@ -559,6 +554,7 @@ function ensureChartInfoCards() {
       chart.parentNode.insertBefore(frame, chart);
       frame.appendChild(chart);
     }
+    frame.classList.toggle("interactive-figure-frame", chart.id === "generalStatsInteractiveFigureChart");
 
     let infoButton = frame.querySelector(".chart-info-btn");
     if (!(infoButton instanceof HTMLButtonElement)) {
@@ -1056,6 +1052,12 @@ const SERVICE_MODE_COLOR = Object.freeze({
   mixed: CHART_COLORS.warning,
   unknown: CHART_COLORS.neutral,
 });
+
+function syncServiceModeLegendColors() {
+  // Keep overview legend swatches aligned with the run colors used by overview charts.
+  document.documentElement.style.setProperty("--legend-with-service-color", SERVICE_MODE_COLOR["with-service"]);
+  document.documentElement.style.setProperty("--legend-no-service-color", SERVICE_MODE_COLOR["no-service"]);
+}
 
 function normalizeServiceModeValue(mode) {
   if (mode === "with-service" || mode === "no-service" || mode === "mixed") {
@@ -1565,15 +1567,26 @@ function syncExplorerListViewportHeights() {
 
     const grid = list.closest(".explorer-grid");
     const detailPane = grid?.querySelector(".explorer-detail-pane");
+    const listRect = list.getBoundingClientRect();
 
     let available = null;
     if (detailPane) {
-      // Keep the list height synchronized with the detail pane height.
-      available = Math.floor(detailPane.getBoundingClientRect().height);
+      // In query mode, bound the query list by the first table-collapsible block.
+      // This keeps the list naturally shorter and aligned to that content section.
+      if (list.id === "queryList") {
+        const anchor = detailPane.querySelector(".table-collapsible");
+        if (anchor instanceof HTMLElement) {
+          const anchorRect = anchor.getBoundingClientRect();
+          available = Math.floor(anchorRect.bottom - listRect.top);
+        }
+      }
+
+      if (!Number.isFinite(available) || available <= 0) {
+        available = Math.floor(detailPane.getBoundingClientRect().height);
+      }
     }
 
     if (!Number.isFinite(available) || available <= 0) {
-      const listRect = list.getBoundingClientRect();
       const viewportHeight = Math.floor(window.visualViewport?.height || window.innerHeight || 0);
       if (!viewportHeight) {
         return;
@@ -1581,7 +1594,7 @@ function syncExplorerListViewportHeights() {
       available = Math.floor(viewportHeight - listRect.top - 14);
     }
 
-    const height = Math.max(minListHeight, Math.floor(available));
+    const height = Math.max(minListHeight, Math.floor(available - bottomGutter));
     list.style.height = `${height}px`;
     list.style.maxHeight = `${height}px`;
   });
@@ -2855,39 +2868,47 @@ function handleHeatmapPointerMove(event) {
 }
 
 function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
-  const xLabel = "HTTP Requests (count)";
-  const yLabel = "Outcome (0 = explicit error, 1 = no explicit error)";
+  const knownHttpRecords = queryRecords.filter((record) => hasNumericValue(record.http_requests));
+  const missingHttpCount = queryRecords.length - knownHttpRecords.length;
+  const httpValues = knownHttpRecords.map((record) => Number(record.http_requests));
+  const useLogScale = httpValues.length > 0 && httpValues.every((value) => value > 0);
+  const xLabel = useLogScale ? "HTTP Requests (count, log scale)" : "HTTP Requests (count)";
+  const yLabel = "Outcome (1=no error, 0=error)";
   clearChartElement(chartEl);
 
   if (!queryRecords.length) {
     renderNoDataPlot(chartEl, "No records for selected query", xLabel, yLabel);
     return;
   }
+  if (!knownHttpRecords.length) {
+    renderNoDataPlot(chartEl, "No records with numeric HTTP request counts", xLabel, yLabel);
+    return;
+  }
 
-  const basePoints = queryRecords
+  const basePoints = knownHttpRecords
     .map((record) => {
       const httpValue = record.http_requests;
       const run = runsById.get(record.run_id) || { run_id: record.run_id, run_label: record.run_label };
       const outcomeNoExplicitError = hasNoExplicitError(record);
-      const httpIsMissing = !hasNumericValue(httpValue);
       return {
-        xBase: httpIsMissing ? null : Number(httpValue),
-        rawHttpRequests: httpIsMissing ? null : Number(httpValue),
+        xBase: Number(httpValue),
+        rawHttpRequests: Number(httpValue),
         runLabel: getRunDisplayLabel(run.run_id, run.run_label),
         start: record.start,
         duration: record.duration_seconds,
         resultsCount: record.results_count,
-        producedResults: outcomeNoExplicitError,
-        httpIsMissing,
+        noExplicitError: outcomeNoExplicitError,
+        outcomeBase: outcomeNoExplicitError ? 1 : 0,
         errorCategory: record.error_category || "N/A",
       };
     })
     .filter(Boolean);
 
-  // Resolve visual overlap deterministically by spreading points that share the same x+outcome bucket.
+  // Resolve exact coordinate collisions without changing the HTTP request value.
+  // The y offset only separates duplicate points inside the same categorical outcome band.
   const groupedPointIndexes = new Map();
   basePoints.forEach((point, index) => {
-    const key = `${point.producedResults ? "success" : "failure"}::${point.httpIsMissing ? "missing" : point.xBase}`;
+    const key = `${point.noExplicitError ? "no-error" : "explicit-error"}::${point.xBase}`;
     if (!groupedPointIndexes.has(key)) {
       groupedPointIndexes.set(key, []);
     }
@@ -2896,23 +2917,26 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
   const pointOffsetMap = new Map();
   groupedPointIndexes.forEach((indexes) => {
     const center = (indexes.length - 1) / 2;
+    const step = indexes.length > 1
+      ? Math.min(0.1, 0.24 / Math.max(center, 1))
+      : 0;
     indexes.forEach((pointIndex, localIndex) => {
-      pointOffsetMap.set(pointIndex, localIndex - center);
+      pointOffsetMap.set(pointIndex, {
+        offset: (localIndex - center) * step,
+        groupSize: indexes.length,
+        groupPosition: localIndex + 1,
+      });
     });
   });
 
   const points = basePoints.map((point, index) => {
-    const overlapOffset = pointOffsetMap.get(index) || 0;
-    const yJitter = overlapOffset * 0.12;
-    // Preserve real HTTP values on x-axis for non-missing points.
-    // Missing HTTP values are rendered near origin solely for visibility.
-    const xValue = point.httpIsMissing
-      ? Math.max(0, 0.8 + (overlapOffset * 0.7))
-      : (point.xBase ?? 0);
+    const collision = pointOffsetMap.get(index) || { offset: 0, groupSize: 1, groupPosition: 1 };
     return {
       ...point,
-      x: xValue,
-      y: (point.producedResults ? 1 : 0) + yJitter,
+      x: point.xBase,
+      y: point.outcomeBase + collision.offset,
+      collisionGroupSize: collision.groupSize,
+      collisionGroupPosition: collision.groupPosition,
     };
   });
 
@@ -2927,8 +2951,8 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
     return;
   }
 
-  const successPoints = points.filter((point) => point.producedResults);
-  const failurePoints = points.filter((point) => !point.producedResults);
+  const successPoints = points.filter((point) => point.noExplicitError);
+  const failurePoints = points.filter((point) => !point.noExplicitError);
   const canvas = buildChartCanvas(chartEl);
   const datasets = [
     {
@@ -2938,8 +2962,8 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
       backgroundColor: CHART_COLORS.success,
       borderColor: CHART_COLORS.success,
       borderWidth: 1,
-      pointRadius: 5,
-      pointHoverRadius: 7,
+      pointRadius: 6,
+      pointHoverRadius: 8,
     },
     {
       label: "Explicit error",
@@ -2948,14 +2972,23 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
       backgroundColor: CHART_COLORS.danger,
       borderColor: CHART_COLORS.danger,
       borderWidth: 1,
-      pointRadius: 5,
-      pointHoverRadius: 7,
+      pointRadius: 6,
+      pointHoverRadius: 8,
     },
   ];
+
+  const xMin = Math.min(...httpValues);
+  const xMax = Math.max(...httpValues);
 
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
+    interaction: {
+      // Force single-point hover semantics for this scatter chart.
+      mode: "nearest",
+      intersect: true,
+      axis: "xy",
+    },
     animation: {
       duration: 320,
       easing: "easeOutQuart",
@@ -2970,8 +3003,17 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
           font: { size: 10 },
         },
       },
+      subtitle: {
+        display: missingHttpCount > 0,
+        text: `${formatNumber(missingHttpCount, 0)} record${missingHttpCount === 1 ? "" : "s"} omitted because HTTP request count is missing`,
+        color: "#4d6980",
+        font: { size: 11, weight: "600" },
+        padding: { bottom: 4 },
+      },
       tooltip: {
         enabled: true,
+        mode: "nearest",
+        intersect: true,
         backgroundColor: "#f8fbff",
         titleColor: "#1d2a37",
         bodyColor: "#1d2a37",
@@ -2982,19 +3024,21 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
         padding: 10,
         cornerRadius: 8,
         callbacks: {
-          title: (items) => {
-            const point = items[0]?.raw;
-            return point?.runLabel ? `Run: ${point.runLabel}` : "Run";
-          },
+          title: () => "Query attempt",
           label: (context) => {
             const point = context.raw;
-            const outcomeLabel = point.producedResults ? "No explicit error" : "Explicit error";
-            return [
+            const outcomeLabel = point.noExplicitError ? "No explicit error" : "Explicit error";
+            const lines = [
+              `Run: ${point.runLabel || "-"}`,
               `Outcome: ${outcomeLabel}`,
-              `HTTP requests: ${point.httpIsMissing ? "N/A (plotted near origin)" : formatNumber(point.rawHttpRequests, 0)}`,
+              `HTTP requests: ${formatNumber(point.rawHttpRequests, 0)}`,
               `Results count: ${formatNullableNumber(point.resultsCount, 0)}`,
               `Duration: ${formatNullableNumber(point.duration, 2)} s`,
             ];
+            if (point.collisionGroupSize > 1) {
+              lines.push(`Same HTTP/outcome group: ${formatNumber(point.collisionGroupPosition, 0)} of ${formatNumber(point.collisionGroupSize, 0)}`);
+            }
+            return lines;
           },
           afterLabel: (context) => {
             const point = context.raw;
@@ -3008,8 +3052,10 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
     },
     scales: {
       x: {
-        type: "linear",
-        beginAtZero: true,
+        type: useLogScale ? "logarithmic" : "linear",
+        beginAtZero: !useLogScale,
+        min: useLogScale ? Math.max(Number.MIN_VALUE, xMin / 1.5) : undefined,
+        max: useLogScale && xMax > xMin ? xMax * 1.25 : undefined,
         title: {
           display: true,
           text: xLabel,
@@ -3028,8 +3074,8 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
         },
       },
       y: {
-        min: -0.15,
-        max: 1.15,
+        min: -0.25,
+        max: 1.25,
         title: {
           display: true,
           text: yLabel,
@@ -3067,14 +3113,12 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
 
 function getActiveRuns() {
   const mainRuns = state.mainDataset?.runs || [];
-  const oldRuns = state.oldDataset?.runs || [];
-  return state.includeOldResults ? [...mainRuns, ...oldRuns] : mainRuns;
+  return mainRuns;
 }
 
 function getActiveRecords() {
   const mainRecords = (state.mainDataset?.records || []).filter((record) => !record.is_run_summary_row);
-  const oldRecords = (state.oldDataset?.records || []).filter((record) => !record.is_run_summary_row);
-  return state.includeOldResults ? [...mainRecords, ...oldRecords] : mainRecords;
+  return mainRecords;
 }
 
 function getQuerySummaries() {
@@ -3150,8 +3194,7 @@ function parseCsvParam(value) {
 
 function getAllKnownRuns() {
   const mainRuns = state.mainDataset?.runs || [];
-  const oldRuns = state.oldDataset?.runs || [];
-  return [...mainRuns, ...oldRuns];
+  return mainRuns;
 }
 
 function buildRunIndexMaps() {
@@ -3201,7 +3244,6 @@ function decodeExperimentSelection(encoded) {
 
 function parseCompactStateParam(encoded) {
   const compact = {
-    includeOldResults: false,
     monthFocus: null,
     explorerMode: "query",
     runFilter: "",
@@ -3241,11 +3283,10 @@ function parseCompactStateParam(encoded) {
     }
     const key = field.slice(0, sep);
     const value = decodeURIComponent(field.slice(sep + 1));
-    if (!value && key !== "o") {
+    if (!value) {
       continue;
     }
-    if (key === "o") compact.includeOldResults = value === "1";
-    else if (key === "p") compact.monthFocus = value || null;
+    if (key === "p") compact.monthFocus = value || null;
     else if (key === "m") compact.explorerMode = value === "e" ? "experiment" : "query";
     else if (key === "r") compact.runFilter = value;
     else if (key === "u") compact.outcomeFilter = value;
@@ -3317,7 +3358,6 @@ function parseUrlDashboardState() {
   const shortExperimentSelection = decodeExperimentSelection(params.get("ex"));
   const longExperimentSelection = parseCsvParam(params.get("experiments"));
   return {
-    includeOldResults: params.get("o") === "1" || params.get("old") === "1",
     monthFocus: params.get("p") || params.get("period") || null,
     explorerMode: (params.get("m") === "e" || params.get("mode") === "experiment") ? "experiment" : "query",
     runFilter: params.get("r") || params.get("run") || "",
@@ -3345,9 +3385,6 @@ function parseUrlDashboardState() {
 function applyUrlDashboardState(urlState) {
   isApplyingUrlState = true;
   try {
-    state.includeOldResults = Boolean(urlState.includeOldResults);
-    dom.includeOldResults.checked = state.includeOldResults;
-
     state.monthFocus = urlState.monthFocus || null;
     state.explorerMode = urlState.explorerMode === "experiment" ? "experiment" : "query";
 
@@ -3395,7 +3432,6 @@ function syncUrlDashboardState() {
     compactParts.push(`${key}:${encodeURIComponent(String(value))}`);
   };
 
-  if (state.includeOldResults) addPart("o", "1");
   if (state.monthFocus) addPart("p", state.monthFocus);
   if (state.explorerMode !== "query") addPart("m", state.explorerMode === "experiment" ? "e" : "q");
 
@@ -3570,7 +3606,9 @@ function filterOverviewRecords({ applyMonthFocus = true } = {}) {
 function renderOverviewKpis(records) {
   const runIds = new Set(records.map((record) => record.run_id));
   const succeeded = records.filter((record) => hasPositiveResultSet(record)).length;
-  const nonZero = records.filter((record) => record.results_count > 0).length;
+  const emptyResults = records.filter((record) => hasNumericValue(record.results_count)
+    && Number(record.results_count) === 0
+    && !hasExplicitError(record)).length;
   const durations = records
     .map((record) => record.duration_seconds)
     .filter((value) => value !== null && value !== undefined);
@@ -3580,7 +3618,7 @@ function renderOverviewKpis(records) {
     { label: metricLabel("Query records", "queryRecords"), value: formatNumber(records.length, 0) },
     { label: metricLabel("Produced results (&gt; 0)", "producedResults"), value: formatNumber(succeeded, 0) },
     { label: metricLabel("<strong>execution success rate</strong>", "executionSuccessRate"), value: formatPercent(records.length ? succeeded / records.length : null) },
-    { label: metricLabel("Non-zero results", "nonZeroResults"), value: formatNumber(nonZero, 0) },
+    { label: metricLabel("Empty results (=0, parseable)", "emptyResults"), value: formatNumber(emptyResults, 0) },
     { label: metricLabel("Median duration (s)", "medianDuration"), value: formatNullableNumber(median(durations)) },
   ];
 
@@ -4212,7 +4250,6 @@ function renderGeneralQueryStatistics() {
   const sourceUrl = stats.source_url || "N/A";
   dom.generalQueryStatsMeta.innerHTML = [
     `Source entries: ${formatNumber(stats.query_count, 0)}`,
-    `Generated: ${formatDateTime(stats.generated_at)}`,
     `Source: <a href="${escapeHtmlAttr(sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(sourceUrl)}</a>`,
   ].join(" | ");
 
@@ -4242,10 +4279,13 @@ function renderGeneralQueryStatistics() {
     </tr>
   `).join("");
 
-  dom.generalStatsDetailTableBody.innerHTML = stats.query_rows.map((row) => `
+  dom.generalStatsDetailTableBody.innerHTML = stats.query_rows.map((row) => {
+    const aliasLabel = row.query_stem ? getQueryDisplayName(row.query_stem) : null;
+    const displayLabel = aliasLabel || row.query_label || row.query_stem || row.source_url || "Unknown query";
+    return `
     <tr>
       <td>
-        <a href="${escapeHtmlAttr(row.source_url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(row.query_label)}</a>
+        <a href="${escapeHtmlAttr(row.source_url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(displayLabel)}</a>
       </td>
       <td>${formatNumber(row.number_triple_patterns, 0)}</td>
       <td>${formatNumber(row.number_optional, 0)}</td>
@@ -4253,7 +4293,8 @@ function renderGeneralQueryStatistics() {
       <td>${formatNumber(row.number_union_with_multiple_triple_triple_patterns, 0)}</td>
       <td>${formatNumber(row.number_federation_member, 0)}</td>
     </tr>
-  `).join("");
+  `;
+  }).join("");
 
 }
 
@@ -5063,9 +5104,6 @@ function renderAll() {
 }
 
 function resetScopeAndFilters() {
-  dom.includeOldResults.checked = false;
-  state.includeOldResults = false;
-
   dom.runFilter.value = "";
   dom.outcomeFilter.value = "all";
   dom.errorFilter.value = "";
@@ -5084,7 +5122,6 @@ function resetScopeAndFilters() {
 
 function bindEvents() {
   const overviewFilterElements = [
-    dom.includeOldResults,
     dom.runFilter,
     dom.outcomeFilter,
     dom.errorFilter,
@@ -5099,11 +5136,6 @@ function bindEvents() {
   for (const element of overviewFilterElements) {
     const eventName = element === dom.searchFilter ? "input" : "change";
     element.addEventListener(eventName, () => {
-      if (element === dom.includeOldResults) {
-        state.includeOldResults = dom.includeOldResults.checked;
-        updateRunOptions();
-        updateErrorOptions();
-      }
       renderAll();
     });
   }
@@ -5181,6 +5213,12 @@ function bindEvents() {
     });
   }
 
+  document.querySelectorAll(".table-collapsible").forEach((section) => {
+    section.addEventListener("toggle", () => {
+      scheduleExplorerListHeightSync();
+    });
+  });
+
   document.addEventListener("click", (event) => {
     const infoButton = event.target.closest(".chart-info-btn");
     if (!(infoButton instanceof HTMLButtonElement)) {
@@ -5240,9 +5278,8 @@ function bindEvents() {
 }
 
 async function loadData() {
-  const [mainDataset, oldDataset, summary, queriesDataset, generalQueryStats, notesText] = await Promise.all([
+  const [mainDataset, summary, queriesDataset, generalQueryStats, notesText] = await Promise.all([
     fetch("./data/main.json").then((response) => response.json()),
-    fetch("./data/old-results.json").then((response) => response.json()),
     fetch("./data/summary.json").then((response) => response.json()),
     fetch("./data/queries.json").then((response) => response.json()),
     fetch("./data/general-query-statistics.json")
@@ -5252,7 +5289,6 @@ async function loadData() {
   ]);
 
   state.mainDataset = mainDataset;
-  state.oldDataset = oldDataset;
   state.summary = summary;
   state.queriesDataset = queriesDataset;
   state.generalQueryStats = generalQueryStats;
@@ -5262,16 +5298,14 @@ async function loadData() {
     `Main runs: ${summary.run_count}`,
     `Main query records: ${summary.query_count}`,
     `Canonical queries: ${queriesDataset.query_summary_count}`,
-    `Generated: ${formatDateTime(summary.generated_at)}`,
   ].join(" | ");
 }
 
 async function bootstrap() {
   try {
     await loadData();
+    syncServiceModeLegendColors();
     const initialUrlState = parseUrlDashboardState();
-    state.includeOldResults = Boolean(initialUrlState.includeOldResults);
-    dom.includeOldResults.checked = state.includeOldResults;
     updateRunOptions();
     updateErrorOptions();
     applyUrlDashboardState(initialUrlState);
