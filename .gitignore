@@ -8,3 +8,4 @@ experiments/testbatch2/13_ns.rq.log
 experiments/testbatch2/11_ns.rq.log
 experiments/EX4-24-10-25/019_ns.rq.log.zip
 no-service-void/sparql-endpoint-comunica.txt
+__pycache__/

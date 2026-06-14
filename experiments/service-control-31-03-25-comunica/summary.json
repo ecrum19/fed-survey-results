@@ -1,0 +1,1899 @@
+{
+  "general_stats": {
+    "run_start": "2025-03-31T00:00:00.000Z",
+    "run_end": null,
+    "run_duration_seconds": null
+  },
+  "entries": [
+    {
+      "query_name": "001",
+      "sources": "dgbi",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 10,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        "10"
+      ],
+      "control_primary_endpoint_results": [
+        "10"
+      ],
+      "control_comunica_error_metadata": [
+        "Query operation processing failed: none of the configured actors were able to handle the operation type pattern",
+        "Error messages of failing actors:",
+        "Actor urn:comunica:default:query-operation/actors#source requires an operation with source annotation."
+      ]
+    },
+    {
+      "query_name": "002",
+      "sources": "dgbi",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": null,
+      "error": "general: error 400 (https://idsm.elixir-czech.cz/sparql/endpoint/wikidata)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "* With IDSM Federation (do not work without SERVICE clause)",
+        "Endpoint errors"
+      ],
+      "control_sections_metadata": [
+        "* With IDSM Federation (do not work without SERVICE clause)",
+        "Endpoint error"
+      ],
+      "control_primary_comunica_results": [
+        "-",
+        "-"
+      ],
+      "control_primary_endpoint_results": [
+        "-",
+        "-"
+      ],
+      "control_comunica_error_metadata": [
+        "general: error 400 (https://idsm.elixir-czech.cz/sparql/endpoint/wikidata)"
+      ]
+    },
+    {
+      "query_name": "006",
+      "sources": "dgbi",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 5,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        "5"
+      ],
+      "control_primary_endpoint_results": [
+        "5"
+      ],
+      "control_comunica_error_metadata": [
+        "Actor urn:comunica:default:query-operation/actors#source requires an operation with source annotation."
+      ]
+    },
+    {
+      "query_name": "007",
+      "sources": "dgbi",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        "92"
+      ],
+      "control_comunica_error_metadata": [
+        "- (maybe could work...)",
+        "FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory"
+      ]
+    },
+    {
+      "query_name": "009",
+      "sources": "dgbi",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 1,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        "1"
+      ],
+      "control_primary_endpoint_results": [
+        "1"
+      ],
+      "control_comunica_error_metadata": [
+        "Actor urn:comunica:default:query-operation/actors#source requires an operation with source annotation."
+      ]
+    },
+    {
+      "query_name": "016",
+      "sources": "Bgee",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 13,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        "13"
+      ],
+      "control_primary_endpoint_results": [
+        "13"
+      ],
+      "control_comunica_error_metadata": [
+        "comunica: Continues to run after results??",
+        "Could not dereference ' https://sparql.omabrowser.org/sparql/'"
+      ]
+    },
+    {
+      "query_name": "017",
+      "sources": "Bgee",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 20,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        "20"
+      ],
+      "control_primary_endpoint_results": [
+        "20"
+      ],
+      "control_comunica_error_metadata": [
+        "No Results.... (check physical query plan)"
+      ]
+    },
+    {
+      "query_name": "018",
+      "sources": "Bgee",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": null,
+      "error": "general: (takes a long time to run...)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Long runtime"
+      ],
+      "control_sections_metadata": [
+        "Long runtime"
+      ],
+      "control_primary_comunica_results": [
+        "-"
+      ],
+      "control_primary_endpoint_results": [
+        "-"
+      ],
+      "control_comunica_error_metadata": [
+        "general: (takes a long time to run...)"
+      ]
+    },
+    {
+      "query_name": "020",
+      "sources": "Bgee",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        "297"
+      ],
+      "control_comunica_error_metadata": [
+        "Invalid SPARQL endpoint response from  https://sparql.omabrowser.org/sparql (HTTP status 406)"
+      ]
+    },
+    {
+      "query_name": "027-biosodafrontend",
+      "sources": "Bgee",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 8,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [],
+      "control_primary_comunica_results": [
+        "8"
+      ],
+      "control_primary_endpoint_results": [
+        "8"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "028-biosodafrontend",
+      "sources": "Bgee",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "- (no results)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Both no results"
+      ],
+      "control_sections_metadata": [],
+      "control_primary_comunica_results": [
+        "0"
+      ],
+      "control_primary_endpoint_results": [
+        "0"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "109_uniprot_transporter_in_liver",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        ">1"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "11",
+      "sources": "Rhea",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 7,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        "7"
+      ],
+      "control_primary_endpoint_results": [
+        "7"
+      ],
+      "control_comunica_error_metadata": [
+        "fetch failed"
+      ]
+    },
+    {
+      "query_name": "116_biosodafrontend_rabit_mouse_orthologs",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 24,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [],
+      "control_primary_comunica_results": [
+        "24"
+      ],
+      "control_primary_endpoint_results": [
+        "24"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "117_biosodafrontend_glioblastoma_orthologs_rat",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 10,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [],
+      "control_primary_comunica_results": [
+        "10"
+      ],
+      "control_primary_endpoint_results": [
+        "10"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "118_biosodafrontend_rat_brain_human_cancer",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 71,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [],
+      "control_primary_comunica_results": [
+        "71"
+      ],
+      "control_primary_endpoint_results": [
+        "71"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "12",
+      "sources": "Rhea",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 12719,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        "12719"
+      ],
+      "control_primary_endpoint_results": [
+        "12719"
+      ],
+      "control_comunica_error_metadata": [
+        "added {} around inner SELECT",
+        "Seems to WORK but only gives 12? results"
+      ]
+    },
+    {
+      "query_name": "13",
+      "sources": "Rhea",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": null,
+      "error": "general: query is broken (error 400)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Endpoint errors"
+      ],
+      "control_sections_metadata": [
+        "Endpoint error"
+      ],
+      "control_primary_comunica_results": [
+        "-"
+      ],
+      "control_primary_endpoint_results": [
+        "-"
+      ],
+      "control_comunica_error_metadata": [
+        "general: query is broken (error 400)"
+      ]
+    },
+    {
+      "query_name": "14",
+      "sources": "OMA",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": null,
+      "error": "general: error 500 (http://sparql.nibb.ac.jp/sparql)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Endpoint errors"
+      ],
+      "control_sections_metadata": [
+        "Endpoint error"
+      ],
+      "control_primary_comunica_results": [
+        "-"
+      ],
+      "control_primary_endpoint_results": [
+        "-"
+      ],
+      "control_comunica_error_metadata": [
+        "general: error 500 (http://sparql.nibb.ac.jp/sparql)"
+      ]
+    },
+    {
+      "query_name": "15-rat-TP53-biosodafrontend",
+      "sources": "oma",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 12,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [],
+      "control_primary_comunica_results": [
+        "12"
+      ],
+      "control_primary_endpoint_results": [
+        "12"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "16",
+      "sources": "SwissLipids",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        "26"
+      ],
+      "control_comunica_error_metadata": [
+        "comunica: ORDER BY??",
+        "fetch failed"
+      ]
+    },
+    {
+      "query_name": "17",
+      "sources": "OrthoDB",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Endpoint error"
+      ],
+      "control_primary_comunica_results": [
+        "2"
+      ],
+      "control_primary_endpoint_results": [
+        "2"
+      ],
+      "control_comunica_error_metadata": [
+        "general: error 500 (https://sparql.orthodb.org/sparql)"
+      ]
+    },
+    {
+      "query_name": "18",
+      "sources": "OrthoDB",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "general: no results | general: error 500 (https://sparql.orthodb.org/sparql)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Both no results"
+      ],
+      "control_sections_metadata": [
+        "Endpoint error"
+      ],
+      "control_primary_comunica_results": [
+        "0"
+      ],
+      "control_primary_endpoint_results": [
+        "0"
+      ],
+      "control_comunica_error_metadata": [
+        "general: error 500 (https://sparql.orthodb.org/sparql)"
+      ]
+    },
+    {
+      "query_name": "18a",
+      "sources": "rhea",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "* With IDSM Federation (do not work without SERVICE clause)",
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "* With IDSM Federation (do not work without SERVICE clause)",
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1",
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        "137",
+        "137"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "19",
+      "sources": "OrthoDB",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 17,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Endpoint error"
+      ],
+      "control_primary_comunica_results": [
+        "17"
+      ],
+      "control_primary_endpoint_results": [
+        "17"
+      ],
+      "control_comunica_error_metadata": [
+        "general: error 500 (https://sparql.orthodb.org/sparql)"
+      ]
+    },
+    {
+      "query_name": "19_draft_human_metabolome",
+      "sources": "Rhea",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "general: (takes a long time to run...) | -, -",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Long runtime"
+      ],
+      "control_sections_metadata": [
+        "Long runtime"
+      ],
+      "control_primary_comunica_results": [
+        "0"
+      ],
+      "control_primary_endpoint_results": [
+        ">1"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "20",
+      "sources": "OrthoDB",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": null,
+      "error": "general: (takes a long time to run...) | general: error 500 (https://sparql.orthodb.org/sparql) + 400 (https://sparql.string-db.org/sparql/)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Long runtime"
+      ],
+      "control_sections_metadata": [
+        "Endpoint error"
+      ],
+      "control_primary_comunica_results": [
+        "-"
+      ],
+      "control_primary_endpoint_results": [
+        "-"
+      ],
+      "control_comunica_error_metadata": [
+        "general: error 500 (https://sparql.orthodb.org/sparql) + 400 (https://sparql.string-db.org/sparql/)"
+      ]
+    },
+    {
+      "query_name": "20_search_chemical_names_in_japanese",
+      "sources": "Rhea",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "comunica: no Comunica results",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Endpoint results but no Comunica results"
+      ],
+      "control_sections_metadata": [
+        "Endpoint results but no Comunica results"
+      ],
+      "control_primary_comunica_results": [
+        "0"
+      ],
+      "control_primary_endpoint_results": [
+        "2"
+      ],
+      "control_comunica_error_metadata": [
+        "comunica: no Comunica results"
+      ]
+    },
+    {
+      "query_name": "26",
+      "sources": "SwissLipids",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": null,
+      "error": "general: (takes a long time to run...)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Long runtime"
+      ],
+      "control_sections_metadata": [
+        "Long runtime"
+      ],
+      "control_primary_comunica_results": [
+        "-"
+      ],
+      "control_primary_endpoint_results": [
+        "-"
+      ],
+      "control_comunica_error_metadata": [
+        "general: (takes a long time to run...)"
+      ]
+    },
+    {
+      "query_name": "27",
+      "sources": "SwissLipids",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": null,
+      "error": "general: (takes a long time to run...)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Long runtime"
+      ],
+      "control_sections_metadata": [
+        "Long runtime"
+      ],
+      "control_primary_comunica_results": [
+        "-"
+      ],
+      "control_primary_endpoint_results": [
+        "-"
+      ],
+      "control_comunica_error_metadata": [
+        "general: (takes a long time to run...)"
+      ]
+    },
+    {
+      "query_name": "29",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        "51"
+      ],
+      "control_comunica_error_metadata": [
+        "fetch failed"
+      ]
+    },
+    {
+      "query_name": "3",
+      "sources": "OMA",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        "76"
+      ],
+      "control_comunica_error_metadata": [
+        "Actor urn:comunica:default:query-operation/actors#source requires an operation with source annotation."
+      ]
+    },
+    {
+      "query_name": "34",
+      "sources": "SwissLipids",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": null,
+      "error": "general: (takes a long time to run...)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Long runtime"
+      ],
+      "control_sections_metadata": [
+        "Long runtime"
+      ],
+      "control_primary_comunica_results": [
+        "-"
+      ],
+      "control_primary_endpoint_results": [
+        "-"
+      ],
+      "control_comunica_error_metadata": [
+        "general: (takes a long time to run...)"
+      ]
+    },
+    {
+      "query_name": "36",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Endpoint error"
+      ],
+      "control_primary_comunica_results": [
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        ">1"
+      ],
+      "control_comunica_error_metadata": [
+        "general: error 500 (https://sparql.orthodb.org/sparql)"
+      ]
+    },
+    {
+      "query_name": "38",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        "2"
+      ],
+      "control_primary_endpoint_results": [
+        "2"
+      ],
+      "control_comunica_error_metadata": [
+        "Invalid SPARQL endpoint response from https://sparql.uniprot.org/sparql (HTTP status 400):"
+      ]
+    },
+    {
+      "query_name": "40",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": null,
+      "error": "general: (takes a long time to run...)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Long runtime"
+      ],
+      "control_sections_metadata": [
+        "Long runtime"
+      ],
+      "control_primary_comunica_results": [
+        "-"
+      ],
+      "control_primary_endpoint_results": [
+        "-"
+      ],
+      "control_comunica_error_metadata": [
+        "general: (takes a long time to run...)"
+      ]
+    },
+    {
+      "query_name": "42",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        "66"
+      ],
+      "control_comunica_error_metadata": [
+        "Could not dereference ' https://data.epo.org/linked-data/query'"
+      ]
+    },
+    {
+      "query_name": "43",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        "71"
+      ],
+      "control_comunica_error_metadata": [
+        "Could not dereference ' https://data.epo.org/linked-data/query'"
+      ]
+    },
+    {
+      "query_name": "45",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        "26"
+      ],
+      "control_comunica_error_metadata": [
+        "Invalid SPARQL endpoint response from  https://query.wikidata.org/sparql (HTTP status 429):",
+        "Rate limit exceeded"
+      ]
+    },
+    {
+      "query_name": "46",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": null,
+      "error": "general: error 404 (https://semantic.eea.europa.eu/sparql)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Endpoint errors"
+      ],
+      "control_sections_metadata": [
+        "Endpoint error"
+      ],
+      "control_primary_comunica_results": [
+        "-"
+      ],
+      "control_primary_endpoint_results": [
+        "-"
+      ],
+      "control_comunica_error_metadata": [
+        "general: error 404 (https://semantic.eea.europa.eu/sparql)"
+      ]
+    },
+    {
+      "query_name": "48",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "general: error (sibSPARQLeditor) / no results (from uniprot)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Both no results"
+      ],
+      "control_sections_metadata": [
+        "Both no results"
+      ],
+      "control_primary_comunica_results": [
+        "0"
+      ],
+      "control_primary_endpoint_results": [
+        "0"
+      ],
+      "control_comunica_error_metadata": [
+        "general: error (sibSPARQLeditor) / no results (from uniprot)"
+      ]
+    },
+    {
+      "query_name": "49",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        "54105"
+      ],
+      "control_comunica_error_metadata": [
+        "FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory"
+      ]
+    },
+    {
+      "query_name": "5",
+      "sources": "SwissLipids",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        "267"
+      ],
+      "control_comunica_error_metadata": [
+        "Actor urn:comunica:default:query-operation/actors#source requires an operation with source annotation."
+      ]
+    },
+    {
+      "query_name": "50",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "general: no results (from uniprot)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Both no results"
+      ],
+      "control_sections_metadata": [
+        "Both no results"
+      ],
+      "control_primary_comunica_results": [
+        "0"
+      ],
+      "control_primary_endpoint_results": [
+        "0"
+      ],
+      "control_comunica_error_metadata": [
+        "general: no results (from uniprot)"
+      ]
+    },
+    {
+      "query_name": "51",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        "24733"
+      ],
+      "control_comunica_error_metadata": [
+        "FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory"
+      ]
+    },
+    {
+      "query_name": "52",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "* With IDSM Federation (do not work without SERVICE clause)",
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "* With IDSM Federation (do not work without SERVICE clause)",
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1",
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        ">1",
+        ">1"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "53",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        ">1"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "54",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "* With IDSM Federation (do not work without SERVICE clause)",
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "* With IDSM Federation (do not work without SERVICE clause)",
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1",
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        ">1",
+        ">1"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "6",
+      "sources": "SwissLipids",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        "26"
+      ],
+      "control_comunica_error_metadata": [
+        "comunica: ORDER BY??",
+        "Actor urn:comunica:default:query-operation/actors#source requires an operation with source annotation."
+      ]
+    },
+    {
+      "query_name": "60",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "* With IDSM Federation (do not work without SERVICE clause)",
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "* With IDSM Federation (do not work without SERVICE clause)",
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1",
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        "39",
+        "39"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "67_draft_human_metabolome",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        ">1"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "7",
+      "sources": "SwissLipids",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "general: no results",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Both no results"
+      ],
+      "control_sections_metadata": [
+        "Both no results"
+      ],
+      "control_primary_comunica_results": [
+        "0"
+      ],
+      "control_primary_endpoint_results": [
+        "0"
+      ],
+      "control_comunica_error_metadata": [
+        "general: no results"
+      ]
+    },
+    {
+      "query_name": "70_enzymes_interacting_with_molecules_similar_to_dopamine",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "* With IDSM Federation (do not work without SERVICE clause)",
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "* With IDSM Federation (do not work without SERVICE clause)",
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1",
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        "406",
+        "406"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": null,
+      "error": "general: (takes a long time to run...)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "* With IDSM Federation (do not work without SERVICE clause)",
+        "Long runtime"
+      ],
+      "control_sections_metadata": [
+        "* With IDSM Federation (do not work without SERVICE clause)",
+        "Long runtime"
+      ],
+      "control_primary_comunica_results": [
+        "-",
+        "-"
+      ],
+      "control_primary_endpoint_results": [
+        "-",
+        "(long time to run)"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "90_uniprot_affected_by_metabolic_diseases_using_MeSH",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": null,
+      "error": "general: error 400 (https://id.nlm.nih.gov/mesh/sparql)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Endpoint errors"
+      ],
+      "control_sections_metadata": [
+        "Endpoint error"
+      ],
+      "control_primary_comunica_results": [
+        "-"
+      ],
+      "control_primary_endpoint_results": [
+        "-"
+      ],
+      "control_comunica_error_metadata": [
+        "general: error 400 (https://id.nlm.nih.gov/mesh/sparql)"
+      ]
+    },
+    {
+      "query_name": "92_uniprot_bioregistry_iri_translation",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "general: no results | general: error (https://bioregistry.io/sparql)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Both no results"
+      ],
+      "control_sections_metadata": [
+        "Endpoint error"
+      ],
+      "control_primary_comunica_results": [
+        "0"
+      ],
+      "control_primary_endpoint_results": [
+        "0"
+      ],
+      "control_comunica_error_metadata": [
+        "general: error (https://bioregistry.io/sparql)"
+      ]
+    },
+    {
+      "query_name": "99_uniprot_identifiers_org_translation",
+      "sources": "uniprot",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": null,
+      "error": "general: error (https://sparql.api.identifiers.org/sparql)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Endpoint errors"
+      ],
+      "control_sections_metadata": [
+        "Endpoint error"
+      ],
+      "control_primary_comunica_results": [
+        "-"
+      ],
+      "control_primary_endpoint_results": [
+        "-"
+      ],
+      "control_comunica_error_metadata": [
+        "general: error (https://sparql.api.identifiers.org/sparql)"
+      ]
+    },
+    {
+      "query_name": "emi#examples011a",
+      "sources": "dgbi",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "general: (takes a long time to run...)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Long runtime"
+      ],
+      "control_sections_metadata": [
+        "Long runtime"
+      ],
+      "control_primary_comunica_results": [
+        "0"
+      ],
+      "control_primary_endpoint_results": [
+        "-"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "emi#examples011b",
+      "sources": "dgbi",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Unknown Error",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        "0"
+      ],
+      "control_primary_endpoint_results": [
+        "152"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "emi#examples012",
+      "sources": "dgbi",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "general: no results",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Both no results"
+      ],
+      "control_sections_metadata": [
+        "Both no results"
+      ],
+      "control_primary_comunica_results": [
+        "0"
+      ],
+      "control_primary_endpoint_results": [
+        "0"
+      ],
+      "control_comunica_error_metadata": [
+        "general: no results"
+      ]
+    },
+    {
+      "query_name": "emi#examples013",
+      "sources": "dgbi",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        "10000"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "emi#examples015",
+      "sources": "dgbi",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        "10000"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "emi#examples018",
+      "sources": "dgbi",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        "1000"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "emi#examples019a",
+      "sources": "dgbi",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": null,
+      "error": "general: (takes a long time to run...)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Long runtime"
+      ],
+      "control_sections_metadata": [
+        "Long runtime"
+      ],
+      "control_primary_comunica_results": [
+        "-"
+      ],
+      "control_primary_endpoint_results": [
+        "-"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "emi#examples019b",
+      "sources": "dgbi",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": true,
+      "results_count": 2,
+      "error": "None",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Work properly"
+      ],
+      "control_sections_metadata": [
+        "Queries problems"
+      ],
+      "control_primary_comunica_results": [
+        ">1"
+      ],
+      "control_primary_endpoint_results": [
+        "10000"
+      ],
+      "control_comunica_error_metadata": []
+    },
+    {
+      "query_name": "emi#examples021",
+      "sources": "dgbi",
+      "start": null,
+      "end": null,
+      "duration_seconds": null,
+      "http_requests": null,
+      "produced_results": false,
+      "results_count": null,
+      "error": "general: (takes a long time to run...)",
+      "control_result_stream": "comunica",
+      "control_core_source_file": "query_trouble-shooting.csv",
+      "control_error_metadata_source_file": "comunica-troubleshooting.csv",
+      "control_sections_primary": [
+        "Long runtime"
+      ],
+      "control_sections_metadata": [
+        "Long runtime"
+      ],
+      "control_primary_comunica_results": [
+        "-"
+      ],
+      "control_primary_endpoint_results": [
+        "-"
+      ],
+      "control_comunica_error_metadata": []
+    }
+  ]
+}

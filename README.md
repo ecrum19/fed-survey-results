@@ -31,6 +31,7 @@ Behavior:
    - `docs/data/summary.json` (main summary only)
    - `docs/data/summary-old-results.json`
    - `docs/data/queries.json` (query catalog + stats + observed performance)
+   - `docs/data/general-query-statistics.json` (SIB query-analysis structural statistics summary/buckets/detail rows)
 
 ## Commands
 
@@ -47,6 +48,14 @@ npm run build:data:no-write
 
 - Regenerates dashboard datasets without writing missing summaries back into `experiments/`.
 
+```bash
+npm run export:paper-figures
+```
+
+- Exports publication-ready PNG figures to `iswc_2026_paper/figures/`:
+  - `query_outcome_heatmap.png`
+  - `queries_with_results_gt0_by_run.png`
+
 ## GitHub Pages setup (simple)
 
 Use GitHub Pages built directly from the repository:
@@ -62,4 +71,16 @@ The site entrypoint is `docs/index.html`.
 
 - The dashboard does not fabricate missing values.
 - Unknown or unavailable values are shown as `N/A`.
+- Dashboard favicon is defined in [`docs/assets/favicon.svg`](./docs/assets/favicon.svg) and linked from [`docs/index.html`](./docs/index.html).
+- General Query Statistics section is sourced from `queries/stat.json`, aligned with [constraintAutomaton/query-analysis-sib-swiss-federated-query/results/stat.json](https://github.com/constraintAutomaton/query-analysis-sib-swiss-federated-query/blob/main/results/stat.json).
 - Main summary metrics exclude `old-results` by design; users can opt in via UI toggle.
+- Dashboard state is encoded into URL query params (filters, selected view, selected query/experiments, period focus), so shared links reopen the same data display.
+- Experiment family labels are remapped in webpage display for readability:
+  - `EX1` -> `NOMETA-ASK`
+  - `EX2` -> `NOMETA-COUNT`
+  - `EX3` -> `VOID-TRIPLE`
+  - `EX4` -> `VOID-BLOCK`
+  - `EX1-NRL` -> `NOMETA-ASK-NRL`
+  - `EX2-NRL` -> `NOMETA-COUNT-NRL`
+  - `EX3-NRL` -> `VOID-TRIPLE-NRL`
+  - `EX4-NRL` -> `VOID-BLOCK-NRL`

@@ -1,0 +1,127 @@
+Data Generated: 31/03/2025
+
+query-name,sib-location,comunica-results,sparql-endpoint-results,problem?,changed-source-url
+
+16/39 still throw errors
+1/39 gets no results
+Work properly:
+001.rq,dgbi,10,10,-,-
+3.rq,OMA,>1,76,-,-
+5.rq,SwissLipids,>1,267,-,-
+6.rq,SwissLipids,>1,26,comunica: ORDER BY??,-
+006.rq,dgbi,5,5,-,-
+007.rq,dgbi,>1,92,-,-
+009.rq,dgbi,1,1,-,-
+11.rq,Rhea,7,7,-,-
+12.rq,Rhea,12719,12719,-,-
+16.rq,SwissLipids,>1,26,comunica: ORDER BY??,-
+016.rq,Bgee,13,13,comunica: Continues to run after results??,-
+017.rq,Bgee,20,20,-,-
+020.rq,Bgee,>1,297,-,-
+29.rq,uniprot,>1,51,-,-
+38.rq,uniprot,2,2,-,-
+42.rq,uniprot,>1,66,-,-
+43.rq,uniprot,>1,71,-,-
+45.rq,uniprot,>1,26,-,-
+49.rq,uniprot,>1,54105,-,-
+51.rq,uniprot,>1,24733,-,-
+*52.rq,uniprot,>1,>1,-,-
+53.rq,uniprot,>1,>1,-,-
+*54.rq,uniprot,>1,>1,-,-
+*60.rq,uniprot,>1,39,-,-
+67_draft_human_metabolome.rq,uniprot,>1,>1,-,-
+*70_enzymes_interacting_with_molecules_similar_to_dopamine.rq,uniprot,>1,406,-,-
+109_uniprot_transporter_in_liver.rq,uniprot,>1,>1,-,-
+emi#examples011b.rq,dgbi,0,152,-,-
+emi#examples013.rq,dgbi,>1,10000,-,-
+emi#examples015.rq,dgbi,>1,10000,-,-
+emi#examples018.rq,dgbi,>1,1000,-,-
+emi#examples019b.rq,dgbi,>1,10000,-,-
+*18a.rq,rhea,>1,137,-,-
+17.rq,OrthoDB,2,2,-,(good example)
+19.rq,OrthoDB,17,17,-,(need to use sparql@ to get results)
+36.rq,uniprot,>1,>1,-,-
+Q00000004.rq,uniprot,10,10,-,-
+Q00000005.rq,uniprot,71,71,-,-
+Q00000007.rq,Bgee,8,8,-,(need to use sparql@ to get results)
+Q00000010.rq,uniprot,24,24,-,(good example)
+Q00000011.rq,oma,12,12,-,(wierd filter -- removed the filter)
+
+
+Both no results:
+7.rq,SwissLipids,0,0,general: no results,-
+48.rq,uniprot,0,0,general: error (sibSPARQLeditor) / no results (from uniprot),-
+50.rq,uniprot,0,0,general: no results (from uniprot),-
+emi#examples012.rq,dgbi,0,0,general: no results,-
+Q00000008.rq,Bgee,0,0,-,- (no results)
+18.rq,OrthoDB,0,0,general: no results,-
+92_uniprot_bioregistry_iri_translation.rq,uniprot,0,0,general: no results,-
+
+
+Endpoint results but no Comunica results:
+20_search_chemical_names_in_japanese.rq,Rhea,0,2,comunica: no Comunica results,-
+
+
+Long runtime:
+19_draft_human_metabolome.rq,Rhea,0,>1,general: (takes a long time to run...),-,-
+018.rq,Bgee,-,-,general: (takes a long time to run...),-
+26.rq,SwissLipids,-,-,general: (takes a long time to run...),-
+27.rq,SwissLipids,-,-,general: (takes a long time to run...),-
+34.rq,SwissLipids,-,-,general: (takes a long time to run...),-
+40.rq,uniprot,-,-,general: (takes a long time to run...),-
+*71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease.rq,uniprot,-,-,general: (takes a long time to run...),-
+emi#examples011a.rq,dgbi,0,-,general: (takes a long time to run...),-
+emi#examples019a.rq,dgbi,-,-,general: (takes a long time to run...),-
+emi#examples021.rq,dgbi,-,-,general: (takes a long time to run...),-
+20.rq,OrthoDB,-,-,general: (takes a long time to run...),-
+
+
+Endpoint errors:
+*002.rq,dgbi,-,-,general: error 400 (https://idsm.elixir-czech.cz/sparql/endpoint/wikidata),-
+13.rq,Rhea,-,-,general: query is broken (error 400),-
+14.rq,OMA,-,-,general: error 500 (http://sparql.nibb.ac.jp/sparql),-
+46.rq,uniprot,-,-,general: error 404 (https://semantic.eea.europa.eu/sparql),-
+99_uniprot_identifiers_org_translation.rq,uniprot,-,-,general: error (https://sparql.api.identifiers.org/sparql),-
+90_uniprot_affected_by_metabolic_diseases_using_MeSH.rq,uniprot,-,-,general: error 400 (https://id.nlm.nih.gov/mesh/sparql),-
+
+
+* With IDSM Federation (do not work without SERVICE clause):
+*70_enzymes_interacting_with_molecules_similar_to_dopamine.rq,uniprot,>1,406,-,-
+*71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease.rq,uniprot,-,(long time to run),-,-
+*52.rq,uniprot,>1,>1,-,-
+*54.rq,uniprot,>1,>1,-,-
+*60.rq,uniprot,>1,39,-,-
+*002.rq,dgbi,-,-,general: error 400 (https://idsm.elixir-czech.cz/sparql/endpoint/wikidata),-
+*18a.rq,rhea,>1,137,-,-
+
+
+Queries that cause problems (so excluded for now):
+emi#examples021.sparql
+70_enzymes_interacting_with_molecules_similar_to_dopamine.sparql
+71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease.sparql
+52.sparql
+54.sparql
+60.sparql
+002.sparql
+18a.sparql
+
+13.sparql
+14.sparql
+17.sparql
+18.sparql
+19.sparql
+20.sparql
+36.sparql
+46.sparql
+92_uniprot_bioregistry_iri_translation.sparql
+99_uniprot_identifiers_org_translation.sparql
+90_uniprot_affected_by_metabolic_diseases_using_MeSH.sparql
+
+7.sparql
+48.sparql
+50.sparql
+emi#examples012.sparql
+
+
+endpoints: 
+dgbi(no-slash),rhea(no-slash),uniprot(no-slash),oma(sparql@/no-slash),swisslipids(beta./no-slash),bgee(sparql@/no-slash),OrthoDB(sparql@/slash)

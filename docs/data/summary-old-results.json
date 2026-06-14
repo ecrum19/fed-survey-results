@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-04-20T10:31:28.107Z",
+  "generated_at": "2026-05-07T12:02:14.162Z",
   "scope": "old-results",
   "run_count": 1,
   "query_count": 43,
-  "succeeded_queries": 5,
-  "failed_queries": 38,
-  "success_rate": 0.11627906976744186,
+  "succeeded_queries": 4,
+  "failed_queries": 39,
+  "success_rate": 0.09302325581395349,
   "non_zero_result_queries": 4,
   "median_duration_seconds": 37.838641,
   "known_http_requests_total": 0,
@@ -13,8 +13,16 @@
   "latest_query_end": "2025-09-12T13:32:00.177Z",
   "error_counts": {
     "None": 5,
-    "Other Error": 13,
+    "Aborted": 8,
     "Fetch Failure": 10,
+    "Node.js v22.17.0": 2,
+    "terminated": 3,
     "Request Failed": 15
+  },
+  "error_group_counts": {
+    "No explicit error": 5,
+    "Timeout-related": 11,
+    "Transport-level": 25,
+    "Other": 2
   }
 }

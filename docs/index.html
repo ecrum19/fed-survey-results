@@ -3,28 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Federated Query Experiment Dashboard</title>
+    <title>Federated Query Results Dashboard</title>
+    <!-- Repository-scoped favicon for GitHub Pages deployment. -->
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+    <link rel="alternate icon" href="./assets/favicon.svg" />
     <link rel="stylesheet" href="./assets/styles.css" />
   </head>
   <body>
     <div class="page-shell">
       <header class="hero">
-        <h1>Federated Query Experiment Dashboard</h1>
+        <h1>Does SPARQL federation work in the real world?</h1>
         <p>
-          Interactive view of run-level and query-level outcomes from the
-          <code>experiments/</code> directory.
+          Interactive data visualization companion for the ISWC In-Use submission titled: 
+          "Does SPARQL federation work in the real world? A case study over large biological SPARQL endpoints".
         </p>
         <p class="meta" id="dataMeta">Loading dataset metadata...</p>
       </header>
 
-      <section class="panel controls">
-        <h2>Scope &amp; Filters</h2>
-        <div class="controls-grid">
-          <label class="toggle-row">
-            <input type="checkbox" id="includeOldResults" />
-            Include <code>experiments/old-results/</code>
-          </label>
+      <section class="panel quickstart-panel">
+        <p class="quickstart-lead">
+          This site presents the experiment-level outcomes of federated query executions. For general interpretation, start with
+          <strong>Overview Charts</strong> and <strong>Monthly Views</strong> for global trends, then dig into the
+          <strong>Data Explorer</strong> to inspect individual queries or experiments in more detail.
+        </p>
+      </section>
 
+      <details class="panel collapsible controls-panel" id="filtersPanel">
+        <summary>Scope &amp; Filters (Optional)</summary>
+        <p class="controls-helper">
+          Use these filters to narrow the visible data. Defaults show the full main experiment scope.
+        </p>
+        <div class="controls-actions">
+          <button type="button" id="resetFilters">Reset Filters</button>
+        </div>
+        <div class="controls-grid">
           <label>
             Run
             <select id="runFilter">
@@ -36,16 +48,16 @@
             Outcome
             <select id="outcomeFilter">
               <option value="all">All</option>
-              <option value="success">Produced results</option>
-              <option value="failure">Did not produce results</option>
+              <option value="success">Result set &gt; 0 (execution success)</option>
+              <option value="failure">Result set = 0 or explicit error</option>
               <option value="nonzero">Non-zero result count</option>
             </select>
           </label>
 
           <label>
-            Error category
+            Error group
             <select id="errorFilter">
-              <option value="">All categories</option>
+              <option value="">All error groups</option>
             </select>
           </label>
 
@@ -84,46 +96,317 @@
             <input id="searchFilter" type="search" placeholder="e.g., 42_ns.rq" />
           </label>
         </div>
-      </section>
+      </details>
 
       <section class="kpi-grid" id="kpiGrid"></section>
 
       <details class="panel collapsible" id="overviewPanel" open>
         <summary>Overview Charts</summary>
+        <p class="section-intro">
+          These charts summarize the full filtered dataset to show overall reliability, dominant failure modes, and baseline runtime behavior across experiment runs.
+        </p>
+        <div class="service-mode-legend" aria-label="Run service-mode legend">
+          <span class="service-mode-legend-title">Run Color Key</span>
+          <span class="service-chip with-service"><span class="swatch"></span>With SERVICE descriptions</span>
+          <span class="service-chip no-service"><span class="swatch"></span>No-SERVICE descriptions</span>
+        </div>
         <div class="chart-grid">
           <div class="chart-card">
-            <h3>Success rate by run</h3>
-            <svg id="runSuccessChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+            <h3><strong>execution success rate</strong> by run <span class="metric-help" tabindex="0" title="Execution success rate = percentage of query attempts with result set count > 0.">ⓘ</span></h3>
+            <div id="runSuccessChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
           <div class="chart-card">
-            <h3>Error category counts</h3>
-            <svg id="errorCategoryChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+            <h3>Error group counts</h3>
+            <div id="errorCategoryChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
           <div class="chart-card">
             <h3>Median runtime by run (seconds)</h3>
-            <svg id="runMedianChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+            <div id="runMedianChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
+          </div>
+          <div class="chart-card">
+            <h3>Queries with result sets &gt; 0 by run</h3>
+            <div id="runPositiveResultCountChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
+          </div>
+          <div class="chart-card no-service-efficacy-card">
+            <h3>NO-SERVICE algorithm efficacy comparison</h3>
+            <div id="noServiceAlgorithmChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
+          </div>
+          <div class="chart-card endpoint-outcome-card">
+            <h3>Endpoint-specific outcomes by run</h3>
+            <div class="endpoint-toggle-row" id="endpointOutcomeToggleRow" aria-label="Endpoint selector"></div>
+            <div id="endpointOutcomeChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
+          </div>
+          <div class="chart-card query-overview-card">
+            <h3>Query outcome heatmap by experiment run</h3>
+            <div id="queryResultsByRunOverviewChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
+          </div>
+          <div class="chart-card query-overview-card">
+            <h3>Query error-type heatmap by experiment run</h3>
+            <div id="queryErrorTypeHeatmapChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
         </div>
       </details>
 
       <details class="panel collapsible" id="monthlyPanel" open>
         <summary>Monthly Views</summary>
+        <p class="section-intro">
+          This section highlights temporal changes in outcomes and workload so you can compare how experiment behavior evolved across testing periods.
+        </p>
         <div class="month-pill-row" id="monthPills"></div>
         <div class="chart-grid">
           <div class="chart-card">
-            <h3>Success rate by month</h3>
-            <svg id="monthSuccessChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+            <h3><strong>Execution success rate</strong> by month <span class="metric-help" tabindex="0" title="Execution success rate = percentage of query attempts with result set count > 0.">ⓘ</span></h3>
+            <div id="monthSuccessChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
           <div class="chart-card">
             <h3>Query volume by month</h3>
-            <svg id="monthVolumeChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+            <div id="monthVolumeChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
           </div>
         </div>
         <div class="monthly-run-grid" id="monthlyRunGrid"></div>
       </details>
 
+      <section class="panel" id="generalQueryStatsSection">
+        <h2>General Query Statistics</h2>
+        <p class="section-intro">
+          This section summarizes structural characteristics of the federated query set using the SIB query-analysis
+          statistics dataset. It mirrors the paper tables with descriptive summaries, bucketed feature distributions,
+          and per-query feature listings.
+        </p>
+        <p class="meta" id="generalQueryStatsMeta">Loading general query statistics...</p>
+
+        <details class="table-collapsible">
+          <summary>Feature Summary Table</summary>
+          <div class="table-wrap">
+            <table id="generalStatsSummaryTable">
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th>Average</th>
+                  <th>Maximum</th>
+                  <th>Minimum</th>
+                  <th>Standard Deviation</th>
+                </tr>
+              </thead>
+              <tbody id="generalStatsSummaryTableBody"></tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class="table-collapsible">
+          <summary>Feature Bucket Table</summary>
+          <div class="table-wrap" id="generalStatsBucketTableWrap">
+            <table id="generalStatsBucketTable">
+              <thead id="generalStatsBucketTableHead"></thead>
+              <tbody id="generalStatsBucketTableBody"></tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class="table-collapsible">
+          <summary>Per-Query Feature Table</summary>
+          <div class="table-wrap" id="generalStatsDetailTableWrap">
+            <table id="generalStatsDetailTable">
+              <thead>
+                <tr>
+                  <th>Query</th>
+                  <th># Triple Patterns</th>
+                  <th># OGPs</th>
+                  <th># UGPs</th>
+                  <th># UGPs w/ Multiple TPs</th>
+                  <th># Federation Members</th>
+                </tr>
+              </thead>
+              <tbody id="generalStatsDetailTableBody"></tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class="table-collapsible" open>
+          <summary>Interactive Query Complexity Figure</summary>
+          <div class="interactive-figure-wrap chart plot-chart" id="generalStatsInteractiveFigureChart">
+            <button type="button" class="figure-expand-btn" aria-label="Open interactive figure fullscreen">⤢</button>
+            <iframe
+              id="generalStatsInteractiveFigure"
+              src="./assets/Queries_Summary_Figure_interactive.html"
+              title="Interactive SPARQL Query Complexity Figure"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+            ></iframe>
+          </div>
+        </details>
+      </section>
+
+      <section class="panel endpoint-reference-panel" id="endpointReferenceSection">
+        <h2>SPARQL Endpoint Reference</h2>
+        <p class="section-intro">
+          Endpoint inventory used by the study workload and its federated targets. This table is reproduced from
+          <code>endpoints_table.tex</code> without altering the underlying endpoint data.
+        </p>
+        <p class="section-intro">
+          Endpoints listed <strong>above</strong> the separator are <strong>targets</strong> in at least one query
+          (the endpoint that receives the full query WITH <code>SERVICE</code> descriptions). Endpoints listed
+          <strong>below</strong> the separator are <strong>federatesWith</strong> sources that are only invoked through
+          remote <code>SERVICE</code> calls.
+        </p>
+        <p class="table-caption">
+          <strong>Table caption:</strong> SPARQL endpoints represented in the real-world query workload.
+          Triple-store was assessed through endpoint literature, server response, and endpoint service description data.
+        </p>
+        <details class="table-collapsible" open>
+          <summary>Endpoint Table</summary>
+          <div class="table-wrap endpoint-reference-wrap">
+            <table class="endpoint-reference-table">
+              <thead>
+                <tr>
+                  <th>Endpoint</th>
+                  <th>Description</th>
+                  <th>Triple-store</th>
+                  <th>Endpoint URL</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>UniProt</td>
+                  <td>Protein sequence and functional annotations</td>
+                  <td>Virtuoso (past) / QLever (current)</td>
+                  <td><a href="https://sparql.uniprot.org/sparql" target="_blank" rel="noopener noreferrer">sparql.uniprot.org/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>Rhea</td>
+                  <td>Biochemical and transport reactions</td>
+                  <td>Virtuoso</td>
+                  <td><a href="https://sparql.rhea-db.org/sparql" target="_blank" rel="noopener noreferrer">sparql.rhea-db.org/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>SwissLipids</td>
+                  <td>Lipid structures</td>
+                  <td>unknown</td>
+                  <td><a href="https://beta.sparql.swisslipids.org/sparql" target="_blank" rel="noopener noreferrer">beta.sparql.swisslipids.org/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>Bgee</td>
+                  <td>Gene expression for comparative analysis</td>
+                  <td>Virtuoso</td>
+                  <td><a href="https://www.bgee.org/sparql" target="_blank" rel="noopener noreferrer">bgee.org/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>OrthoDB</td>
+                  <td>Orthologous genes</td>
+                  <td>Virtuoso</td>
+                  <td><a href="https://sparql.orthodb.org/sparql" target="_blank" rel="noopener noreferrer">sparql.orthodb.org/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>OMA</td>
+                  <td>Orthology and protein families</td>
+                  <td>Virtuoso</td>
+                  <td><a href="https://sparql.omabrowser.org/sparql" target="_blank" rel="noopener noreferrer">sparql.omabrowser.org/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>biosoda</td>
+                  <td>SPARQL federation server</td>
+                  <td>N/A</td>
+                  <td><a href="https://biosoda.unil.ch/emi/sparql" target="_blank" rel="noopener noreferrer">biosoda.unil.ch/emi/sparql</a></td>
+                </tr>
+                <!-- line here -->
+                <tr class="endpoint-divider-row" aria-hidden="true">
+                  <td colspan="4"></td>
+                </tr>
+                <tr>
+                  <td>Wikidata</td>
+                  <td>General-purpose knowledge graph</td>
+                  <td>Blazegraph</td>
+                  <td><a href="https://query.wikidata.org/sparql" target="_blank" rel="noopener noreferrer">query.wikidata.org/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>Wikidata--QLever</td>
+                  <td>Alternative Wikidata endpoint</td>
+                  <td>QLever</td>
+                  <td><a href="https://qlever.cs.uni-freiburg.de/api/wikidata" target="_blank" rel="noopener noreferrer">qlever.cs.uni-freiburg.de/api/wikidata</a></td>
+                </tr>
+                <tr>
+                  <td>METRIN-KG</td>
+                  <td>Plant metabolome and traits</td>
+                  <td>QLever</td>
+                  <td><a href="https://kg.earthmetabolome.org/metrin/api" target="_blank" rel="noopener noreferrer">kg.earthmetabolome.org/metrin/api</a></td>
+                </tr>
+                <tr>
+                  <td>IDSM</td>
+                  <td>Small molecule database</td>
+                  <td>PostgreSQL</td>
+                  <td><a href="https://idsm.elixir-czech.cz/sparql" target="_blank" rel="noopener noreferrer">idsm.elixir-czech.cz/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>MBGD</td>
+                  <td>Microbial genomes</td>
+                  <td>Virtuoso</td>
+                  <td><a href="http://sparql.nibb.ac.jp/sparql" target="_blank" rel="noopener noreferrer">sparql.nibb.ac.jp/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>STRING-DB</td>
+                  <td>Functional protein association networks</td>
+                  <td>Virtuoso</td>
+                  <td><a href="https://string-db.org/sparql" target="_blank" rel="noopener noreferrer">string-db.org/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>Allie</td>
+                  <td>Abbreviation and long-form searches</td>
+                  <td>Virtuoso</td>
+                  <td><a href="http://data.allie.dbcls.jp/sparql" target="_blank" rel="noopener noreferrer">data.allie.dbcls.jp/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>EPO</td>
+                  <td>Linked patent data</td>
+                  <td>unknown</td>
+                  <td><a href="https://data.epo.org/linked-data/query" target="_blank" rel="noopener noreferrer">data.epo.org/linked-data/query</a></td>
+                </tr>
+                <tr>
+                  <td>EUNIS</td>
+                  <td>Biodiversity and species data</td>
+                  <td>unknown</td>
+                  <td><a href="https://semantic.eea.europa.eu/sparql" target="_blank" rel="noopener noreferrer">semantic.eea.europa.eu/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>data.europa.eu</td>
+                  <td>European open data</td>
+                  <td>Virtuoso</td>
+                  <td><a href="https://data.europa.eu/sparql" target="_blank" rel="noopener noreferrer">data.europa.eu/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>GlyConnect</td>
+                  <td>Glycoproteomics data</td>
+                  <td>GraphDB</td>
+                  <td><a href="https://glyconnect.expasy.org/sparql" target="_blank" rel="noopener noreferrer">glyconnect.expasy.org/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>MeSH</td>
+                  <td>Medical Subject Headings (MeSH)</td>
+                  <td>unknown</td>
+                  <td><a href="https://id.nlm.nih.gov/mesh/sparql" target="_blank" rel="noopener noreferrer">id.nlm.nih.gov/mesh/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>Bioregistry</td>
+                  <td>Registry of biomedical identifiers</td>
+                  <td>RDFLib endpoint</td>
+                  <td><a href="https://bioregistry.io/sparql" target="_blank" rel="noopener noreferrer">bioregistry.io/sparql</a></td>
+                </tr>
+                <tr>
+                  <td>Identifiers.org</td>
+                  <td>Persistent identifier registry</td>
+                  <td>unknown</td>
+                  <td><a href="https://sparql.api.identifiers.org/sparql" target="_blank" rel="noopener noreferrer">sparql.api.identifiers.org/sparql</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+
       <section class="panel explorer-panel">
         <h2>Data Explorer</h2>
+        <p class="section-intro">
+          Use this area to inspect individual queries or selected experiment groups, with linked tables and charts for detailed, evidence-level comparisons.
+        </p>
         <div class="explorer-mode-row">
           <button type="button" class="mode-btn active" id="modeByQuery">By Query</button>
           <button type="button" class="mode-btn" id="modeByExperiment">By Experiment</button>
@@ -146,34 +429,67 @@
               <div class="chart-grid">
                 <div class="chart-card">
                   <h3>Duration across runs</h3>
-                  <svg id="queryDurationChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                  <div id="queryDurationChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                 </div>
                 <div class="chart-card">
                   <h3>Result counts across runs</h3>
-                  <svg id="queryResultsChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                  <div id="queryResultsChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
+                </div>
+                <div class="chart-card">
+                  <h3>HTTP requests vs outcome</h3>
+                  <div id="queryHttpOutcomeChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
+                </div>
+                <div class="chart-card query-variability-card">
+                  <h3>Result variability over time</h3>
+                  <p class="variability-meta" id="queryResultVariabilityMeta">Select a query to inspect temporal result stability.</p>
+                  <div id="queryResultVariabilityChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                 </div>
               </div>
 
               <div class="table-meta" id="queryRunTableMeta"></div>
-              <div class="table-wrap">
-                <table id="queryRunsTable">
-                  <thead>
-                    <tr>
-                      <th>Run</th>
-                      <th>Start</th>
-                      <th>Duration (s)</th>
-                      <th>Outcome</th>
-                      <th>Results</th>
-                      <th>Error</th>
-                    </tr>
-                  </thead>
-                  <tbody id="queryRunsTableBody"></tbody>
-                </table>
+              <details class="table-collapsible">
+                <summary>Query Run Records Table</summary>
+                <div class="table-wrap">
+                  <table id="queryRunsTable">
+                    <thead>
+                      <tr>
+                        <th>Run</th>
+                        <th>Start</th>
+                        <th>Duration (s) <span class="metric-help" tabindex="0" title="Duration is per-query runtime in seconds from start to end.">ⓘ</span></th>
+                        <th>Outcome</th>
+                        <th>Results <span class="metric-help" tabindex="0" title="Results is the raw result-set count returned by the query attempt.">ⓘ</span></th>
+                        <th>HTTP Requests <span class="metric-help" tabindex="0" title="HTTP Requests is the number of network requests issued during the query attempt.">ⓘ</span></th>
+                        <th>Error</th>
+                      </tr>
+                    </thead>
+                    <tbody id="queryRunsTableBody"></tbody>
+                  </table>
+                </div>
+              </details>
+
+              <div class="query-detail">
+                <div class="query-text-head">
+                  <h3>Query Text</h3>
+                  <label class="query-variant-select">
+                    Version
+                    <select id="queryVariantSelect"></select>
+                  </label>
+                </div>
+                <pre id="queryTextDetail">Select a query to inspect its text and metadata.</pre>
               </div>
 
               <div class="query-detail">
-                <h3>Query Text</h3>
-                <pre id="queryTextDetail">Select a query to inspect its text and metadata.</pre>
+                <h3>SIB Query Context</h3>
+                <div class="table-meta" id="querySibMeta">No SIB metadata loaded.</div>
+                <details class="table-collapsible">
+                  <summary>SIB Query Context Table</summary>
+                  <div class="table-wrap" id="querySibTableWrap">
+                    <table id="querySibTable">
+                      <thead id="querySibTableHead"></thead>
+                      <tbody id="querySibTableBody"></tbody>
+                    </table>
+                  </div>
+                </details>
               </div>
             </div>
           </div>
@@ -198,50 +514,144 @@
 
               <div class="chart-grid">
                 <div class="chart-card">
-                  <h3>Success rate by selected experiment</h3>
-                  <svg id="selectedRunSuccessChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                  <h3><strong>execution success rate</strong> by selected experiment <span class="metric-help" tabindex="0" title="Execution success rate = percentage of query attempts with result set count > 0.">ⓘ</span></h3>
+                  <div id="selectedRunSuccessChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                 </div>
                 <div class="chart-card">
                   <h3>Median runtime by selected experiment</h3>
-                  <svg id="selectedRunDurationChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                  <div id="selectedRunDurationChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                 </div>
                 <div class="chart-card">
-                  <h3>Error categories in selection</h3>
-                  <svg id="selectedRunErrorChart" class="chart" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+                  <h3>Error groups in selection</h3>
+                  <div id="selectedRunErrorChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
                 </div>
               </div>
 
-              <div class="table-meta" id="experimentQueryTableMeta"></div>
-              <div class="table-wrap">
-                <table id="experimentQueryTable">
-                  <thead>
-                    <tr>
-                      <th>Query</th>
-                      <th>Attempts</th>
-                      <th>Success rate</th>
-                      <th>Median duration (s)</th>
-                      <th>Max results</th>
-                    </tr>
-                  </thead>
-                  <tbody id="experimentQueryTableBody"></tbody>
-                </table>
+              <div class="chart-card">
+                <h3>HTTP requests by query and experiment</h3>
+                <div class="table-meta" id="httpRequestMatrixMeta"></div>
+                <div class="http-controls">
+                  <label>
+                    View
+                    <select id="httpDisplayMode">
+                      <option value="matrix">Matrix</option>
+                      <option value="bar">Bar chart</option>
+                    </select>
+                  </label>
+                  <label>
+                    Query filter
+                    <input id="httpQueryFilter" type="search" placeholder="e.g., 18a or biosoda" />
+                  </label>
+                  <label>
+                    Top queries
+                    <input id="httpTopN" type="number" min="1" max="300" step="1" value="35" />
+                  </label>
+                  <label>
+                    HTTP aggregate
+                    <select id="httpAggregateMode">
+                      <option value="median">Median</option>
+                      <option value="mean">Mean</option>
+                      <option value="max">Max</option>
+                    </select>
+                  </label>
+                </div>
+                <div id="httpMatrixContainer">
+                  <div class="http-matrix-wrap" id="httpRequestMatrix"></div>
+                </div>
+                <div class="http-chart-wrap hidden" id="httpBarContainer">
+                  <div id="httpRequestBarChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
+                </div>
               </div>
+
+              <details class="optional-insights">
+                <summary>Optional Analytics</summary>
+                <div class="selected-meta" id="successOnlyMeta"></div>
+                <div class="chart-grid">
+                  <div class="chart-card">
+                    <h3>Successful query results by experiment</h3>
+                    <div id="successOnlyResultsChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
+                  </div>
+                  <div class="chart-card">
+                    <h3>Median runtime of successful queries</h3>
+                    <div id="successOnlyDurationChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
+                  </div>
+                  <div class="chart-card">
+                    <h3>Failure-only error groups</h3>
+                    <div id="failureErrorChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
+                  </div>
+                  <div class="chart-card">
+                    <h3>Median HTTP requests by experiment</h3>
+                    <div id="httpByRunChart" class="chart plot-chart" role="img" aria-label="Interactive chart"></div>
+                  </div>
+                </div>
+              </details>
+
+              <div class="table-meta" id="experimentQueryTableMeta"></div>
+              <details class="table-collapsible">
+                <summary>Query Summary Table (Selected Experiments)</summary>
+                <div class="table-wrap">
+                  <table id="experimentQueryTable">
+                    <thead>
+                      <tr>
+                        <th>Query</th>
+                        <th>Attempts <span class="metric-help" tabindex="0" title="Attempts = number of query records represented in the selected experiment scope.">ⓘ</span></th>
+                        <th><strong>execution success rate</strong> <span class="metric-help" tabindex="0" title="Execution success rate = percentage of query attempts with result set count > 0.">ⓘ</span></th>
+                        <th>Median duration (s) <span class="metric-help" tabindex="0" title="Median duration is the 50th percentile runtime across attempts.">ⓘ</span></th>
+                        <th>Max results <span class="metric-help" tabindex="0" title="Max results is the largest result-set count observed across attempts.">ⓘ</span></th>
+                      </tr>
+                    </thead>
+                    <tbody id="experimentQueryTableBody"></tbody>
+                  </table>
+                </div>
+              </details>
             </div>
           </div>
         </div>
       </section>
 
+      <details class="panel collapsible notes-panel" id="notesPanel">
+        <summary>Interesting Findings &amp; Outcome Notes</summary>
+        <p class="notes-intro">
+          This section shows curated field notes documented in
+          <code>Experiment Outcomes (notes).txt</code>.
+        </p>
+        <p class="notes-meta" id="notesMeta">Loading notes...</p>
+        <div class="notes-content" id="notesContent"></div>
+      </details>
+
       <section class="panel note-panel">
         <h2>Notes</h2>
+        <p class="section-intro">
+          These notes record interpretation constraints and data handling choices so readers can understand assumptions behind the displayed results.
+        </p>
         <ul>
           <li>Only values present in source files are displayed; unknown values remain blank.</li>
-          <li>Main summary metrics exclude <code>old-results</code> by default.</li>
+          <li>Archived <code>old-results</code> data is kept in-repo for provenance and is excluded from all displays.</li>
           <li><code>_ns</code> and <code>no-service</code> query identifiers are treated as "no service descriptions".</li>
+          <li>
+            Experiment-family display mapping: <code>EX1</code> -> <code>NOMETA-ASK</code>,
+            <code>EX2</code> -> <code>NOMETA-COUNT</code>, <code>EX3</code> -> <code>VOID-TRIPLE</code>,
+            <code>EX4</code> -> <code>VOID-BLOCK</code>, and matching <code>-NRL</code> variants.
+          </li>
           <li>Overview and Monthly sections are collapsible.</li>
         </ul>
       </section>
     </div>
 
+    <div class="focus-modal hidden" id="focusModal" aria-hidden="true">
+      <div class="focus-modal-panel">
+        <div class="focus-modal-head">
+          <h2 id="focusModalTitle">Expanded View</h2>
+          <button type="button" class="focus-modal-close" id="focusModalClose" aria-label="Close fullscreen view">Close</button>
+        </div>
+        <div class="focus-modal-body">
+          <div class="focus-modal-hint">Press <kbd>Esc</kbd> or tap outside to exit.</div>
+          <div id="focusModalContent"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script type="module" src="./assets/app.js"></script>
   </body>
 </html>
