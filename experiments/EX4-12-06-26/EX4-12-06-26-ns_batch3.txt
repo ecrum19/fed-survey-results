@@ -1,0 +1,74 @@
+Experiment log for: EX4-12-06-26
+Experiment EX4-12-06-26 began at 2026-06-12T11:16:19.963419
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://biosoda.unil.ch/emi/sparql https://query.wikidata.org/sparql -f /home/ubuntu/fed-sparql-survey-expts/queries/no-service/ns_batch3/001_ns.rq -t 'application/sparql-results+json' -l debug 2> /home/ubuntu/fed-sparql-survey-expts/experiments/EX4-12-06-26/001_ns.rq.log --httpRetryCount=2
+Timestamp (start): 2026-06-12T11:16:19.963509
+Error executing command for 001_ns.rq: 
+Timestamp (end): 2026-06-12T11:16:25.422341
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://biosoda.unil.ch/emi/sparql https://query.wikidata.org/sparql -f /home/ubuntu/fed-sparql-survey-expts/queries/no-service/ns_batch3/006_ns.rq -t 'application/sparql-results+json' -l debug 2> /home/ubuntu/fed-sparql-survey-expts/experiments/EX4-12-06-26/006_ns.rq.log --httpRetryCount=2
+Timestamp (start): 2026-06-12T11:16:26.423754
+Error executing command for 006_ns.rq: 
+Timestamp (end): 2026-06-12T11:16:32.237509
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://biosoda.unil.ch/emi/sparql https://query.wikidata.org/sparql -f /home/ubuntu/fed-sparql-survey-expts/queries/no-service/ns_batch3/009_ns.rq -t 'application/sparql-results+json' -l debug 2> /home/ubuntu/fed-sparql-survey-expts/experiments/EX4-12-06-26/009_ns.rq.log --httpRetryCount=2
+Timestamp (start): 2026-06-12T11:16:33.238866
+Error executing command for 009_ns.rq: 
+Timestamp (end): 2026-06-12T11:16:38.550657
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://www.bgee.org/sparql https://sparql.omabrowser.org/sparql -f /home/ubuntu/fed-sparql-survey-expts/queries/no-service/ns_batch3/018_ns.rq -t 'application/sparql-results+json' -l debug 2> /home/ubuntu/fed-sparql-survey-expts/experiments/EX4-12-06-26/018_ns.rq.log --httpRetryCount=2
+Timestamp (start): 2026-06-12T11:16:39.552045
+Error executing command for 018_ns.rq: 
+Timestamp (end): 2026-06-12T11:16:44.694932
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.rhea-db.org/sparql https://sparql.uniprot.org/sparql/ -f /home/ubuntu/fed-sparql-survey-expts/queries/no-service/ns_batch3/11_ns.rq -t 'application/sparql-results+json' -l debug 2> /home/ubuntu/fed-sparql-survey-expts/experiments/EX4-12-06-26/11_ns.rq.log --httpRetryCount=2
+Timestamp (start): 2026-06-12T11:16:45.696301
+Error executing command for 11_ns.rq: 
+Timestamp (end): 2026-06-12T11:16:50.792518
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.rhea-db.org/sparql https://sparql.uniprot.org/sparql/ -f /home/ubuntu/fed-sparql-survey-expts/queries/no-service/ns_batch3/12_ns.rq -t 'application/sparql-results+json' -l debug 2> /home/ubuntu/fed-sparql-survey-expts/experiments/EX4-12-06-26/12_ns.rq.log --httpRetryCount=2
+Timestamp (start): 2026-06-12T11:16:51.793894
+Error executing command for 12_ns.rq: 
+Timestamp (end): 2026-06-12T11:16:57.120528
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.rhea-db.org/sparql https://sparql.uniprot.org/sparql/ -f /home/ubuntu/fed-sparql-survey-expts/queries/no-service/ns_batch3/13_ns.rq -t 'application/sparql-results+json' -l debug 2> /home/ubuntu/fed-sparql-survey-expts/experiments/EX4-12-06-26/13_ns.rq.log --httpRetryCount=2
+Timestamp (start): 2026-06-12T11:16:58.121905
+Error executing command for 13_ns.rq: 
+Timestamp (end): 2026-06-12T11:17:03.334105
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.rhea-db.org/sparql https://idsm.elixir-czech.cz/sparql/endpoint/chebi -f /home/ubuntu/fed-sparql-survey-expts/queries/no-service/ns_batch3/18a_ns.rq -t 'application/sparql-results+json' -l debug 2> /home/ubuntu/fed-sparql-survey-expts/experiments/EX4-12-06-26/18a_ns.rq.log --httpRetryCount=2
+Timestamp (start): 2026-06-12T11:17:04.336201
+Error executing command for 18a_ns.rq: 
+Timestamp (end): 2026-06-12T11:17:09.708143
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.rhea-db.org/sparql https://data.allie.dbcls.jp/sparql -f /home/ubuntu/fed-sparql-survey-expts/queries/no-service/ns_batch3/20_search_chemical_names_in_japanese_ns.rq -t 'application/sparql-results+json' -l debug 2> /home/ubuntu/fed-sparql-survey-expts/experiments/EX4-12-06-26/20_search_chemical_names_in_japanese_ns.rq.log --httpRetryCount=2
+Timestamp (start): 2026-06-12T11:17:10.709490
+Error executing command for 20_search_chemical_names_in_japanese_ns.rq: 
+Timestamp (end): 2026-06-12T11:18:06.575810
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.omabrowser.org/sparql https://sparql.uniprot.org/sparql/ -f /home/ubuntu/fed-sparql-survey-expts/queries/no-service/ns_batch3/3_ns.rq -t 'application/sparql-results+json' -l debug 2> /home/ubuntu/fed-sparql-survey-expts/experiments/EX4-12-06-26/3_ns.rq.log --httpRetryCount=2
+Timestamp (start): 2026-06-12T11:18:07.579729
+Error executing command for 3_ns.rq: 
+Timestamp (end): 2026-06-12T11:18:12.874185
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://biosoda.unil.ch/emi/sparql https://qlever.cs.uni-freiburg.de/api/wikidata -f /home/ubuntu/fed-sparql-survey-expts/queries/no-service/ns_batch3/emi#examples011a_ns.rq -t 'application/sparql-results+json' -l debug 2> /home/ubuntu/fed-sparql-survey-expts/experiments/EX4-12-06-26/emi#examples011a_ns.rq.log --httpRetryCount=2
+Timestamp (start): 2026-06-12T11:18:13.875566
+Error executing command for emi#examples011a_ns.rq: 
+Timestamp (end): 2026-06-12T11:18:19.030351
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://biosoda.unil.ch/emi/sparql https://qlever.cs.uni-freiburg.de/api/wikidata -f /home/ubuntu/fed-sparql-survey-expts/queries/no-service/ns_batch3/emi#examples011b_ns.rq -t 'application/sparql-results+json' -l debug 2> /home/ubuntu/fed-sparql-survey-expts/experiments/EX4-12-06-26/emi#examples011b_ns.rq.log --httpRetryCount=2
+Timestamp (start): 2026-06-12T11:18:20.031726
+Error executing command for emi#examples011b_ns.rq: 
+Timestamp (end): 2026-06-12T11:18:25.385849
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://biosoda.unil.ch/emi/sparql https://qlever.cs.uni-freiburg.de/api/wikidata -f /home/ubuntu/fed-sparql-survey-expts/queries/no-service/ns_batch3/emi#examples019a_ns.rq -t 'application/sparql-results+json' -l debug 2> /home/ubuntu/fed-sparql-survey-expts/experiments/EX4-12-06-26/emi#examples019a_ns.rq.log --httpRetryCount=2
+Timestamp (start): 2026-06-12T11:18:26.387191
+Error executing command for emi#examples019a_ns.rq: 
+Timestamp (end): 2026-06-12T11:18:31.658709
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://biosoda.unil.ch/emi/sparql https://qlever.cs.uni-freiburg.de/api/wikidata -f /home/ubuntu/fed-sparql-survey-expts/queries/no-service/ns_batch3/emi#examples019b_ns.rq -t 'application/sparql-results+json' -l debug 2> /home/ubuntu/fed-sparql-survey-expts/experiments/EX4-12-06-26/emi#examples019b_ns.rq.log --httpRetryCount=2
+Timestamp (start): 2026-06-12T11:18:32.660183
+Error executing command for emi#examples019b_ns.rq: 
+Timestamp (end): 2026-06-12T11:18:38.043851
+
+Experiment EX4-12-06-26 completed at 2026-06-12T11:18:38.043964

@@ -1,0 +1,875 @@
+{
+  "general_stats": {
+    "run_start": "2026-06-12T09:49:34.213114",
+    "run_end": "2026-06-12T09:56:42.584213",
+    "run_duration_seconds": 428.36950099999996
+  },
+  "entries": [
+    {
+      "query_name": "EX2-12-06-26",
+      "sources": "None",
+      "start": "2026-06-12T09:49:34.213114",
+      "end": "2026-06-12T09:56:42.584213",
+      "duration_seconds": 428.36950099999996,
+      "http_requests": null,
+      "produced_results": 0,
+      "results_count": 0,
+      "error": 60
+    },
+    {
+      "query_name": "109_uniprot_transporter_in_liver_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://www.bgee.org/sparql"
+      ],
+      "start": "2026-06-12T09:49:34.213229",
+      "end": "2026-06-12T09:49:39.594057",
+      "duration_seconds": 5.380828,
+      "http_requests": 5,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "19_draft_human_metabolome_ns.rq",
+      "sources": [
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2026-06-12T09:49:40.595525",
+      "end": "2026-06-12T09:49:45.823673",
+      "duration_seconds": 5.228148,
+      "http_requests": 4,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "29_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://data.allie.dbcls.jp/sparql"
+      ],
+      "start": "2026-06-12T09:49:46.825035",
+      "end": "2026-06-12T09:49:52.581055",
+      "duration_seconds": 5.75602,
+      "http_requests": 4,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "36_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.orthodb.org/sparql"
+      ],
+      "start": "2026-06-12T09:49:53.582453",
+      "end": "2026-06-12T09:49:59.037140",
+      "duration_seconds": 5.454687,
+      "http_requests": 6,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "40_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.rhea-db.org/sparql"
+      ],
+      "start": "2026-06-12T09:50:00.038478",
+      "end": "2026-06-12T09:50:05.592671",
+      "duration_seconds": 5.554193,
+      "http_requests": 4,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "42_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://data.epo.org/linked-data/query"
+      ],
+      "start": "2026-06-12T09:50:06.594008",
+      "end": "2026-06-12T09:50:11.814931",
+      "duration_seconds": 5.220923,
+      "http_requests": 4,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "43_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://data.epo.org/linked-data/query"
+      ],
+      "start": "2026-06-12T09:50:12.816272",
+      "end": "2026-06-12T09:50:18.089880",
+      "duration_seconds": 5.273608,
+      "http_requests": 4,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "45_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.rhea-db.org/sparql",
+        "https://query.wikidata.org/sparql"
+      ],
+      "start": "2026-06-12T09:50:19.091355",
+      "end": "2026-06-12T09:50:24.202470",
+      "duration_seconds": 5.111115,
+      "http_requests": 5,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "48_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://glyconnect.expasy.org/sparql"
+      ],
+      "start": "2026-06-12T09:50:25.203906",
+      "end": "2026-06-12T09:50:30.641591",
+      "duration_seconds": 5.437685,
+      "http_requests": 4,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "50_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.rhea-db.org/sparql",
+        "https://www.bgee.org/sparql"
+      ],
+      "start": "2026-06-12T09:50:31.642983",
+      "end": "2026-06-12T09:50:36.835664",
+      "duration_seconds": 5.192681,
+      "http_requests": 5,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "51_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.rhea-db.org/sparql"
+      ],
+      "start": "2026-06-12T09:50:37.837141",
+      "end": "2026-06-12T09:50:42.895031",
+      "duration_seconds": 5.05789,
+      "http_requests": 4,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "53_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.omabrowser.org/sparql"
+      ],
+      "start": "2026-06-12T09:50:43.896397",
+      "end": "2026-06-12T09:50:49.167713",
+      "duration_seconds": 5.271316,
+      "http_requests": 5,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "67_draft_human_metabolome_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.rhea-db.org/sparql"
+      ],
+      "start": "2026-06-12T09:50:50.169018",
+      "end": "2026-06-12T09:50:55.280911",
+      "duration_seconds": 5.111893,
+      "http_requests": 4,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "92_uniprot_bioregistry_iri_translation_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://bioregistry.io/sparql"
+      ],
+      "start": "2026-06-12T09:50:56.282232",
+      "end": "2026-06-12T09:51:02.036334",
+      "duration_seconds": 5.754102,
+      "http_requests": 4,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "016_ns.rq",
+      "sources": [
+        "https://www.bgee.org/sparql",
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.omabrowser.org/sparql"
+      ],
+      "start": "2026-06-12T09:51:02.036854",
+      "end": "2026-06-12T09:51:07.221778",
+      "duration_seconds": 5.184924,
+      "http_requests": 7,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "017_ns.rq",
+      "sources": [
+        "https://www.bgee.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2026-06-12T09:51:08.223107",
+      "end": "2026-06-12T09:51:13.412760",
+      "duration_seconds": 5.189653,
+      "http_requests": 6,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "019_ns.rq",
+      "sources": [
+        "https://www.bgee.org/sparql",
+        "https://sparql.omabrowser.org/sparql"
+      ],
+      "start": "2026-06-12T09:51:14.414083",
+      "end": "2026-06-12T09:51:19.584399",
+      "duration_seconds": 5.170316,
+      "http_requests": 5,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "020_ns.rq",
+      "sources": [
+        "https://www.bgee.org/sparql",
+        "https://sparql.omabrowser.org/sparql"
+      ],
+      "start": "2026-06-12T09:51:20.585758",
+      "end": "2026-06-12T09:51:25.626529",
+      "duration_seconds": 5.040771,
+      "http_requests": 4,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "16_ns.rq",
+      "sources": [
+        "https://beta.sparql.swisslipids.org/sparql",
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2026-06-12T09:51:26.627956",
+      "end": "2026-06-12T09:51:31.758386",
+      "duration_seconds": 5.13043,
+      "http_requests": 5,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "17_ns.rq",
+      "sources": [
+        "https://sparql.orthodb.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2026-06-12T09:51:32.759794",
+      "end": "2026-06-12T09:51:38.324099",
+      "duration_seconds": 5.564305,
+      "http_requests": 5,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "18_ns.rq",
+      "sources": [
+        "https://sparql.orthodb.org/sparql",
+        "https://sparql.nextprot.org"
+      ],
+      "start": "2026-06-12T09:51:39.325427",
+      "end": "2026-06-12T09:51:45.637507",
+      "duration_seconds": 6.31208,
+      "http_requests": 42,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Unknown SPARQL results content type: text/html"
+    },
+    {
+      "query_name": "19_ns.rq",
+      "sources": [
+        "https://sparql.orthodb.org/sparql",
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.rhea-db.org/sparql"
+      ],
+      "start": "2026-06-12T09:51:46.638868",
+      "end": "2026-06-12T09:51:51.925161",
+      "duration_seconds": 5.286293,
+      "http_requests": 9,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "26_ns.rq",
+      "sources": [
+        "https://beta.sparql.swisslipids.org/sparql",
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2026-06-12T09:51:52.926554",
+      "end": "2026-06-12T09:51:58.333446",
+      "duration_seconds": 5.406892,
+      "http_requests": 5,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "27_ns.rq",
+      "sources": [
+        "https://beta.sparql.swisslipids.org/sparql",
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2026-06-12T09:51:59.334863",
+      "end": "2026-06-12T09:52:04.756542",
+      "duration_seconds": 5.421679,
+      "http_requests": 5,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "34_ns.rq",
+      "sources": [
+        "https://beta.sparql.swisslipids.org/sparql",
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2026-06-12T09:52:05.757923",
+      "end": "2026-06-12T09:52:11.392915",
+      "duration_seconds": 5.634992,
+      "http_requests": 5,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "5_ns.rq",
+      "sources": [
+        "https://beta.sparql.swisslipids.org/sparql",
+        "https://sparql.rhea-db.org/sparql"
+      ],
+      "start": "2026-06-12T09:52:12.394253",
+      "end": "2026-06-12T09:52:24.431312",
+      "duration_seconds": 12.037059,
+      "http_requests": 183,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "Request failed: https://sparql.rhea-db.org/sparql?query=SELECT%20%3Fb%20WHERE%20%7B%20_%3Agenid-5b3864245025492a97d91df6fd453b015-bn33302t3f33300%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23subClassOf%3E%20%3Fb.%20%7D"
+    },
+    {
+      "query_name": "6_ns.rq",
+      "sources": [
+        "https://beta.sparql.swisslipids.org/sparql",
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2026-06-12T09:52:25.432632",
+      "end": "2026-06-12T09:52:30.837799",
+      "duration_seconds": 5.405167,
+      "http_requests": 5,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "7_ns.rq",
+      "sources": [
+        "https://beta.sparql.swisslipids.org/sparql",
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2026-06-12T09:52:31.839129",
+      "end": "2026-06-12T09:52:37.094176",
+      "duration_seconds": 5.255047,
+      "http_requests": 5,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "001_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://query.wikidata.org/sparql"
+      ],
+      "start": "2026-06-12T09:52:37.094608",
+      "end": "2026-06-12T09:52:42.710884",
+      "duration_seconds": 5.616276,
+      "http_requests": 4,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server-side error encountered"
+    },
+    {
+      "query_name": "006_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://query.wikidata.org/sparql"
+      ],
+      "start": "2026-06-12T09:52:43.712266",
+      "end": "2026-06-12T09:52:49.370208",
+      "duration_seconds": 5.657942,
+      "http_requests": 6,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server-side error encountered"
+    },
+    {
+      "query_name": "009_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://query.wikidata.org/sparql"
+      ],
+      "start": "2026-06-12T09:52:50.371599",
+      "end": "2026-06-12T09:52:56.381482",
+      "duration_seconds": 6.009883,
+      "http_requests": 7,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server-side error encountered"
+    },
+    {
+      "query_name": "018_ns.rq",
+      "sources": [
+        "https://www.bgee.org/sparql",
+        "https://sparql.omabrowser.org/sparql"
+      ],
+      "start": "2026-06-12T09:52:57.382912",
+      "end": "2026-06-12T09:53:02.607111",
+      "duration_seconds": 5.224199,
+      "http_requests": 5,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "11_ns.rq",
+      "sources": [
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2026-06-12T09:53:03.608489",
+      "end": "2026-06-12T09:53:09.029374",
+      "duration_seconds": 5.420885,
+      "http_requests": 4,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "12_ns.rq",
+      "sources": [
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2026-06-12T09:53:10.030807",
+      "end": "2026-06-12T09:53:15.413238",
+      "duration_seconds": 5.382431,
+      "http_requests": 4,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "13_ns.rq",
+      "sources": [
+        "https://sparql.rhea-db.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2026-06-12T09:53:16.414621",
+      "end": "2026-06-12T09:53:21.738535",
+      "duration_seconds": 5.323914,
+      "http_requests": 5,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "18a_ns.rq",
+      "sources": [
+        "https://sparql.rhea-db.org/sparql",
+        "https://idsm.elixir-czech.cz/sparql/endpoint/chebi"
+      ],
+      "start": "2026-06-12T09:53:22.739851",
+      "end": "2026-06-12T09:53:28.176012",
+      "duration_seconds": 5.436161,
+      "http_requests": 6,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "20_search_chemical_names_in_japanese_ns.rq",
+      "sources": [
+        "https://sparql.rhea-db.org/sparql",
+        "https://data.allie.dbcls.jp/sparql"
+      ],
+      "start": "2026-06-12T09:53:29.177385",
+      "end": "2026-06-12T09:54:20.067250",
+      "duration_seconds": 50.889865,
+      "http_requests": 13,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "3_ns.rq",
+      "sources": [
+        "https://sparql.omabrowser.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2026-06-12T09:54:21.068638",
+      "end": "2026-06-12T09:54:26.270571",
+      "duration_seconds": 5.201933,
+      "http_requests": 4,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "emi#examples011a_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://qlever.cs.uni"
+      ],
+      "start": "2026-06-12T09:54:27.272091",
+      "end": "2026-06-12T09:54:32.498048",
+      "duration_seconds": 5.225957,
+      "http_requests": 7,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "emi#examples011b_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://qlever.cs.uni"
+      ],
+      "start": "2026-06-12T09:54:33.499517",
+      "end": "2026-06-12T09:54:38.713567",
+      "duration_seconds": 5.21405,
+      "http_requests": 8,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "emi#examples019a_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://qlever.cs.uni"
+      ],
+      "start": "2026-06-12T09:54:39.714928",
+      "end": "2026-06-12T09:54:44.978043",
+      "duration_seconds": 5.263115,
+      "http_requests": 8,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "emi#examples019b_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://qlever.cs.uni"
+      ],
+      "start": "2026-06-12T09:54:45.979416",
+      "end": "2026-06-12T09:54:51.600727",
+      "duration_seconds": 5.621311,
+      "http_requests": 8,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "007_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://query.wikidata.org/sparql"
+      ],
+      "start": "2026-06-12T09:54:51.601890",
+      "end": "2026-06-12T09:54:57.037595",
+      "duration_seconds": 5.435705,
+      "http_requests": 6,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server-side error encountered"
+    },
+    {
+      "query_name": "027-biosodafrontend_ns.rq",
+      "sources": [
+        "https://www.bgee.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2026-06-12T09:54:58.038946",
+      "end": "2026-06-12T09:55:03.295076",
+      "duration_seconds": 5.25613,
+      "http_requests": 6,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "028-biosodafrontend_ns.rq",
+      "sources": [
+        "https://www.bgee.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2026-06-12T09:55:04.296469",
+      "end": "2026-06-12T09:55:09.341911",
+      "duration_seconds": 5.045442,
+      "http_requests": 6,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "116_biosodafrontend_rabit_mouse_orthologs_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.omabrowser.org/sparql"
+      ],
+      "start": "2026-06-12T09:55:10.343342",
+      "end": "2026-06-12T09:55:15.613149",
+      "duration_seconds": 5.269807,
+      "http_requests": 4,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "117_biosodafrontend_glioblastoma_orthologs_rat_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.omabrowser.org/sparql",
+        "https://www.bgee.org/sparql"
+      ],
+      "start": "2026-06-12T09:55:16.614561",
+      "end": "2026-06-12T09:55:21.834098",
+      "duration_seconds": 5.219537,
+      "http_requests": 7,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "118_biosodafrontend_rat_brain_human_cancer_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.omabrowser.org/sparql",
+        "https://www.bgee.org/sparql"
+      ],
+      "start": "2026-06-12T09:55:22.835491",
+      "end": "2026-06-12T09:55:27.784758",
+      "duration_seconds": 4.949267,
+      "http_requests": 5,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "15-rat-TP53-biosodafrontend_ns.rq",
+      "sources": [
+        "https://sparql.omabrowser.org/sparql",
+        "https://sparql.uniprot.org/sparql"
+      ],
+      "start": "2026-06-12T09:55:28.786103",
+      "end": "2026-06-12T09:55:34.219603",
+      "duration_seconds": 5.4335,
+      "http_requests": 4,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "emi#examples012_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://qlever.cs.uni"
+      ],
+      "start": "2026-06-12T09:55:35.221037",
+      "end": "2026-06-12T09:55:40.310451",
+      "duration_seconds": 5.089414,
+      "http_requests": 8,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "emi#examples013_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://qlever.cs.uni"
+      ],
+      "start": "2026-06-12T09:55:41.310911",
+      "end": "2026-06-12T09:55:46.867046",
+      "duration_seconds": 5.556135,
+      "http_requests": 8,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "emi#examples015_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://qlever.cs.uni"
+      ],
+      "start": "2026-06-12T09:55:47.868485",
+      "end": "2026-06-12T09:55:53.204364",
+      "duration_seconds": 5.335879,
+      "http_requests": 8,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "emi#examples018_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://qlever.cs.uni"
+      ],
+      "start": "2026-06-12T09:55:54.205729",
+      "end": "2026-06-12T09:55:59.454879",
+      "duration_seconds": 5.24915,
+      "http_requests": 7,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "emi#examples021_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://qlever.cs.uni"
+      ],
+      "start": "2026-06-12T09:56:00.456241",
+      "end": "2026-06-12T09:56:05.793050",
+      "duration_seconds": 5.336809,
+      "http_requests": 8,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "002_ns.rq",
+      "sources": [
+        "https://biosoda.unil.ch/emi/sparql",
+        "https://idsm.elixir-czech.cz/sparql/endpoint/wikidata"
+      ],
+      "start": "2026-06-12T09:56:05.793473",
+      "end": "2026-06-12T09:56:11.266055",
+      "duration_seconds": 5.472582,
+      "http_requests": 11,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "52_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://sparql.rhea-db.org/sparql",
+        "https://idsm.elixir-czech.cz/sparql/endpoint/idsm"
+      ],
+      "start": "2026-06-12T09:56:12.266944",
+      "end": "2026-06-12T09:56:17.498192",
+      "duration_seconds": 5.231248,
+      "http_requests": 5,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "54_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://idsm.elixir-czech.cz/sparql/endpoint/chebi"
+      ],
+      "start": "2026-06-12T09:56:18.499542",
+      "end": "2026-06-12T09:56:23.896321",
+      "duration_seconds": 5.396779,
+      "http_requests": 7,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "60_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://idsm.elixir-czech.cz/sparql/endpoint/chebi",
+        "https://sparql.rhea-db.org/sparql"
+      ],
+      "start": "2026-06-12T09:56:24.897688",
+      "end": "2026-06-12T09:56:30.048633",
+      "duration_seconds": 5.150945,
+      "http_requests": 8,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "70_enzymes_interacting_with_molecules_similar_to_dopamine_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://idsm.elixir-czech.cz/sparql/endpoint/chebi"
+      ],
+      "start": "2026-06-12T09:56:31.049963",
+      "end": "2026-06-12T09:56:36.339673",
+      "duration_seconds": 5.28971,
+      "http_requests": 7,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    },
+    {
+      "query_name": "71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease_ns.rq",
+      "sources": [
+        "https://sparql.uniprot.org/sparql",
+        "https://idsm.elixir-czech.cz/sparql/endpoint/chebi"
+      ],
+      "start": "2026-06-12T09:56:37.341030",
+      "end": "2026-06-12T09:56:42.584099",
+      "duration_seconds": 5.243069,
+      "http_requests": 7,
+      "produced_results": false,
+      "results_count": 0,
+      "error": "DEBUG: Server reported client-side error"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+Experiment log for: EX4-12-06-26
+Experiment EX4-12-06-26 began at 2026-06-12T11:19:51.255276
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://biosoda.unil.ch/emi/sparql https://idsm.elixir-czech.cz/sparql/endpoint/wikidata -f /home/ubuntu/fed-sparql-survey-expts/queries/no-service/ns_batch5/002_ns.rq -t 'application/sparql-results+json' -l debug 2> /home/ubuntu/fed-sparql-survey-expts/experiments/EX4-12-06-26/002_ns.rq.log --httpRetryCount=2
+Timestamp (start): 2026-06-12T11:19:51.255351
+Error executing command for 002_ns.rq: 
+Timestamp (end): 2026-06-12T11:19:56.495389
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.uniprot.org/sparql/ https://sparql.rhea-db.org/sparql https://idsm.elixir-czech.cz/sparql/endpoint/idsm -f /home/ubuntu/fed-sparql-survey-expts/queries/no-service/ns_batch5/52_ns.rq -t 'application/sparql-results+json' -l debug 2> /home/ubuntu/fed-sparql-survey-expts/experiments/EX4-12-06-26/52_ns.rq.log --httpRetryCount=2
+Timestamp (start): 2026-06-12T11:19:57.496764
+Error executing command for 52_ns.rq: 
+Timestamp (end): 2026-06-12T11:20:02.506724
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.uniprot.org/sparql/ https://idsm.elixir-czech.cz/sparql/endpoint/chebi -f /home/ubuntu/fed-sparql-survey-expts/queries/no-service/ns_batch5/54_ns.rq -t 'application/sparql-results+json' -l debug 2> /home/ubuntu/fed-sparql-survey-expts/experiments/EX4-12-06-26/54_ns.rq.log --httpRetryCount=2
+Timestamp (start): 2026-06-12T11:20:03.508209
+Error executing command for 54_ns.rq: 
+Timestamp (end): 2026-06-12T11:20:09.209256
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.uniprot.org/sparql/ https://idsm.elixir-czech.cz/sparql/endpoint/chebi https://sparql.rhea-db.org/sparql -f /home/ubuntu/fed-sparql-survey-expts/queries/no-service/ns_batch5/60_ns.rq -t 'application/sparql-results+json' -l debug 2> /home/ubuntu/fed-sparql-survey-expts/experiments/EX4-12-06-26/60_ns.rq.log --httpRetryCount=2
+Timestamp (start): 2026-06-12T11:20:10.210662
+Error executing command for 60_ns.rq: 
+Timestamp (end): 2026-06-12T11:20:15.171337
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.uniprot.org/sparql/ https://idsm.elixir-czech.cz/sparql/endpoint/chebi -f /home/ubuntu/fed-sparql-survey-expts/queries/no-service/ns_batch5/70_enzymes_interacting_with_molecules_similar_to_dopamine_ns.rq -t 'application/sparql-results+json' -l debug 2> /home/ubuntu/fed-sparql-survey-expts/experiments/EX4-12-06-26/70_enzymes_interacting_with_molecules_similar_to_dopamine_ns.rq.log --httpRetryCount=2
+Timestamp (start): 2026-06-12T11:20:16.172763
+Error executing command for 70_enzymes_interacting_with_molecules_similar_to_dopamine_ns.rq: 
+Timestamp (end): 2026-06-12T11:20:21.353459
+
+Executing: node comunica/engines/query-sparql/bin/query-dynamic.js https://sparql.uniprot.org/sparql/ https://idsm.elixir-czech.cz/sparql/endpoint/chebi -f /home/ubuntu/fed-sparql-survey-expts/queries/no-service/ns_batch5/71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease_ns.rq -t 'application/sparql-results+json' -l debug 2> /home/ubuntu/fed-sparql-survey-expts/experiments/EX4-12-06-26/71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease_ns.rq.log --httpRetryCount=2
+Timestamp (start): 2026-06-12T11:20:22.354928
+Error executing command for 71_enzymes_interacting_with_molecules_similar_to_dopamine_with_variants_related_to_disease_ns.rq: 
+Timestamp (end): 2026-06-12T11:20:27.245075
+
+Experiment EX4-12-06-26 completed at 2026-06-12T11:20:27.245244
