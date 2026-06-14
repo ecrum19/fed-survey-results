@@ -7,7 +7,20 @@
     <!-- Repository-scoped favicon for GitHub Pages deployment. -->
     <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
     <link rel="alternate icon" href="./assets/favicon.svg" />
-    <link rel="stylesheet" href="./assets/styles.css" />
+    <noscript><link rel="stylesheet" href="./assets/styles.css" /></noscript>
+    <script>
+      // GitHub Pages can serve cached assets for stable URLs after a push.
+      // Load the stylesheet through a per-page version token so the live site
+      // always revalidates after deployment.
+      (() => {
+        const version = String(Date.now());
+        window.__DASHBOARD_VERSION__ = version;
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = `./assets/styles.css?v=${encodeURIComponent(version)}`;
+        document.head.appendChild(link);
+      })();
+    </script>
   </head>
   <body>
     <div class="page-shell">
@@ -228,7 +241,7 @@
             <button type="button" class="figure-expand-btn" aria-label="Open interactive figure fullscreen">⤢</button>
             <iframe
               id="generalStatsInteractiveFigure"
-              src="./assets/Queries_Summary_Figure_interactive.html"
+              src="about:blank"
               title="Interactive SPARQL Query Complexity Figure"
               loading="lazy"
               referrerpolicy="no-referrer"
@@ -652,6 +665,15 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-    <script type="module" src="./assets/app.js"></script>
+    <script>
+      // Mirror the stylesheet cache-busting for the dashboard controller.
+      (() => {
+        const version = window.__DASHBOARD_VERSION__ || String(Date.now());
+        const script = document.createElement("script");
+        script.type = "module";
+        script.src = `./assets/app.js?v=${encodeURIComponent(version)}`;
+        document.body.appendChild(script);
+      })();
+    </script>
   </body>
 </html>

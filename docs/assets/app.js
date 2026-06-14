@@ -29,6 +29,7 @@ let isApplyingUrlState = false;
 let activeHeatmapLegendItem = null;
 let metricTooltipEl = null;
 let activeMetricHelpEl = null;
+const CACHE_BUSTER = window.__DASHBOARD_VERSION__ || String(Date.now());
 
 const dom = {
   dataMeta: document.getElementById("dataMeta"),
@@ -123,6 +124,18 @@ const focusView = {
   placeholder: null,
   focusBeforeOpen: null,
 };
+
+function versionedPath(relativePath) {
+  const separator = relativePath.includes("?") ? "&" : "?";
+  return `${relativePath}${separator}v=${encodeURIComponent(CACHE_BUSTER)}`;
+}
+
+function initializeVersionedAssets() {
+  const complexityFrame = document.getElementById("generalStatsInteractiveFigure");
+  if (complexityFrame && complexityFrame.src !== versionedPath("./assets/Queries_Summary_Figure_interactive.html")) {
+    complexityFrame.src = versionedPath("./assets/Queries_Summary_Figure_interactive.html");
+  }
+}
 
 const EXPANDABLE_SURFACE_SELECTOR = ".chart-card, .table-wrap, .http-matrix-wrap, .http-chart-wrap, .interactive-figure-wrap";
 const INTERACTIVE_BLOCK_SELECTOR = "button, a, input, select, textarea, label, summary, [role='button']";
@@ -5284,13 +5297,13 @@ function bindEvents() {
 
 async function loadData() {
   const [mainDataset, summary, queriesDataset, generalQueryStats, notesText] = await Promise.all([
-    fetch("./data/main.json").then((response) => response.json()),
-    fetch("./data/summary.json").then((response) => response.json()),
-    fetch("./data/queries.json").then((response) => response.json()),
-    fetch("./data/general-query-statistics.json")
+    fetch(versionedPath("./data/main.json")).then((response) => response.json()),
+    fetch(versionedPath("./data/summary.json")).then((response) => response.json()),
+    fetch(versionedPath("./data/queries.json")).then((response) => response.json()),
+    fetch(versionedPath("./data/general-query-statistics.json"))
       .then((response) => (response.ok ? response.json() : null))
       .catch(() => null),
-    fetch("./data/experiment-outcomes-notes.txt").then((response) => response.text()),
+    fetch(versionedPath("./data/experiment-outcomes-notes.txt")).then((response) => response.text()),
   ]);
 
   state.mainDataset = mainDataset;
@@ -5308,6 +5321,7 @@ async function loadData() {
 
 async function bootstrap() {
   try {
+    initializeVersionedAssets();
     await loadData();
     syncServiceModeLegendColors();
     const initialUrlState = parseUrlDashboardState();
