@@ -906,6 +906,8 @@ code {
   overflow-y: hidden;
   border: 1px solid var(--border);
   border-radius: 10px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .table-caption {
@@ -987,10 +989,11 @@ code {
 }
 
 #querySibTable {
-  width: 100%;
+  width: max-content;
   border-collapse: collapse;
   table-layout: auto;
-  min-width: 980px;
+  min-width: 100%;
+  max-width: none;
 }
 
 #generalStatsSummaryTable,
@@ -1002,9 +1005,13 @@ code {
 }
 
 #querySibTableWrap {
+  width: 100%;
+  min-width: 0;
   overflow-x: auto;
   overflow-y: hidden;
   max-width: 100%;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 #generalStatsBucketTableWrap,
@@ -1348,6 +1355,9 @@ code {
 
 .query-detail {
   margin-top: 0.78rem;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .query-text-head {
@@ -2134,6 +2144,7 @@ body.modal-open {
   #queryRunsTable,
   #experimentQueryTable,
   #querySibTable {
+    width: 100%;
     min-width: 0;
     border-collapse: separate;
     border-spacing: 0 0.5rem;

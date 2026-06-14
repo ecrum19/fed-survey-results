@@ -256,6 +256,11 @@ const RUN_TEMPORAL_GROUP_OVERRIDES = Object.freeze({
   "experiments/EX4-17-4-26": "spring-2026",
   "experiments/EX1-NRL-17-4-26": "spring-2026",
   "experiments/service-control-20-4-26": "spring-2026",
+  "experiments/EX1-12-06-26": "spring-2026",
+  "experiments/EX2-12-06-26": "spring-2026",
+  "experiments/EX3-12-06-26": "spring-2026",
+  "experiments/EX4-12-06-26": "spring-2026",
+  "experiments/EX1-NRL-12-06-26": "spring-2026",
 });
 
 function formatNumber(value, digits = 2) {
@@ -1778,7 +1783,7 @@ function inferTemporalGroupFromDate(date) {
   if (year === 2026 && month >= 1 && month <= 2) {
     return "winter-2026";
   }
-  if (year === 2026 && month >= 3 && month <= 5) {
+  if (year === 2026 && month >= 3 && month <= 6) {
     return "spring-2026";
   }
   return null;

@@ -1231,6 +1231,79 @@ function buildSummaryFromLegacyQueryTimes(runDir) {
   };
 }
 
+function buildSummaryFromSummaryCsv(runDir, runLabel) {
+  const csvPath = path.join(runDir, "summary.csv");
+  if (!fileExists(csvPath)) {
+    return null;
+  }
+
+  let text;
+  try {
+    text = fs.readFileSync(csvPath, "utf8");
+  } catch (error) {
+    console.warn(`[WARN] Could not read ${path.relative(repoRoot, csvPath)}: ${error.message}`);
+    return null;
+  }
+
+  const rows = parseDelimitedCsv(text);
+  if (!rows.length) {
+    return null;
+  }
+
+  let generalRow = null;
+  const entries = [];
+
+  for (const row of rows) {
+    const queryName = typeof row.query_name === "string" ? row.query_name.trim() : "";
+    if (!queryName) {
+      continue;
+    }
+
+    if (!generalRow && queryName === runLabel) {
+      generalRow = row;
+      continue;
+    }
+
+    entries.push({
+      query_name: queryName,
+      sources: parseSources(row.sources),
+      start: safeIso(row.start),
+      end: safeIso(row.end),
+      duration_seconds: toNumber(row.duration_seconds),
+      http_requests: toNumber(row.http_requests),
+      produced_results: toBool(row.produced_results),
+      results_count: toNumber(row.results_count) ?? 0,
+      error: typeof row.error === "string" && row.error.trim() !== ""
+        ? row.error.trim()
+        : "None",
+    });
+  }
+
+  const starts = entries
+    .map((entry) => parseIsoTimestamp(entry.start))
+    .filter(Boolean);
+  const ends = entries
+    .map((entry) => parseIsoTimestamp(entry.end))
+    .filter(Boolean);
+
+  const earliest = starts.length
+    ? starts.reduce((min, value) => (value < min ? value : min))
+    : null;
+  const latest = ends.length
+    ? ends.reduce((max, value) => (value > max ? value : max))
+    : null;
+
+  return {
+    general_stats: {
+      run_start: safeIso(generalRow?.start) || (earliest ? earliest.toISOString() : null),
+      run_end: safeIso(generalRow?.end) || (latest ? latest.toISOString() : null),
+      run_duration_seconds: toNumber(generalRow?.duration_seconds)
+        ?? (earliest && latest ? (latest.getTime() - earliest.getTime()) / 1000 : null),
+    },
+    entries,
+  };
+}
+
 function buildGeneralRow(runLabel, summary) {
   const entries = Array.isArray(summary.entries) ? summary.entries : [];
 
@@ -1279,6 +1352,19 @@ function sanitizeSummary(runLabel, summary) {
   }
 
   return safeSummary;
+}
+
+function loadSummaryJson(summaryPath) {
+  if (!fileExists(summaryPath)) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(fs.readFileSync(summaryPath, "utf8"));
+  } catch (error) {
+    console.warn(`[WARN] Failed to parse ${summaryPath}: ${error.message}`);
+    return null;
+  }
 }
 
 function applyRunDateOverride(runPath, summary) {
@@ -2257,47 +2343,70 @@ function buildDataset(scopeName, runDirs, writeMissingSummaries = false) {
     const runLabel = path.basename(runDir);
     const runPath = path.relative(repoRoot, runDir).replaceAll(path.sep, "/");
     const summaryPath = path.join(runDir, "summary.json");
+    const csvPath = path.join(runDir, "summary.csv");
 
     let hasSummaryFile = fileExists(summaryPath);
-    let summarySource = hasSummaryFile ? "summary.json" : "generated_from_logs";
     let summary;
+    let summarySource = null;
 
-    if (hasSummaryFile) {
-      try {
-        summary = JSON.parse(fs.readFileSync(summaryPath, "utf8"));
-      } catch (error) {
-        console.warn(`[WARN] Failed to parse ${summaryPath}: ${error.message}`);
-        summary = null;
+    const batchSummary = buildSummaryFromBatches(runDir);
+    if (batchSummary) {
+      summary = batchSummary;
+      summarySource = "generated_from_logs";
+    }
+
+    if (!summary) {
+      const legacySummary = buildSummaryFromLegacyQueryTimes(runDir);
+      if (legacySummary) {
+        summary = legacySummary;
+        summarySource = "generated_from_query_times_csv";
       }
     }
 
     if (!summary) {
-      summary = buildSummaryFromBatches(runDir);
+      const hasCsvSummary = fileExists(csvPath);
+      const preferCsvSummary = hasCsvSummary && (
+        !hasSummaryFile
+        || fs.statSync(csvPath).mtimeMs > fs.statSync(summaryPath).mtimeMs
+      );
 
-      if (summary) {
-        summarySource = "generated_from_logs";
-      } else {
-        summary = buildSummaryFromLegacyQueryTimes(runDir);
+      if (preferCsvSummary) {
+        summary = buildSummaryFromSummaryCsv(runDir, runLabel);
         if (summary) {
-          summarySource = "generated_from_query_times_csv";
-        } else {
-          console.warn(`[WARN] Could not build summary for ${runPath}; skipping run.`);
-          continue;
+          summarySource = "summary.csv";
         }
       }
+    }
 
-      if (writeMissingSummaries) {
-        // Persist generated summaries so future runs can rely on canonical run-level files.
-        fs.writeFileSync(summaryPath, `${JSON.stringify(summary, null, 2)}\n`, "utf8");
-        hasSummaryFile = true;
+    if (!summary && hasSummaryFile) {
+      summary = loadSummaryJson(summaryPath);
+      if (summary) {
+        summarySource = "summary.json";
       }
+    }
+
+    if (!summary && fileExists(csvPath)) {
+      summary = buildSummaryFromSummaryCsv(runDir, runLabel);
+      if (summary) {
+        summarySource = "summary.csv";
+      }
+    }
+
+    if (!summary) {
+      console.warn(`[WARN] Could not build summary for ${runPath}; skipping run.`);
+      continue;
+    }
+
+    if (writeMissingSummaries && !hasSummaryFile) {
+      // Persist generated summaries so future runs can rely on canonical run-level files.
+      fs.writeFileSync(summaryPath, `${JSON.stringify(summary, null, 2)}\n`, "utf8");
+      hasSummaryFile = true;
     }
 
     const sanitizedInitial = sanitizeSummary(runLabel, summary);
     const { summary: sanitized, override: appliedDateOverride } = applyRunDateOverride(runPath, sanitizedInitial);
 
-    if (writeMissingSummaries && summarySource === "generated_from_logs") {
-      const csvPath = path.join(runDir, "summary.csv");
+    if (writeMissingSummaries && summarySource === "generated_from_logs" && !fileExists(csvPath)) {
       const csv = toCsv(sanitized.entries);
       fs.writeFileSync(csvPath, csv, "utf8");
     }
