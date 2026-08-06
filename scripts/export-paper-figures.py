@@ -68,6 +68,45 @@ SERVICE_MODE_COLORS = {
     "no-service": "#E69F00",    # orange
 }
 
+TEMPORAL_GROUP_META: Dict[str, Dict[str, object]] = {
+    "spring-2025": {"key": "spring-2025", "label": "Spring 2025", "order": 0},
+    "fall-2025": {"key": "fall-2025", "label": "Fall 2025", "order": 1},
+    "winter-2026": {"key": "winter-2026", "label": "Winter 2026", "order": 2},
+    "spring-2026": {"key": "spring-2026", "label": "Spring 2026", "order": 3},
+}
+
+RUN_TEMPORAL_GROUP_OVERRIDES: Dict[str, str] = {
+    # Spring 2025 controls
+    "experiments/old-results/default-service-test-1": "spring-2025",
+    "experiments/service-control-31-03-25-comunica": "spring-2025",
+    "experiments/service-control-31-03-25-endpoint": "spring-2025",
+    # Fall 2025 campaign
+    "experiments/EX1-17-9-25": "fall-2025",
+    "experiments/EX2-13-10-25": "fall-2025",
+    "experiments/EX3-16-10-25": "fall-2025",
+    "experiments/EX4-24-10-25": "fall-2025",
+    # Winter 2026 campaign
+    "experiments/EX1-NRL-14-11-25": "winter-2026",
+    "experiments/EX1-17-11-25": "winter-2026",
+    "experiments/EX2-19-11-25": "winter-2026",
+    "experiments/EX3-24-11-25": "winter-2026",
+    "experiments/EX4-26-11-25": "winter-2026",
+    "experiments/EX2-NRL-01-12-25": "winter-2026",
+    "experiments/EX1-31-1-26": "winter-2026",
+    # Spring 2026 campaign
+    "experiments/EX1-17-4-26": "spring-2026",
+    "experiments/EX2-17-4-26": "spring-2026",
+    "experiments/EX3-17-4-26": "spring-2026",
+    "experiments/EX4-17-4-26": "spring-2026",
+    "experiments/EX1-NRL-17-4-26": "spring-2026",
+    "experiments/service-control-20-4-26": "spring-2026",
+    "experiments/EX1-12-06-26": "spring-2026",
+    "experiments/EX2-12-06-26": "spring-2026",
+    "experiments/EX3-12-06-26": "spring-2026",
+    "experiments/EX4-12-06-26": "spring-2026",
+    "experiments/EX1-NRL-12-06-26": "spring-2026",
+}
+
 
 def parse_iso(value: Optional[str]) -> Optional[datetime]:
     if not value:
@@ -122,6 +161,10 @@ def get_run_timestamp(run: dict, records: List[dict]) -> float:
         return min(starts).timestamp()
     # Fallback keeps deterministic ordering.
     return 0.0
+
+
+def get_run_temporal_group(run_id: str) -> Optional[str]:
+    return RUN_TEMPORAL_GROUP_OVERRIDES.get(run_id)
 
 
 @dataclass
@@ -352,6 +395,7 @@ def export_positive_by_run(main_data: dict, out_path: Path, dpi: int) -> None:
     labels = []
     values = []
     colors = []
+    temporal_groups = []
     for run in sorted_runs:
         run_id = run["run_id"]
         run_records = run_record_map.get(run_id, [])
@@ -360,6 +404,7 @@ def export_positive_by_run(main_data: dict, out_path: Path, dpi: int) -> None:
         values.append(positive)
         mode = str(run.get("service_description_mode") or "unknown")
         colors.append(SERVICE_MODE_COLORS.get(mode, "#8A94A6"))
+        temporal_groups.append(get_run_temporal_group(run_id))
 
     fig_w = max(11.0, 3.0 + 0.55 * len(labels))
     fig, ax = plt.subplots(figsize=(fig_w, 6.8), constrained_layout=True)
@@ -373,6 +418,49 @@ def export_positive_by_run(main_data: dict, out_path: Path, dpi: int) -> None:
     ax.set_xticklabels(labels, rotation=45, ha="right", fontsize=8)
     ax.grid(axis="y", linestyle="--", linewidth=0.6, alpha=0.45)
     ax.set_axisbelow(True)
+
+    # Overlay dashed separators so the chronological runs remain visually
+    # partitioned into the four study periods used throughout the dashboard.
+    period_segments: List[Tuple[str, int, int]] = []
+    segment_start = 0
+    current_group = temporal_groups[0] if temporal_groups else None
+    for idx in range(1, len(temporal_groups) + 1):
+        next_group = temporal_groups[idx] if idx < len(temporal_groups) else None
+        if idx == len(temporal_groups) or next_group != current_group:
+            if current_group:
+                period_segments.append((current_group, segment_start, idx - 1))
+            segment_start = idx
+            current_group = next_group
+
+    for _, _, end_idx in period_segments[:-1]:
+        ax.axvline(
+            end_idx + 0.5,
+            color="#5b6777",
+            linestyle=(0, (4, 4)),
+            linewidth=1.0,
+            alpha=0.8,
+            zorder=0,
+        )
+
+    if values:
+        y_max = max(values)
+        label_y = y_max + max(0.6, y_max * 0.07)
+        for group_key, start_idx, end_idx in period_segments:
+            group_meta = TEMPORAL_GROUP_META.get(group_key)
+            if not group_meta:
+                continue
+            group_center = (start_idx + end_idx) / 2.0
+            ax.text(
+                group_center,
+                label_y,
+                str(group_meta["label"]),
+                ha="center",
+                va="bottom",
+                fontsize=8,
+                color="#334155",
+                fontweight="semibold",
+            )
+        ax.set_ylim(top=label_y + max(0.8, y_max * 0.08))
 
     for bar in bars:
         h = bar.get_height()

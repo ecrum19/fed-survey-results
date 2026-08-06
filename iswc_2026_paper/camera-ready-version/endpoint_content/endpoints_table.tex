@@ -1,0 +1,138 @@
+% Preamble
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\begin{table}[!t]
+\centering
+\scriptsize
+\caption{SPARQL endpoints represented in the real-world query workload. 
+Triple-Store was assessed through endpoint literature, server response, and endpoint service description data.
+}
+\label{tab:endpoints}
+
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.08}
+
+\begin{tabularx}{\linewidth}{
+    L{0.16\linewidth}
+    Y
+    L{0.22\linewidth}
+    L{0.25\linewidth}
+}
+\hline
+\textbf{Endpoint} 
+& \textbf{Description} 
+& \textbf{Triple-store} 
+& \textbf{Endpoint URL} \\
+\hline
+
+UniProt~\cite{uniprot2025} 
+& Protein sequence and functional annotations
+& Virtuoso (past) / QLever (current)
+& \tinyhref{https://sparql.uniprot.org/sparql}{sparql.uniprot.org/sparql} \\
+
+Rhea~\cite{bansal2022rhea} 
+& Biochemical and transport reactions
+& Virtuoso
+& \tinyhref{https://sparql.rhea-db.org/sparql}{sparql.rhea-db.org/sparql} \\
+
+SwissLipids~\cite{Aimo2015SwissLipids} 
+& Lipid structures
+& unknown
+& \tinyhref{https://beta.sparql.swisslipids.org/sparql}{beta.sparql.swisslipids.org/sparql} \\
+
+Bgee~\cite{Bastian2025Bgee} 
+& Gene expression for comparative analysis 
+& Virtuoso
+& \tinyhref{https://www.bgee.org/sparql}{bgee.org/sparql} \\
+
+OrthoDB~\cite{Tegenfeldt2025OrthoDB} 
+& Orthologous genes 
+& Virtuoso
+& \tinyhref{https://sparql.orthodb.org/sparql}{sparql.orthodb.org/sparql} \\
+
+OMA~\cite{Altenhoff2024OMA} 
+& Orthology and protein families 
+& Virtuoso
+& \tinyhref{https://sparql.omabrowser.org/sparql}{sparql.omabrowser.org/sparql} \\
+
+biosoda~\cite{biosoda2021} 
+& SPARQL federation server
+& N/A
+& \tinyhref{https://biosoda.unil.ch/emi/sparql}{biosoda.unil.ch/emi/sparql} \\
+
+\hline
+
+Wikidata~\cite{vrandecic2014wikidata} 
+& General-purpose knowledge graph 
+& Blazegraph
+& \tinyhref{https://query.wikidata.org/sparql}{query.wikidata.org/sparql} \\
+
+Wikidata--QLever 
+& Alternative Wikidata endpoint 
+& QLever
+& \tinyhref{https://qlever.cs.uni-freiburg.de/api/wikidata}{qlever.cs.uni-freiburg.de/api/wikidata} \\
+
+METRIN-KG~\cite{Tandon2026METRIN} 
+& Plant metabolome and traits
+& QLever
+& \tinyhref{https://kg.earthmetabolome.org/metrin/api}{kg.earthmetabolome.org/metrin/api} \\
+
+IDSM~\cite{Galgonek2021ChemWebRDF} 
+& Small molecule database
+& PostgreSQL
+& \tinyhref{https://idsm.elixir-czech.cz/sparql}{idsm.elixir-czech.cz/sparql} \\
+
+MBGD~\cite{Uchiyama2019MBGD} 
+& Microbial genomes
+& Virtuoso
+& \tinyhref{http://sparql.nibb.ac.jp/sparql}{sparql.nibb.ac.jp/sparql} \\
+
+STRING-DB~\cite{Szklarczyk2025STRING} 
+& Functional protein association networks 
+& Virtuoso
+& \tinyhref{https://string-db.org/sparql}{string-db.org/sparql} \\
+
+Allie~\cite{Yamamoto2011Allie} 
+& Abbreviation and long-form searches 
+& Virtuoso
+& \tinyhref{http://data.allie.dbcls.jp/sparql}{data.allie.dbcls.jp/sparql} \\
+
+EPO~\cite{Kracker2018} 
+& Linked patent data
+& unknown
+& \tinyhref{https://data.epo.org/linked-data/query}{data.epo.org/linked-data/query} \\
+
+EUNIS
+& Biodiversity and species data
+& unknown
+& \tinyhref{https://semantic.eea.europa.eu/sparql}{semantic.eea.europa.eu/sparql} \\
+
+data.europa.eu 
+& European open data
+& Virtuoso
+& \tinyhref{https://data.europa.eu/sparql}{data.europa.eu/sparql} \\
+
+GlyConnect~\cite{Alocci2019GlyConnect} 
+& Glycoproteomics data 
+& GraphDB
+& \tinyhref{https://glyconnect.expasy.org/sparql}{glyconnect.expasy.org/sparql} \\
+
+MeSH~\cite{bushman2015} 
+& Medical Subject Headings (MeSH)
+& unknown
+& \tinyhref{https://id.nlm.nih.gov/mesh/sparql}{id.nlm.nih.gov/mesh/sparql} \\
+
+Bioregistry~\cite{Hoyt2022Bioregistry} 
+& Registry of biomedical identifiers 
+& RDFLib endpoint
+& \tinyhref{https://bioregistry.io/sparql}{bioregistry.io/sparql} \\
+
+Identifiers.org~\cite{Juty2012Identifiers} 
+& Persistent identifier registry 
+& unknown
+& \tinyhref{https://sparql.api.identifiers.org/sparql}{sparql.api.identifiers.org/sparql} \\
+
+\hline
+\end{tabularx}
+\end{table}
