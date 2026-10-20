@@ -1,4 +1,4 @@
-# Fed Survey Results Dashboard
+# "Does SPARQL Federation Work in the Real-World?" Results Dashboard
 
 This repository now includes a static GitHub Pages dashboard for interactive exploration of experiment results in [`experiments/`](./experiments).
 
@@ -55,17 +55,6 @@ npm run export:paper-figures
 - Exports publication-ready PNG figures to `iswc_2026_paper/figures/`:
   - `query_outcome_heatmap.png`
   - `queries_with_results_gt0_by_run.png`
-
-## GitHub Pages setup (simple)
-
-Use GitHub Pages built directly from the repository:
-
-1. In GitHub: **Settings -> Pages**
-2. Source: **Deploy from a branch**
-3. Branch: `main`
-4. Folder: `/docs`
-
-The site entrypoint is `docs/index.html`.
 
 ## Notes
 
