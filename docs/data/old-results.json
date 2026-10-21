@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-14T17:06:38.848Z",
+  "generated_at": "2026-10-21T06:33:08.031Z",
   "scope": "old-results",
   "run_count": 1,
   "query_record_count": 43,
@@ -213,7 +213,7 @@
       "start": "2025-09-11T09:18:01.211Z",
       "end": "2025-09-12T02:27:23.275Z",
       "duration_seconds": 61762.064,
-      "http_requests": 0,
+      "http_requests": 1133434,
       "sources": [
         "https://beta.sparql.swisslipids.org/sparql",
         "https://sparql.rhea-db.org/sparql",
@@ -222,9 +222,9 @@
       "source_count": 3,
       "produced_results": false,
       "results_count": 0,
-      "error_raw": "Unknown Error",
-      "error_category": "Unknown Error",
-      "error_group": "Other",
+      "error_raw": "fetch failed",
+      "error_category": "Fetch Failure",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -542,7 +542,7 @@
       "start": "2025-09-02T08:18:44.860Z",
       "end": "2025-09-03T01:15:36.459Z",
       "duration_seconds": 61011.599,
-      "http_requests": 0,
+      "http_requests": 659045,
       "sources": [
         "https://sparql.rhea-db.org/sparql",
         "https://sparql.uniprot.org/sparql"
@@ -550,9 +550,9 @@
       "source_count": 2,
       "produced_results": false,
       "results_count": 0,
-      "error_raw": "Unknown Error",
-      "error_category": "Unknown Error",
-      "error_group": "Other",
+      "error_raw": "DEBUG: Server reported client-side error",
+      "error_category": "Client-Side HTTP Error",
+      "error_group": "Client-side HTTP",
       "has_service_description": false
     },
     {
@@ -693,7 +693,7 @@
       "start": "2025-09-03T02:03:22.539Z",
       "end": "2025-09-03T13:42:15.247Z",
       "duration_seconds": 41932.708,
-      "http_requests": 0,
+      "http_requests": 414333,
       "sources": [
         "https://sparql.rhea-db.org/sparql",
         "https://sparql.uniprot.org/sparql"
@@ -701,9 +701,9 @@
       "source_count": 2,
       "produced_results": false,
       "results_count": 0,
-      "error_raw": "Unknown Error",
-      "error_category": "Unknown Error",
-      "error_group": "Other",
+      "error_raw": "fetch failed",
+      "error_category": "Fetch Failure",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {
@@ -743,7 +743,7 @@
       "start": "2025-09-03T14:41:12.382Z",
       "end": "2025-09-05T16:47:03.678Z",
       "duration_seconds": 180351.296,
-      "http_requests": 0,
+      "http_requests": 3107589,
       "sources": [
         "https://beta.sparql.swisslipids.org/sparql",
         "https://sparql.rhea-db.org/sparql",
@@ -752,9 +752,9 @@
       "source_count": 3,
       "produced_results": false,
       "results_count": 0,
-      "error_raw": "Unknown Error",
-      "error_category": "Unknown Error",
-      "error_group": "Other",
+      "error_raw": "fetch failed",
+      "error_category": "Fetch Failure",
+      "error_group": "Transport-level",
       "has_service_description": false
     },
     {

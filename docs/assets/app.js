@@ -1355,8 +1355,16 @@ function hasExplicitError(record) {
 }
 
 function hasPositiveResultSet(record) {
-  // Execution success for reporting is strictly a non-empty result set.
-  return Number(record?.results_count || 0) > 0;
+  // Execution success for reporting is strictly a non-empty result set without an explicit error.
+  return Number(record?.results_count || 0) > 0 && !hasExplicitError(record);
+}
+
+// Three-way execution outcome used by charts that separate empty from non-empty results.
+function getRecordOutcome(record) {
+  if (hasExplicitError(record)) {
+    return "error";
+  }
+  return hasPositiveResultSet(record) ? "non-empty" : "empty";
 }
 
 function hasNoExplicitError(record) {
@@ -1961,6 +1969,17 @@ function renderNoDataPlot(chartEl, message, xLabel, yLabel) {
   chartEl.innerHTML = `<div class="chart-empty">${escapeHtml(message)}</div>`;
 }
 
+function missingValueSubtitle(missingCount, totalCount, includesErrors = false) {
+  const reason = includesErrors ? "failed or not recorded" : "not recorded";
+  return {
+    display: missingCount > 0,
+    text: `${formatNumber(missingCount, 0)} of ${formatNumber(totalCount, 0)} bar${totalCount === 1 ? "" : "s"} left empty: value ${reason}`,
+    color: "#4d6980",
+    font: { size: 11, weight: "600" },
+    padding: { bottom: 4 },
+  };
+}
+
 function renderBarChart(svg, data, valueLabelFormatter, options = {}) {
   const chartEl = svg;
   const yLabel = options.yLabel || "Value";
@@ -1988,9 +2007,13 @@ function renderBarChart(svg, data, valueLabelFormatter, options = {}) {
 
   const canvas = buildChartCanvas(chartEl);
   const xValues = data.map((item) => item.label);
-  const rawValues = data.map((item) => (hasNumericValue(item.value) ? Number(item.value) : 0));
+  // Missing values stay null (no bar) so they are never read as a measured 0.
+  const rawValues = data.map((item) => (hasNumericValue(item.value) ? Number(item.value) : null));
   const missingFlags = data.map((item) => !hasNumericValue(item.value));
-  const valueText = rawValues.map((value, index) => (missingFlags[index] ? "null" : valueLabelFormatter(value)));
+  const missingCount = missingFlags.filter(Boolean).length;
+  const valueText = rawValues.map((value, index) => (
+    missingFlags[index] ? (data[index].missingLabel || "not recorded") : valueLabelFormatter(value)
+  ));
   const barColors = data.map((item, index) => (missingFlags[index] ? "#c8d3de" : (item.color || CHART_COLORS.primary)));
   const serviceModes = data.map((item) => normalizeServiceModeValue(item.service_mode));
   const hasServiceMetadata = data.some((item) => item.service_mode !== undefined && item.service_mode !== null);
@@ -2015,6 +2038,7 @@ function renderBarChart(svg, data, valueLabelFormatter, options = {}) {
 
   const chartOptions = chartBaseOptions(xLabel, yLabel, xValues);
   chartOptions.plugins.legend.display = false;
+  chartOptions.plugins.subtitle = missingValueSubtitle(missingCount, data.length, data.some((item) => item.missingLabel));
   chartOptions.plugins.tooltip.callbacks = {
     title: (items) => {
       const index = items[0]?.dataIndex ?? 0;
@@ -2031,6 +2055,9 @@ function renderBarChart(svg, data, valueLabelFormatter, options = {}) {
         lines.push(`Service mode: ${formatServiceModeBadge(serviceModes[idx])}`);
       }
       lines.push(`Missing value: ${missingFlags[idx] ? "Yes" : "No"}`);
+      if (data[idx].note) {
+        lines.push(data[idx].note);
+      }
       return lines;
     },
   };
@@ -2081,9 +2108,10 @@ function renderGroupedBarChart(svg, groups, series, options = {}) {
   const datasets = series.map((run, runIndex) => {
     const runLabel = getRunDisplayLabel(run.run_id, run.run_label);
     const runMode = getRunServiceMode(run);
+    // Missing cells stay null (no bar) so they are never read as a measured 0.
     const yRaw = groups.map((group) => {
       const value = group.values.get(run.run_id);
-      return hasNumericValue(value) ? Number(value) : 0;
+      return hasNumericValue(value) ? Number(value) : null;
     });
     const missingFlags = groups.map((group) => !hasNumericValue(group.values.get(run.run_id)));
     const yDisplay = yRaw.map((value, rowIndex) => (
@@ -2129,6 +2157,8 @@ function renderGroupedBarChart(svg, groups, series, options = {}) {
 
   const chartOptions = chartBaseOptions(xLabel, yLabel, xValues);
   chartOptions.plugins.legend.display = options.legendDisplay === undefined ? true : Boolean(options.legendDisplay);
+  const missingCellCount = datasets.reduce((sum, dataset) => sum + dataset.metaMissingFlags.filter(Boolean).length, 0);
+  chartOptions.plugins.subtitle = missingValueSubtitle(missingCellCount, groups.length * series.length);
   chartOptions.plugins.tooltip.callbacks = {
     title: (items) => {
       const index = items[0]?.dataIndex ?? 0;
@@ -2233,9 +2263,11 @@ function renderNoServiceAlgorithmEfficacyChart(chartEl, algorithmRows, periodLab
     },
     label: (context) => {
       const label = context.dataset.label || "Value";
-      const value = context.dataset.yAxisID === "y1"
-        ? `${formatNumber(Number(context.raw), 1)}`
-        : `${Number(context.raw).toFixed(1)}%`;
+      const value = !hasNumericValue(context.raw)
+        ? "n/a (no error-free attempts)"
+        : context.dataset.yAxisID === "y1"
+          ? `${formatNumber(Number(context.raw), 1)}`
+          : `${Number(context.raw).toFixed(1)}%`;
       if (label.includes("Median HTTP")) {
         return `${label}: ${value}`;
       }
@@ -2889,9 +2921,19 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
   const knownHttpRecords = queryRecords.filter((record) => hasNumericValue(record.http_requests));
   const missingHttpCount = queryRecords.length - knownHttpRecords.length;
   const httpValues = knownHttpRecords.map((record) => Number(record.http_requests));
-  const useLogScale = httpValues.length > 0 && httpValues.every((value) => value > 0);
+  const positiveHttpValues = httpValues.filter((value) => value > 0);
+  const zeroHttpCount = httpValues.length - positiveHttpValues.length;
+  const minPositiveHttp = positiveHttpValues.length ? Math.min(...positiveHttpValues) : null;
+  const maxPositiveHttp = positiveHttpValues.length ? Math.max(...positiveHttpValues) : null;
+  // Request counts span 1 to millions; keep the log axis even when some attempts made no
+  // requests, and draw those at a floor value instead of falling back to a linear axis.
+  const useLogScale = positiveHttpValues.length > 0
+    && (zeroHttpCount === 0 || maxPositiveHttp / minPositiveHttp >= 100);
+  const zeroHttpFloor = useLogScale ? Math.min(1, minPositiveHttp) / 2 : 0;
   const xLabel = useLogScale ? "HTTP Requests (count, log scale)" : "HTTP Requests (count)";
-  const yLabel = "Outcome (1=no error, 0=error)";
+  const yLabel = "Outcome";
+  const OUTCOME_BANDS = { error: 0, empty: 1, "non-empty": 2 };
+  const OUTCOME_LABELS = { error: "Explicit error", empty: "Empty result (no error)", "non-empty": "Non-empty result" };
   clearChartElement(chartEl);
 
   if (!queryRecords.length) {
@@ -2907,16 +2949,16 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
     .map((record) => {
       const httpValue = record.http_requests;
       const run = runsById.get(record.run_id) || { run_id: record.run_id, run_label: record.run_label };
-      const outcomeNoExplicitError = hasNoExplicitError(record);
+      const outcome = getRecordOutcome(record);
       return {
-        xBase: Number(httpValue),
+        xBase: Number(httpValue) > 0 ? Number(httpValue) : zeroHttpFloor,
         rawHttpRequests: Number(httpValue),
         runLabel: getRunDisplayLabel(run.run_id, run.run_label),
         start: record.start,
         duration: record.duration_seconds,
         resultsCount: record.results_count,
-        noExplicitError: outcomeNoExplicitError,
-        outcomeBase: outcomeNoExplicitError ? 1 : 0,
+        outcome,
+        outcomeBase: OUTCOME_BANDS[outcome],
         errorCategory: record.error_category || "N/A",
       };
     })
@@ -2926,7 +2968,7 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
   // The y offset only separates duplicate points inside the same categorical outcome band.
   const groupedPointIndexes = new Map();
   basePoints.forEach((point, index) => {
-    const key = `${point.noExplicitError ? "no-error" : "explicit-error"}::${point.xBase}`;
+    const key = `${point.outcome}::${point.xBase}`;
     if (!groupedPointIndexes.has(key)) {
       groupedPointIndexes.set(key, []);
     }
@@ -2969,34 +3011,28 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
     return;
   }
 
-  const successPoints = points.filter((point) => point.noExplicitError);
-  const failurePoints = points.filter((point) => !point.noExplicitError);
   const canvas = buildChartCanvas(chartEl);
-  const datasets = [
-    {
-      label: "No explicit error",
-      data: successPoints,
-      parsing: false,
-      backgroundColor: CHART_COLORS.success,
-      borderColor: CHART_COLORS.success,
-      borderWidth: 1,
-      pointRadius: 6,
-      pointHoverRadius: 8,
-    },
-    {
-      label: "Explicit error",
-      data: failurePoints,
-      parsing: false,
-      backgroundColor: CHART_COLORS.danger,
-      borderColor: CHART_COLORS.danger,
-      borderWidth: 1,
-      pointRadius: 6,
-      pointHoverRadius: 8,
-    },
-  ];
+  const outcomeColors = { "non-empty": CHART_COLORS.success, empty: CHART_COLORS.neutral, error: CHART_COLORS.danger };
+  const datasets = ["non-empty", "empty", "error"].map((outcome) => ({
+    label: OUTCOME_LABELS[outcome],
+    data: points.filter((point) => point.outcome === outcome),
+    parsing: false,
+    backgroundColor: outcomeColors[outcome],
+    borderColor: outcomeColors[outcome],
+    borderWidth: 1,
+    pointRadius: 6,
+    pointHoverRadius: 8,
+  }));
 
-  const xMin = Math.min(...httpValues);
+  const xMin = useLogScale ? Math.min(...points.map((point) => point.xBase)) : Math.min(...httpValues);
   const xMax = Math.max(...httpValues);
+  const subtitleNotes = [];
+  if (missingHttpCount > 0) {
+    subtitleNotes.push(`${formatNumber(missingHttpCount, 0)} record${missingHttpCount === 1 ? "" : "s"} omitted because HTTP request count is missing`);
+  }
+  if (useLogScale && zeroHttpCount > 0) {
+    subtitleNotes.push(`${formatNumber(zeroHttpCount, 0)} attempt${zeroHttpCount === 1 ? "" : "s"} with 0 requests drawn at the left edge`);
+  }
 
   const chartOptions = {
     responsive: true,
@@ -3022,8 +3058,8 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
         },
       },
       subtitle: {
-        display: missingHttpCount > 0,
-        text: `${formatNumber(missingHttpCount, 0)} record${missingHttpCount === 1 ? "" : "s"} omitted because HTTP request count is missing`,
+        display: subtitleNotes.length > 0,
+        text: subtitleNotes.join(" · "),
         color: "#4d6980",
         font: { size: 11, weight: "600" },
         padding: { bottom: 4 },
@@ -3045,7 +3081,7 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
           title: () => "Query attempt",
           label: (context) => {
             const point = context.raw;
-            const outcomeLabel = point.noExplicitError ? "No explicit error" : "Explicit error";
+            const outcomeLabel = OUTCOME_LABELS[point.outcome];
             const lines = [
               `Run: ${point.runLabel || "-"}`,
               `Outcome: ${outcomeLabel}`,
@@ -3084,7 +3120,7 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
           color: "#4d6980",
           maxRotation: 45,
           minRotation: 45,
-          callback: (value) => formatAxisNumber(Number(value)),
+          callback: (value) => (useLogScale && Number(value) < Math.min(1, minPositiveHttp) ? "" : formatAxisNumber(Number(value))),
         },
         grid: {
           color: "#e7eff7",
@@ -3092,8 +3128,8 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
         },
       },
       y: {
-        min: -0.25,
-        max: 1.25,
+        min: -0.4,
+        max: 2.4,
         title: {
           display: true,
           text: yLabel,
@@ -3104,8 +3140,11 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
           color: "#4d6980",
           stepSize: 1,
           callback: (value) => {
+            if (Number(value) === 2) {
+              return "Non-empty";
+            }
             if (Number(value) === 1) {
-              return "No error";
+              return "Empty";
             }
             if (Number(value) === 0) {
               return "Error";
@@ -3158,8 +3197,13 @@ function summaryImplicatesEndpoint(summary, endpointUrl) {
   if (!summary || !endpointUrl) {
     return false;
   }
-  const hasMatch = (rawValue) => String(rawValue || "").includes(endpointUrl);
-  const variantMatch = (summary.variants || []).some((variant) => hasMatch(variant.query_text));
+  // Endpoint IRIs appear both with and without a trailing slash across queries and metadata.
+  const endpointKey = String(endpointUrl).replace(/\/+$/, "");
+  const hasMatch = (rawValue) => String(rawValue || "").includes(endpointKey);
+  // Query text lives on the top-level variants, not on summary.variants.
+  const variantMatch = getQueryVariants()
+    .filter((variant) => variant.query_stem === summary.query_stem)
+    .some((variant) => hasMatch(variant.query_text));
   if (variantMatch) {
     return true;
   }
@@ -3852,7 +3896,7 @@ function renderOverviewCharts(records) {
     } else {
       bucket.errorCount += 1;
     }
-    if (hasNumericValue(record.results_count) && Number(record.results_count) > 0) {
+    if (hasPositiveResultSet(record)) {
       bucket.positiveCount += 1;
     }
   });
@@ -3871,7 +3915,7 @@ function renderOverviewCharts(records) {
       errorFreeRate: bucket.attempts ? bucket.errorFreeCount / bucket.attempts : 0,
       positiveRate: bucket.attempts ? bucket.positiveCount / bucket.attempts : 0,
       successHttpCount: bucket.successHttpValues.length,
-      medianHttpSuccess: median(bucket.successHttpValues) ?? 0,
+      medianHttpSuccess: median(bucket.successHttpValues) ?? null,
     }));
   if (activePeriodLabel) {
     setChartCardTitle(dom.noServiceAlgorithmChart, `NO-SERVICE algorithm efficacy (${activePeriodLabel})`);
@@ -4112,7 +4156,7 @@ function getMonthlyStats(records) {
   return [...map.values()]
     .map((month) => ({
       ...month,
-      successRate: month.total ? month.success / month.total : 0,
+      successRate: month.total ? month.success / month.total : null,
       medianDuration: median(month.durations),
     }))
     .sort((a, b) => {
@@ -4214,7 +4258,7 @@ function renderMonthlyViews(recordsBeforeMonthFocus) {
   } else {
     const successBars = visibleMonths.map((month) => ({
       label: month.label,
-      value: month.successRate * 100,
+      value: month.successRate === null ? null : month.successRate * 100,
       color: CHART_COLORS.secondary,
     }));
     const volumeBars = visibleMonths.map((month) => ({
@@ -4465,9 +4509,14 @@ function renderQueryDetail(records) {
   const durations = queryRecords.map((record) => record.duration_seconds).filter((v) => v !== null && v !== undefined);
   const resultsMax = Math.max(0, ...queryRecords.map((record) => record.results_count || 0));
   const displayName = getQueryDisplayName(state.selectedQueryStem);
+  // A failed attempt's results_count of 0 says nothing about the query's answer, so only
+  // attempts without an explicit error count towards result variability.
+  const resultCountForVariability = (record) => (
+    hasExplicitError(record) || !hasNumericValue(record.results_count) ? null : Number(record.results_count)
+  );
   const knownResultCounts = queryRecords
-    .map((record) => (record.results_count === null || record.results_count === undefined ? null : Number(record.results_count)))
-    .filter((value) => value !== null && !Number.isNaN(value));
+    .map(resultCountForVariability)
+    .filter((value) => value !== null);
   const uniqueResultCounts = [...new Set(knownResultCounts)];
   const hasResultVariability = uniqueResultCounts.length > 1;
 
@@ -4514,17 +4563,17 @@ function renderQueryDetail(records) {
     label: getRunDisplayLabel(record.run_id, record.run_label),
     run_id: record.run_id,
     service_mode: getRunServiceMode(runsById.get(record.run_id) || { service_description_mode: record.service_description_mode }, [record]),
-    value: record.results_count || 0,
+    // Failed attempts have no result set; draw them as missing, not as 0 results.
+    value: hasExplicitError(record) ? null : (record.results_count ?? null),
+    missingLabel: hasExplicitError(record) ? `error (${record.error_category || "unknown"})` : null,
     color: getRunModeColor(runsById.get(record.run_id) || { service_description_mode: record.service_description_mode }, [record]),
   }));
 
   let previousKnownResult = null;
   let changedTimePointCount = 0;
   const variabilityBars = queryRecords.map((record) => {
-    const numericResult = record.results_count === null || record.results_count === undefined
-      ? null
-      : Number(record.results_count);
-    const isKnown = numericResult !== null && !Number.isNaN(numericResult);
+    const numericResult = resultCountForVariability(record);
+    const isKnown = numericResult !== null;
     const changedFromPrevious = isKnown && previousKnownResult !== null && numericResult !== previousKnownResult;
     if (changedFromPrevious) {
       changedTimePointCount += 1;
@@ -4547,6 +4596,7 @@ function renderQueryDetail(records) {
       run_id: record.run_id,
       service_mode: getRunServiceMode(runsById.get(record.run_id) || { service_description_mode: record.service_description_mode }, [record]),
       value: numericResult,
+      missingLabel: hasExplicitError(record) ? `error (${record.error_category || "unknown"})` : null,
       color,
     };
   });
@@ -5012,6 +5062,7 @@ function renderOptionalInsights(selectedRuns, selectedRecords) {
       run_id: run.run_id,
       service_mode: getRunServiceMode(run, knownHttpRecords.filter((record) => record.run_id === run.run_id)),
       value: median(runHttp) ?? null,
+      note: `Median over ${formatNumber(runHttp.length, 0)} of ${formatNumber(selectedRecords.filter((record) => record.run_id === run.run_id).length, 0)} records with a known HTTP count`,
       color: getRunModeColor(run, knownHttpRecords.filter((record) => record.run_id === run.run_id)),
     };
   });
