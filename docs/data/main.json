@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T06:27:42.802Z",
+  "generated_at": "2026-10-21T07:01:03.269Z",
   "scope": "main",
   "run_count": 25,
   "query_record_count": 1520,
@@ -10342,7 +10342,7 @@
       "start": "2025-11-14T14:51:35.756Z",
       "end": "2025-11-14T14:52:27.040Z",
       "duration_seconds": 51.284,
-      "http_requests": 10082,
+      "http_requests": 31871,
       "sources": [
         "https://beta.sparql.swisslipids.org/sparql",
         "https://sparql.rhea-db.org/sparql"

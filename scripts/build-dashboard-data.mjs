@@ -1385,6 +1385,25 @@ function loadSummaryJson(summaryPath) {
   }
 }
 
+// summary.json counts were made upstream from the complete query logs. Some logs in this
+// repository are truncated copies (e.g. EX1-NRL-14-11-25/5_ns.rq.log stops 24 s before the
+// query ended), so a higher recorded count is the more complete one.
+function applyRecordedHttpCounts(runDir, summary) {
+  const recorded = loadSummaryJson(path.join(runDir, "summary.json"));
+  const recordedByQuery = new Map(
+    (recorded?.entries || []).map((entry) => [entry.query_name, toNumber(entry.http_requests)]),
+  );
+  for (const entry of summary.entries) {
+    const recordedCount = recordedByQuery.get(entry.query_name);
+    if (recordedCount !== null && recordedCount !== undefined
+      && (entry.http_requests === null || recordedCount > entry.http_requests)) {
+      console.log(`[INFO] ${path.relative(repoRoot, runDir)}/${entry.query_name}: using recorded HTTP count ${recordedCount} (log copy gives ${entry.http_requests ?? "none"})`);
+      entry.http_requests = recordedCount;
+    }
+  }
+  return summary;
+}
+
 function applyRunDateOverride(runPath, summary) {
   const override = runDateOverrides.get(runPath);
   if (!override) {
@@ -2369,7 +2388,7 @@ function buildDataset(scopeName, runDirs, writeMissingSummaries = false) {
 
     const batchSummary = buildSummaryFromBatches(runDir);
     if (batchSummary) {
-      summary = batchSummary;
+      summary = applyRecordedHttpCounts(runDir, batchSummary);
       summarySource = "generated_from_logs";
     }
 
