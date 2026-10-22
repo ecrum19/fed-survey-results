@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-14T17:06:38.848Z",
+  "generated_at": "2026-10-21T07:06:22.881Z",
   "scope": "old-results",
   "run_count": 1,
   "query_count": 43,
@@ -8,26 +8,25 @@
   "success_rate": 0.09302325581395349,
   "non_zero_result_queries": 4,
   "median_duration_seconds": 37.838,
-  "known_http_requests_total": 405661,
+  "known_http_requests_total": 5720062,
   "earliest_query_start": "2025-09-02T08:17:00.718Z",
   "latest_query_end": "2025-09-12T13:32:00.177Z",
   "error_counts": {
     "None": 5,
     "Out of Memory": 3,
     "Aborted": 4,
-    "Unknown Error": 4,
-    "Client-Side HTTP Error": 12,
-    "Fetch Failure": 7,
+    "Fetch Failure": 10,
+    "Client-Side HTTP Error": 13,
     "Node.js v22.17.0": 1,
     "terminated": 3,
     "Server-Side Error": 4
   },
   "error_group_counts": {
     "No explicit error": 5,
-    "Other": 8,
+    "Other": 4,
     "Timeout-related": 7,
-    "Client-side HTTP": 12,
-    "Transport-level": 7,
+    "Transport-level": 10,
+    "Client-side HTTP": 13,
     "Server-side HTTP": 4
   }
 }

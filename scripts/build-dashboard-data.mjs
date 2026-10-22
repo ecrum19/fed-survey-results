@@ -830,7 +830,8 @@ function extractLogTimeBoundsFromRun(runDir) {
     let text;
     try {
       text = readTextMaybeZipped(logFile);
-    } catch {
+    } catch (error) {
+      console.warn(`[WARN] Could not read ${path.relative(repoRoot, logFile)}: ${error.message.split("\n")[0]}`);
       continue;
     }
 
@@ -945,38 +946,55 @@ function extractJsonObjectAfterOutput(sectionText) {
   return null;
 }
 
+const LOG_READ_FAILED_MARKER = "__LOG_READ_FAILED__";
+
+// Single streaming pass over a query log: request count, first matching error pattern,
+// last non-empty line. Request-explosion logs reach several GiB uncompressed, which is
+// beyond what can be buffered into one string, so the log is never loaded into memory.
+const LOG_SCAN_AWK = `
+BEGIN { n = split(ENVIRON["LOG_ERROR_PATTERNS"], pats, "\\n"); found = 0; count = 0; last = "" }
+{ sub(/\\r$/, "") }
+$0 == "${LOG_READ_FAILED_MARKER}" { failed = 1; next }
+index($0, "INFO: Requesting") { count++ }
+!found { for (i = 1; i <= n; i++) if (index($0, pats[i])) { found = i; break } }
+$0 != "" { last = $0 }
+END { if (failed) exit 3; printf "%d\\n%d\\n%s", count, found, last }
+`;
+
+function scanLogFile(filePath) {
+  const reader = filePath.endsWith(".zip") ? "unzip -p" : "cat";
+  const output = execFileSync(
+    "sh",
+    ["-c", `{ ${reader} "$1" || printf '\\n${LOG_READ_FAILED_MARKER}\\n'; } | awk "$2"`, "sh", filePath, LOG_SCAN_AWK],
+    {
+      encoding: "utf8",
+      maxBuffer: 64 * 1024 * 1024,
+      env: { ...process.env, LC_ALL: "C", LOG_ERROR_PATTERNS: ERROR_PATTERNS.join("\n") },
+    },
+  );
+
+  const firstBreak = output.indexOf("\n");
+  const secondBreak = output.indexOf("\n", firstBreak + 1);
+  const foundIndex = Number(output.slice(firstBreak + 1, secondBreak));
+  return {
+    infoCount: Number(output.slice(0, firstBreak)),
+    foundError: foundIndex > 0 ? ERROR_PATTERNS[foundIndex - 1] : null,
+    lastLine: output.slice(secondBreak + 1),
+  };
+}
+
 function getLogDataFromFileOrZipped(filePath, hasError = true) {
-  let text;
+  let scan;
   try {
-    text = readTextMaybeZipped(filePath);
-  } catch {
-    return { httpRequests: 0, errorText: hasError ? "Unknown Error" : null };
+    scan = scanLogFile(filePath);
+  } catch (error) {
+    // Unknown, not zero: a zero here would hide the run from request-count charts.
+    console.warn(`[WARN] Could not read ${path.relative(repoRoot, filePath)}: ${error.message.split("\n")[0]}`);
+    return { httpRequests: null, errorText: hasError ? "Unknown Error" : null };
   }
 
-  const lines = text.split(/\r?\n/);
-  let infoCount = 0;
-  let foundError = null;
-  let lastLine = "";
-
-  for (const rawLine of lines) {
-    const line = rawLine.replace(/\r$/, "");
-    if (line.includes("INFO: Requesting")) {
-      infoCount += 1;
-    }
-
-    if (hasError && !foundError) {
-      for (const pattern of ERROR_PATTERNS) {
-        if (line.includes(pattern)) {
-          foundError = pattern;
-          break;
-        }
-      }
-    }
-
-    if (line !== "") {
-      lastLine = line;
-    }
-  }
+  const { infoCount, lastLine } = scan;
+  const foundError = hasError ? scan.foundError : null;
 
   if (!hasError) {
     return { httpRequests: infoCount, errorText: null };
@@ -1365,6 +1383,25 @@ function loadSummaryJson(summaryPath) {
     console.warn(`[WARN] Failed to parse ${summaryPath}: ${error.message}`);
     return null;
   }
+}
+
+// summary.json counts were made upstream from the complete query logs. Some logs in this
+// repository are truncated copies (e.g. EX1-NRL-14-11-25/5_ns.rq.log stops 24 s before the
+// query ended), so a higher recorded count is the more complete one.
+function applyRecordedHttpCounts(runDir, summary) {
+  const recorded = loadSummaryJson(path.join(runDir, "summary.json"));
+  const recordedByQuery = new Map(
+    (recorded?.entries || []).map((entry) => [entry.query_name, toNumber(entry.http_requests)]),
+  );
+  for (const entry of summary.entries) {
+    const recordedCount = recordedByQuery.get(entry.query_name);
+    if (recordedCount !== null && recordedCount !== undefined
+      && (entry.http_requests === null || recordedCount > entry.http_requests)) {
+      console.log(`[INFO] ${path.relative(repoRoot, runDir)}/${entry.query_name}: using recorded HTTP count ${recordedCount} (log copy gives ${entry.http_requests ?? "none"})`);
+      entry.http_requests = recordedCount;
+    }
+  }
+  return summary;
 }
 
 function applyRunDateOverride(runPath, summary) {
@@ -2351,7 +2388,7 @@ function buildDataset(scopeName, runDirs, writeMissingSummaries = false) {
 
     const batchSummary = buildSummaryFromBatches(runDir);
     if (batchSummary) {
-      summary = batchSummary;
+      summary = applyRecordedHttpCounts(runDir, batchSummary);
       summarySource = "generated_from_logs";
     }
 
