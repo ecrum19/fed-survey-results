@@ -1712,6 +1712,22 @@ function abbreviateRunLabelForAxis(label) {
   return truncateLabel(source, 20);
 }
 
+// Compact heatmap labels must stay distinguishable: when two labels abbreviate to the same
+// text (e.g. "19" and "19-metabolome-draft"), the named one gets a short suffix ("19·MET").
+function buildHeatmapCompactLabels(labels) {
+  const base = labels.map((label) => abbreviateQueryLabelForHeatmap(label));
+  const counts = new Map();
+  base.forEach((value) => counts.set(value, (counts.get(value) || 0) + 1));
+  return labels.map((label, index) => {
+    if (counts.get(base[index]) < 2) {
+      return base[index];
+    }
+    const rest = String(label || "").replace(/^\d+[a-z]?/i, "").replace(/^[-_#\s]+/, "");
+    const suffix = rest.split(/[-_\s]+/).filter(Boolean)[0];
+    return suffix ? `${base[index]}·${suffix.slice(0, 3).toUpperCase()}` : base[index];
+  });
+}
+
 function abbreviateQueryLabelForHeatmap(label) {
   if (!label) {
     return "";
@@ -1722,6 +1738,10 @@ function abbreviateQueryLabelForHeatmap(label) {
   }
 
   const compactSource = source.replace(/^biosodafrontend#/i, "").trim();
+  const emiExample = compactSource.match(/^emi#examples(\d+[a-z]?)$/i);
+  if (emiExample) {
+    return `E${emiExample[1].toUpperCase()}`;
+  }
   const numericLead = compactSource.match(/^(\d+[a-z]?)/i);
   if (numericLead) {
     return numericLead[1].toUpperCase();
@@ -2493,7 +2513,8 @@ function renderQueryOutcomeHeatmap(chartEl, groups, series) {
     ${groups.map(() => `<col class="query-heat-col" style="width:${queryColumnWidth};">`).join("")}
   `;
 
-  const headerCells = groups.map((group) => {
+  const compactLabels = buildHeatmapCompactLabels(groups.map((group) => group.label));
+  const headerCells = groups.map((group, groupIndex) => {
     const consistencyLabel = group.consistencyState === "same"
       ? "Same non-error raw result count across runs"
       : group.consistencyState === "different"
@@ -2503,7 +2524,7 @@ function renderQueryOutcomeHeatmap(chartEl, groups, series) {
     return `
       <th scope="col" class="query-col-head" title="${escapeHtmlAttr(headerTitle)}">
         <div class="query-col-head-text">
-          <span class="heatmap-label-compact">${escapeHtml(abbreviateQueryLabelForHeatmap(group.label))}</span>
+          <span class="heatmap-label-compact">${escapeHtml(compactLabels[groupIndex])}</span>
           <span class="heatmap-label-full">${escapeHtml(truncateLabel(group.label, 32))}</span>
         </div>
       </th>
@@ -2637,10 +2658,11 @@ function renderQueryErrorTypeHeatmap(chartEl, groups, series, errorCategoryTotal
   const observedErrorCategories = [...errorCategoryTotals.keys()];
   const errorColorMap = buildErrorCategoryColorMap(observedErrorCategories);
 
-  const headerCells = groups.map((group) => `
+  const compactLabels = buildHeatmapCompactLabels(groups.map((group) => group.label));
+  const headerCells = groups.map((group, groupIndex) => `
     <th scope="col" class="query-col-head" title="${escapeHtmlAttr(`Query: ${group.label}`)}">
       <div class="query-col-head-text">
-        <span class="heatmap-label-compact">${escapeHtml(abbreviateQueryLabelForHeatmap(group.label))}</span>
+        <span class="heatmap-label-compact">${escapeHtml(compactLabels[groupIndex])}</span>
         <span class="heatmap-label-full">${escapeHtml(truncateLabel(group.label, 32))}</span>
       </div>
     </th>
@@ -2964,41 +2986,13 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
     })
     .filter(Boolean);
 
-  // Resolve exact coordinate collisions without changing the HTTP request value.
-  // The y offset only separates duplicate points inside the same categorical outcome band.
-  const groupedPointIndexes = new Map();
-  basePoints.forEach((point, index) => {
-    const key = `${point.outcome}::${point.xBase}`;
-    if (!groupedPointIndexes.has(key)) {
-      groupedPointIndexes.set(key, []);
-    }
-    groupedPointIndexes.get(key).push(index);
-  });
-  const pointOffsetMap = new Map();
-  groupedPointIndexes.forEach((indexes) => {
-    const center = (indexes.length - 1) / 2;
-    const step = indexes.length > 1
-      ? Math.min(0.1, 0.24 / Math.max(center, 1))
-      : 0;
-    indexes.forEach((pointIndex, localIndex) => {
-      pointOffsetMap.set(pointIndex, {
-        offset: (localIndex - center) * step,
-        groupSize: indexes.length,
-        groupPosition: localIndex + 1,
-      });
-    });
-  });
-
-  const points = basePoints.map((point, index) => {
-    const collision = pointOffsetMap.get(index) || { offset: 0, groupSize: 1, groupPosition: 1 };
-    return {
-      ...point,
-      x: point.xBase,
-      y: point.outcomeBase + collision.offset,
-      collisionGroupSize: collision.groupSize,
-      collisionGroupPosition: collision.groupPosition,
-    };
-  });
+  // Points sit on their outcome band; overlapping dots are spread on screen by
+  // separateOverlappingPointsPlugin, so the plotted values are never changed.
+  const points = basePoints.map((point) => ({
+    ...point,
+    x: point.xBase,
+    y: point.outcomeBase,
+  }));
 
   if (!points.length) {
     renderNoDataPlot(chartEl, "No HTTP request data for selected query", xLabel, yLabel);
@@ -3043,10 +3037,8 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
       intersect: true,
       axis: "xy",
     },
-    animation: {
-      duration: 320,
-      easing: "easeOutQuart",
-    },
+    // No position animation: separateOverlappingPointsPlugin sets final pixel positions directly.
+    animation: false,
     plugins: {
       legend: {
         display: true,
@@ -3089,9 +3081,6 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
               `Results count: ${formatNullableNumber(point.resultsCount, 0)}`,
               `Duration: ${formatNullableNumber(point.duration, 2)} s`,
             ];
-            if (point.collisionGroupSize > 1) {
-              lines.push(`Same HTTP/outcome group: ${formatNumber(point.collisionGroupPosition, 0)} of ${formatNumber(point.collisionGroupSize, 0)}`);
-            }
             return lines;
           },
           afterLabel: (context) => {
@@ -3164,9 +3153,70 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
     type: "scatter",
     data: { datasets },
     options: chartOptions,
+    plugins: [separateOverlappingPointsPlugin],
   });
   chartRegistry.set(chartEl.id, instance);
 }
+
+// Beeswarm layout for categorical outcome bands. Works in pixel space after every layout,
+// so near-equal request counts on a log axis (e.g. 1,308 / 1,309 / 1,321) are separated
+// just like exact duplicates, at any chart size. Only the drawn y position moves.
+const separateOverlappingPointsPlugin = {
+  id: "separateOverlappingPoints",
+  afterDatasetsUpdate(chart) {
+    const yScale = chart.scales.y;
+    const items = [];
+    chart.data.datasets.forEach((dataset, datasetIndex) => {
+      if (!chart.isDatasetVisible(datasetIndex)) {
+        return;
+      }
+      chart.getDatasetMeta(datasetIndex).data.forEach((element, index) => {
+        items.push({
+          element,
+          band: dataset.data[index].outcomeBase,
+          radius: element.options?.radius ?? 6,
+        });
+      });
+    });
+    items.sort((a, b) => a.element.x - b.element.x);
+
+    const placedByBand = new Map();
+    for (const item of items) {
+      const placed = placedByBand.get(item.band) || [];
+      const minDistance = item.radius * 2 + 1.5;
+      let offset = 0;
+      // Try the band centre, then alternate above and below in one-dot steps.
+      for (let attempt = 0; attempt < 400; attempt += 1) {
+        offset = Math.ceil(attempt / 2) * minDistance * (attempt % 2 ? -1 : 1);
+        const candidate = offset;
+        const overlaps = placed.some((other) => (
+          Math.hypot(other.x - item.element.x, other.offset - candidate) < minDistance
+        ));
+        if (!overlaps) {
+          break;
+        }
+      }
+      item.offset = offset;
+      placed.push({ x: item.element.x, offset });
+      placedByBand.set(item.band, placed);
+    }
+
+    // Keep each band's spread inside its own band (the axis leaves 0.4 units around each
+    // band); in small charts a large cluster is compressed rather than spilling over.
+    const pixelsPerUnit = Math.abs(yScale.getPixelForValue(0) - yScale.getPixelForValue(1));
+    placedByBand.forEach((placed, band) => {
+      const radius = items.find((item) => item.band === band)?.radius ?? 6;
+      const limit = Math.max(0, 0.4 * pixelsPerUnit - radius);
+      const maxOffset = Math.max(...placed.map((point) => Math.abs(point.offset)));
+      const factor = maxOffset > limit ? limit / maxOffset : 1;
+      items
+        .filter((item) => item.band === band)
+        .forEach((item) => {
+          item.element.y = yScale.getPixelForValue(band) + item.offset * factor;
+        });
+    });
+  },
+};
 
 function getActiveRuns() {
   const mainRuns = state.mainDataset?.runs || [];
