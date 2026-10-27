@@ -2594,6 +2594,7 @@ function renderQueryOutcomeHeatmap(chartEl, groups, series) {
       <tr>
         <th scope="row" class="run-row-head" title="${escapeHtmlAttr(runLabel)}">
           <span class="heatmap-label-compact">${escapeHtml(runLabelShort)}</span>
+          <span class="heatmap-label-medium">${escapeHtml(truncateLabel(abbreviateRunLabelForAxis(runLabel), 18))}</span>
           <span class="heatmap-label-full">${escapeHtml(truncateLabel(runLabel, 38))}</span>
         </th>
         ${cells}
@@ -2726,6 +2727,7 @@ function renderQueryErrorTypeHeatmap(chartEl, groups, series, errorCategoryTotal
       <tr>
         <th scope="row" class="run-row-head" title="${escapeHtmlAttr(runLabel)}">
           <span class="heatmap-label-compact">${escapeHtml(runLabelShort)}</span>
+          <span class="heatmap-label-medium">${escapeHtml(truncateLabel(abbreviateRunLabelForAxis(runLabel), 18))}</span>
           <span class="heatmap-label-full">${escapeHtml(truncateLabel(runLabel, 38))}</span>
         </th>
         ${cells}
@@ -3016,6 +3018,8 @@ function renderHttpOutcomeScatterChart(chartEl, queryRecords, runsById) {
     borderWidth: 1,
     pointRadius: 6,
     pointHoverRadius: 8,
+    // Draw edge points in full on narrow charts instead of cutting them at the plot border.
+    clip: 10,
   }));
 
   const xMin = useLogScale ? Math.min(...points.map((point) => point.xBase)) : Math.min(...httpValues);
