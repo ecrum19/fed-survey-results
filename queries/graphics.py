@@ -589,8 +589,8 @@ def build_interactive_html(layout, output_path):
       padding: 8px 10px;
       box-shadow: 0 8px 24px rgba(24, 45, 70, 0.15);
       font-size: 13px;
-      min-width: 250px;
-      max-width: 420px;
+      min-width: min(250px, calc(100vw - 16px));
+      max-width: min(420px, calc(100vw - 16px));
       display: none;
       white-space: normal;
       color: #13293d;
@@ -604,6 +604,16 @@ def build_interactive_html(layout, output_path):
       margin-top: 8px;
       color: var(--muted);
       font-size: 0.92rem;
+    }}
+    @media (max-width: 640px) {{
+      body {{ padding: 6px; }}
+      .panel {{ padding: 8px; }}
+      .title {{ font-size: 1.05rem; margin-bottom: 6px; }}
+      .legend-row {{ gap: 6px; margin-bottom: 6px; }}
+      .legend-box {{ flex: 1 1 140px; min-width: 0; padding: 6px 8px; }}
+      .legend-title {{ font-size: 0.82rem; margin-bottom: 3px; }}
+      .legend-item {{ font-size: 0.78rem; gap: 6px; margin: 2px 0; }}
+      .foot {{ font-size: 0.8rem; }}
     }}
   </style>
 </head>
@@ -625,7 +635,7 @@ def build_interactive_html(layout, output_path):
     <div class="plot-wrap">
       <svg id="chart" role="img" aria-label="Interactive SPARQL query complexity chart"></svg>
     </div>
-    <p class="foot">Hover bars for detailed query metadata. Scroll horizontally if needed.</p>
+    <p class="foot">Hover or tap bars for detailed query metadata. Scroll horizontally if needed.</p>
   </div>
   <div class="tooltip" id="tooltip"></div>
 
@@ -633,6 +643,11 @@ def build_interactive_html(layout, output_path):
     const data = {json_payload};
     const svg = document.getElementById("chart");
     const tooltip = document.getElementById("tooltip");
+    document.addEventListener("click", (event) => {{
+      if (!event.target.closest(".bar")) {{
+        tooltip.style.display = "none";
+      }}
+    }});
     const bars = data.bars;
     const margin = {{ top: 20, right: 16, bottom: 165, left: 92 }};
     const rowHeight = 11.5;
@@ -644,8 +659,10 @@ def build_interactive_html(layout, output_path):
     const maxY = Math.max(...bars.map((b) => Number(b.height || 0)), 0) + 2;
 
     svg.setAttribute("viewBox", `0 0 ${{width}} ${{height}}`);
-    svg.setAttribute("width", width);
-    svg.setAttribute("height", height);
+    // Phones get a smaller rendering of the same figure; it still scrolls sideways.
+    const displayScale = window.matchMedia("(max-width: 640px)").matches ? 0.8 : 1;
+    svg.setAttribute("width", width * displayScale);
+    svg.setAttribute("height", height * displayScale);
 
     const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
     defs.innerHTML = `
@@ -779,14 +796,15 @@ def build_interactive_html(layout, output_path):
         if (top + tooltip.offsetHeight > window.innerHeight - 8) {{
           top = event.clientY - tooltip.offsetHeight - offset;
         }}
-        tooltip.style.left = `${{left}}px`;
-        tooltip.style.top = `${{top}}px`;
+        tooltip.style.left = `${{Math.max(8, left)}}px`;
+        tooltip.style.top = `${{Math.max(8, top)}}px`;
       }};
       const hideTooltip = () => {{
         tooltip.style.display = "none";
       }};
       baseRect.addEventListener("mousemove", showTooltip);
       baseRect.addEventListener("mouseleave", hideTooltip);
+      baseRect.addEventListener("click", showTooltip);
       svg.appendChild(baseRect);
 
       if (bar.fed_member === 3) {{
